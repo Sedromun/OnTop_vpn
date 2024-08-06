@@ -1,0 +1,28 @@
+version: "3"
+
+volumes:
+    db_volume:
+
+services:
+    bot:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        container_name: bot
+        restart: always
+        depends_on:
+            - database
+        volumes:
+            - .:/app
+        env_file:
+            - ./.env
+
+# Database Services
+    database:
+        build:
+            context: ./database
+            dockerfile: Dockerfile
+        container_name: database
+        restart: always
+        volumes:
+            - db_volume:/var/lib/postgresql/data
