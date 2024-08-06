@@ -15,7 +15,8 @@ PAYMENTS_PROVIDER_TOKEN = str(os.getenv("PAYMENTS_PROVIDER_TOKEN"))
 MIN_ADD_AMOUNT = 90
 SUPPORT_TAG = str(os.getenv("SUPPORT_TAG"))
 RECALLS_TGC_TAG = str(os.getenv("RECALLS_TGC_TAG"))
-
-bot = Bot(BOT_TOKEN.get_secret_value())
+RECALLS_TGC_LINK = "https://t.me/" + RECALLS_TGC_TAG
+CONNECT_INSTR_URL = str(os.getenv("CONNECT_INSTR_URL"))
+bot = Bot(BOT_TOKEN.get_secret_value(), parse_mode="HTML")
 dp = Dispatcher()
 

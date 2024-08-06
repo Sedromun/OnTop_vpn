@@ -1,6 +1,7 @@
 from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from config import RECALLS_TGC_TAG, RECALLS_TGC_LINK
 from text.keyboard_text import *
 
 
@@ -16,7 +17,7 @@ def get_info_keyboard():
     )
     builder.button(
         text=recalls,
-        callback_data=InfoCallbackFactory(text=recalls)
+        url=RECALLS_TGC_LINK
     )
     builder.adjust(1)
     return builder.as_markup()

@@ -33,19 +33,41 @@ async def choose_country_callback(
     await callback.answer()
 
 
-@buy_router.callback_query(ChooseCountryCallbackFactory.filter())
+@buy_router.callback_query(ChooseCountryCallbackFactory.filter(F.back == True))
 async def choose_payment_callback(
         callback: CallbackQuery,
         callback_data: PaymentCallbackFactory
 ):
+    await callback.message.edit_text(text=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(extend=False))
+    await callback.answer()
+
+
+@buy_router.callback_query(ChooseCountryCallbackFactory.filter(F.back == False))
+async def choose_payment_callback(
+        callback: CallbackQuery,
+        callback_data: PaymentCallbackFactory
+):
+    user = get_user(callback.from_user.id)
     await callback.message.edit_text(
-        text=get_payment_option_text(),
+        text=get_payment_option_text(callback_data.price, user.balance),
         reply_markup=get_payment_options_keyboard(
             duration=callback_data.duration,
             price=callback_data.price,
             country=callback_data.country,
             extend=False
         )
+    )
+    await callback.answer()
+
+
+@buy_router.callback_query(PaymentCallbackFactory.filter((F.option == Payment.Back.value) & (F.extend == False)))
+async def buy_balance_callback(
+        callback: CallbackQuery,
+        callback_data: PaymentCallbackFactory
+):
+    await callback.message.edit_text(
+        text=get_payment_choose_country_text(),
+        reply_markup=get_payment_countries_keyboard(duration=callback_data.duration, price=callback_data.price),
     )
     await callback.answer()
 
@@ -87,7 +109,25 @@ async def buy_balance_callback(
     await callback.answer()
 
 
-@buy_router.callback_query(PaymentAddMoneyCallbackFactory.filter(F.order_id == -1))
+@buy_router.callback_query(PaymentAddMoneyCallbackFactory.filter((F.order_id == -1) & (F.back == True)))
+async def add_money_callback(
+        callback: CallbackQuery,
+        callback_data: PaymentAddMoneyCallbackFactory
+):
+    user = get_user(callback.from_user.id)
+    await callback.message.edit_text(
+        text=get_payment_option_text(callback_data.price, user.balance),
+        reply_markup=get_payment_options_keyboard(
+            duration=callback_data.duration,
+            price=callback_data.price,
+            country=callback_data.country,
+            extend=False
+        )
+    )
+    await callback.answer()
+
+
+@buy_router.callback_query(PaymentAddMoneyCallbackFactory.filter((F.order_id == -1) & (F.back == False)))
 async def add_money_callback(
         callback: CallbackQuery,
         callback_data: PaymentAddMoneyCallbackFactory
@@ -108,7 +148,7 @@ async def process_successful_payment(message: types.Message):
     user = get_user(message.from_user.id)
     amount = message.successful_payment.total_amount // 100
 
-    if extend == 'C' or extend == 'C':
+    if extend == 'E' or extend == 'C':
         order = get_order(int(order_id))
         price = order.price
         new_balance = user.balance + amount - price
@@ -135,7 +175,6 @@ async def process_successful_payment(message: types.Message):
         )
 
 
-
 @buy_router.callback_query(PaymentCallbackFactory.filter((F.option == Payment.Card.value) & (F.extend == False)))
 async def buy_callback(
         callback: CallbackQuery,
@@ -155,4 +194,3 @@ def create_new_order(callback, callback_data):
         'expiration_date': end,
         'price': callback_data.price
     })
-

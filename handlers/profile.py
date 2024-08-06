@@ -70,18 +70,31 @@ async def profile_extend_key_callback(
 ):
     await callback.message.edit_text(
         text=get_buy_vpn_text(),
-        reply_markup=get_buy_vpn_keyboard(extend=True, order_id=callback_data.id)
+        reply_markup=get_buy_vpn_keyboard(extend=True, order_id=callback_data.id, need_back=True)
     )
     await callback.answer()
 
 
-@profile_router.callback_query(BuyCallbackFactory.filter(F.extend == True))
+@profile_router.callback_query(BuyCallbackFactory.filter(F.back == True))
 async def profile_extend_key_callback(
         callback: CallbackQuery,
         callback_data: BuyCallbackFactory
 ):
     await callback.message.edit_text(
-        text=get_payment_option_text(),
+        text=get_order_info_text(callback_data.order_id),
+        reply_markup=get_order_changes_keyboard(callback_data.order_id),
+    )
+    await callback.answer()
+
+
+@profile_router.callback_query(BuyCallbackFactory.filter((F.extend == True) & (F.back == False)))
+async def profile_extend_key_callback(
+        callback: CallbackQuery,
+        callback_data: BuyCallbackFactory
+):
+    user = get_user(callback.from_user.id)
+    await callback.message.edit_text(
+        text=get_payment_option_text(callback_data.price, user.balance),
         reply_markup=get_payment_options_keyboard(
             duration=callback_data.duration,
             price=callback_data.price,
@@ -89,6 +102,18 @@ async def profile_extend_key_callback(
             extend=True,
             order_id=callback_data.order_id
         )
+    )
+    await callback.answer()
+
+
+@profile_router.callback_query(PaymentCallbackFactory.filter((F.option == Payment.Back.value) & (F.extend == True)))
+async def buy_callback(
+        callback: CallbackQuery,
+        callback_data: PaymentCallbackFactory
+):
+    await callback.message.edit_text(
+        text=get_buy_vpn_text(),
+        reply_markup=get_buy_vpn_keyboard(extend=True, order_id=callback_data.order_id, need_back=True)
     )
     await callback.answer()
 
@@ -139,7 +164,19 @@ async def add_money_callback(
     await buy_handle(callback, callback_data, callback_data.amount, callback_data.order_id, extend=True)
 
 
-@profile_router.callback_query(ChooseCountryChangeCallbackFactory.filter())
+@profile_router.callback_query(ChooseCountryChangeCallbackFactory.filter(F.back == True))
+async def changing_country_back_callback(
+        callback: CallbackQuery,
+        callback_data: ChooseCountryChangeCallbackFactory
+):
+    await callback.message.edit_text(
+        text=get_order_info_text(callback_data.id),
+        reply_markup=get_order_changes_keyboard(callback_data.id),
+    )
+    await callback.answer()
+
+
+@profile_router.callback_query(ChooseCountryChangeCallbackFactory.filter(F.back == False))
 async def changing_country_callback(
         callback: CallbackQuery,
         callback_data: ChooseCountryChangeCallbackFactory
@@ -166,7 +203,17 @@ async def profile_order_info_callback(
     await callback.answer()
 
 
-@profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter())
+@profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter(F.back == True))
+async def add_money_callback(
+        callback: CallbackQuery,
+        callback_data: PaymentAddMoneyCallbackFactory
+):
+    id = callback.from_user.id
+    await callback.message.answer(text=get_profile_text(id), reply_markup=get_profile_keyboard(id))
+    await callback.answer()
+
+
+@profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter(F.back == False))
 async def add_money_callback(
         callback: CallbackQuery,
         callback_data: PaymentAddMoneyCallbackFactory

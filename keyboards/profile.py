@@ -1,6 +1,7 @@
 from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from config import CONNECT_INSTR_URL
 from database.controllers.user import get_user_orders
 from text.keyboard_text import *
 
@@ -33,12 +34,16 @@ def get_order_changes_keyboard(id: int):
         callback_data=OrderChangesCallbackFactory(text=change_country, id=id)
     )
     builder.button(
-        text=back,
-        callback_data=OrderChangesCallbackFactory(text=back, id=id)
-    )
-    builder.button(
         text=extend_key,
         callback_data=OrderChangesCallbackFactory(text=extend_key, id=id)
+    )
+    builder.button(
+        text=connect_instr,
+        url=CONNECT_INSTR_URL
+    )
+    builder.button(
+        text=back,
+        callback_data=OrderChangesCallbackFactory(text=back, id=id)
     )
     builder.adjust(1)
     return builder.as_markup()
@@ -56,6 +61,10 @@ def get_order_countries_keyboard(id: int):
             text=get_country_text(name, flag),
             callback_data=ChooseCountryChangeCallbackFactory(id=id, country=name)
         )
+    builder.button(
+        text=back,
+        callback_data=ChooseCountryChangeCallbackFactory(id=id, country='', back=True)
+    )
     builder.adjust(1)
     return builder.as_markup()
 
@@ -63,6 +72,7 @@ def get_order_countries_keyboard(id: int):
 class ChooseCountryChangeCallbackFactory(CallbackData, prefix="country_change"):
     id: int
     country: str
+    back: bool = False
 
 
 def get_add_money_keyboard():
@@ -74,10 +84,15 @@ def get_add_money_keyboard():
             text=str(amount),
             callback_data=ProfileAddMoneyCallbackFactory(amount=amount, duration=0)
         )
-    builder.adjust(3, 3, 3)
+    builder.button(
+        text=back,
+        callback_data=ProfileAddMoneyCallbackFactory(amount=0, duration=0, back=True)
+    )
+    builder.adjust(3, 3, 3, 1)
     return builder.as_markup()
 
 
 class ProfileAddMoneyCallbackFactory(CallbackData, prefix="profile_add_money"):
     amount: int
     duration: int
+    back: bool = False
