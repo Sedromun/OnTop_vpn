@@ -38,7 +38,7 @@ def get_buy_vpn_text():
 
 
 def get_payment_option_text(amount: int, balance: int):
-    return f"💸К оплате {amount}₽\n🏦На балансе {balance}₽\n\nВыберите тип оплаты:"
+    return f"💸К оплате {amount}₽\n\n🏦На балансе {balance}₽\n\nВыберите тип оплаты:"
 
 
 def get_success_created_key_text(key: str):
@@ -47,7 +47,7 @@ def get_success_created_key_text(key: str):
 
 
 def get_payment_choose_country_text():
-    return "Выберите страну для VPN\n(Её можно будет изменить)"
+    return "Выберите страну для <b>VPN</b>\n(Её можно будет изменить)"
 
 
 def get_not_enough_money_text(add: int):
