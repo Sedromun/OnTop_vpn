@@ -42,7 +42,7 @@ def get_payment_option_text(amount: int, balance: int):
 
 
 def get_success_created_key_text(key: str):
-    return (f"🎉 <b>Благодарим за покупку!</b>\n\n<a href={CONNECT_INSTR_URL}>⚙️ Инструкция по "
+    return (f"🎉 <b>Благодарим за покупку!</b>\n\n<a href='{CONNECT_INSTR_URL}'>⚙️ Инструкция по "
             f"подключению</a>\n\n🔑 Ваш ключ:\n<code>{key}</code>")
 
 
