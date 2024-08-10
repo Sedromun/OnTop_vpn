@@ -118,8 +118,10 @@ def get_balance_add_money_keyboard(duration: int, price: int, country: str, add:
         )
 
     adds = [100, 200, 300, 500, 1000, 2000]
+    col = 0
     for amount in adds:
         if amount >= add:
+            col += 1
             builder.button(
                 text=str(amount),
                 callback_data=PaymentAddMoneyCallbackFactory(duration=duration, price=price, country=country,
@@ -130,7 +132,7 @@ def get_balance_add_money_keyboard(duration: int, price: int, country: str, add:
         callback_data=PaymentAddMoneyCallbackFactory(duration=duration, price=price, country=country,
                                                      amount=0, order_id=order_id, back=True)
     )
-    builder.adjust(1, 3, 3, 1)
+    builder.adjust(1, 3 if col >= 3 else col, col - 3 if col > 3 else 1, 1)
     return builder.as_markup()
 
 

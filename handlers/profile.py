@@ -156,8 +156,27 @@ async def buy_balance_callback(
     await callback.answer()
 
 
+@profile_router.callback_query(PaymentAddMoneyCallbackFactory.filter((F.order_id != -1) & (F.back == True)))
+async def add_money_balance_back_callback(
+        callback: CallbackQuery,
+        callback_data: PaymentAddMoneyCallbackFactory
+):
+    user = get_user(callback.from_user.id)
+    await callback.message.edit_text(
+        text=get_payment_option_text(callback_data.price, user.balance),
+        reply_markup=get_payment_options_keyboard(
+            duration=callback_data.duration,
+            price=callback_data.price,
+            country='',
+            extend=True,
+            order_id=callback_data.order_id
+        )
+    )
+    await callback.answer()
+
+
 @profile_router.callback_query(PaymentAddMoneyCallbackFactory.filter(F.order_id != -1))
-async def add_money_callback(
+async def add_money_balance_callback(
         callback: CallbackQuery,
         callback_data: PaymentAddMoneyCallbackFactory
 ):
