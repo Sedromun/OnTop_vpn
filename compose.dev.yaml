@@ -34,6 +34,7 @@ services:
     restart: always
     depends_on:
       - database
+      - proxy
     volumes:
       - ./:/app
     env_file:
