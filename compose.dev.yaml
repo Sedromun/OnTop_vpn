@@ -19,20 +19,6 @@ services:
       - ./.env
 
 
-  backend:
-    build:
-      context: ./site
-      dockerfile: Dockerfile
-    container_name: backend
-    restart: always
-    depends_on:
-      - database
-    volumes:
-      - .:/app
-    env_file:
-      - ./.env
-
-
   database:
     build:
       context: ./database

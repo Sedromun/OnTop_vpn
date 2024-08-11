@@ -11,7 +11,7 @@ def get_user_orders(tg_id: int) -> list[OrderModel] | None:
     orders = user.orders
     res = []
     for order in orders:
-        if order.key is not None:
+        if order.keys:
             res.append(order)
     res.sort(key=lambda x: x.id)
     return res

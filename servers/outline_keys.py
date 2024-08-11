@@ -10,7 +10,7 @@ def get_key(country: str, order_id: int) -> str:
     if key is not None:
         return key.key
 
-    new_key = outline_client[country].create_key()
+    new_key = outline_client[country].create_key().access_url
     create_key({
         "order_id": order_id,
         "country": country,

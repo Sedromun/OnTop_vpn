@@ -1,11 +1,10 @@
 from aiogram import types
 
-from config import bot, PAYMENTS_PROVIDER_TOKEN, KEYS_URL
+from config import bot, PAYMENTS_PROVIDER_TOKEN, KEYS_URL, YOOMONEY_OAUTH_TOKEN
 # from yookassa import Payment, Configuration
-
-# Configuration.account_id = <Идентификатор магазина>
-# Configuration.secret_key = <Секретный ключ>
-
+#
+# Configuration.configure_auth_token(YOOMONEY_OAUTH_TOKEN)
+#
 # payment = Payment.create({
 #     "amount": {
 #         "value": "2.00",

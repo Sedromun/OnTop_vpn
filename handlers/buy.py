@@ -91,7 +91,7 @@ async def buy_balance_callback(
         update_user(callback.from_user.id, {'balance': user.balance - callback_data.price})
 
         await callback.message.edit_text(
-            text=get_success_created_key_text(key)
+            text=get_success_created_key_text(get_order_perm_key(order.id))
         )
 
         return
@@ -153,9 +153,9 @@ async def process_successful_payment(message: types.Message):
         new_balance = user.balance + amount - price
         update_user(user.id, {'balance': new_balance})
         if extend == 'C':
-            key = get_key(order.country, order.id)
+            get_key(order.country, order.id)
             await message.answer(
-                text=get_success_created_key_text(key)
+                text=get_success_created_key_text(get_order_perm_key(order.id))
             )
         else:
             begin = order.expiration_date

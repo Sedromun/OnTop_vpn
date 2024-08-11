@@ -24,7 +24,9 @@ KEYS_URL = SSCONF + "://" + DOMEN + "/keys" + "/"
 
 
 outline_client = {
-    'sweden': OutlineVPN(api_url=SWEDEN_API_URL, cert_sha256=SWEDEN_CERT_SHA256)
+    'Россия': OutlineVPN(api_url=SWEDEN_API_URL, cert_sha256=SWEDEN_CERT_SHA256),
+    'Швеция': OutlineVPN(api_url=SWEDEN_API_URL, cert_sha256=SWEDEN_CERT_SHA256),
+    'Германия': OutlineVPN(api_url=SWEDEN_API_URL, cert_sha256=SWEDEN_CERT_SHA256)
 }
 
 PAYMENTS_PROVIDER_TOKEN = str(os.getenv("PAYMENTS_PROVIDER_TOKEN"))
@@ -33,6 +35,10 @@ SUPPORT_TAG = str(os.getenv("SUPPORT_TAG"))
 RECALLS_TGC_TAG = str(os.getenv("RECALLS_TGC_TAG"))
 RECALLS_TGC_LINK = "https://t.me/" + RECALLS_TGC_TAG
 CONNECT_INSTR_URL = str(os.getenv("CONNECT_INSTR_URL"))
+
+YOOMONEY_ACCOUNT_ID = os.getenv("YOOMONEY_ACCOUNT_ID")
+YOOMONEY_OAUTH_TOKEN = str(os.getenv("YOOMONEY_OAUTH_TOKEN"))
+
 bot = Bot(BOT_TOKEN.get_secret_value(), parse_mode="HTML")
 
 
