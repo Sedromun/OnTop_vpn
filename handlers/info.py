@@ -17,7 +17,7 @@ from keyboards.buy import BuyCallbackFactory, get_payment_options_keyboard, Paym
 from keyboards.profile import ProfileCallbackFactory, get_order_changes_keyboard, OrderChangesCallbackFactory, \
     get_order_countries_keyboard, get_profile_keyboard, ChooseCountryChangeCallbackFactory, get_add_money_keyboard, \
     ProfileAddMoneyCallbackFactory
-from servers.outline_keys import get_key, key_change_country
+from servers.outline_keys import get_key
 from text.keyboard_text import buy, change_country, extend_key, back, countries, tech_support, recalls
 from text.profile import get_order_info_text, get_order_choose_country_text, get_country_changed_text, \
     get_success_extended_key_text, get_profile_add_money_text

@@ -1,4 +1,5 @@
 import datetime
+from typing import List
 
 from sqlalchemy import ForeignKey, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship, registry
@@ -21,7 +22,9 @@ class OrderModel(BaseModel):
     begin_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=func.now())
     expiration_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False,
                                                                default=func.now())
+
     price: Mapped[int] = mapped_column(nullable=False, default=0)
-    key: Mapped[str] = mapped_column(nullable=True)
+
+    keys: Mapped[List["KeyModel"]] = relationship(back_populates="order")
 
     user: Mapped["UserModel"] = relationship(back_populates="orders")

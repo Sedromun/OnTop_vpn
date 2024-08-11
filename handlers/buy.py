@@ -16,7 +16,7 @@ from text.keyboard_text import buy
 from text.profile import get_success_extended_key_text, get_money_added_text
 from text.texts import get_payment_option_text, get_success_created_key_text, get_payment_choose_country_text, \
     get_buy_vpn_text, get_not_enough_money_text, get_pay_text
-from utils.payment import buy_handle
+from utils.payment import buy_handle, get_order_perm_key
 
 buy_router = Router(name="buy")
 
@@ -79,17 +79,16 @@ async def buy_balance_callback(
 ):
     user = get_user(callback.from_user.id)
     if user.balance >= callback_data.price:
-        key = get_key(callback_data.country)
-        update_user(callback.from_user.id, {'balance': user.balance - callback_data.price})
         begin = datetime.datetime.now()
         end = begin + datetime.timedelta(days=callback_data.duration)
-        create_order({
+        order = create_order({
             'user_id': user.id,
             'country': callback_data.country,
             'begin_date': begin,
             'expiration_date': end,
-            'key': key
         })
+        key = get_key(callback_data.country, order.id)
+        update_user(callback.from_user.id, {'balance': user.balance - callback_data.price})
 
         await callback.message.edit_text(
             text=get_success_created_key_text(key)
@@ -154,8 +153,7 @@ async def process_successful_payment(message: types.Message):
         new_balance = user.balance + amount - price
         update_user(user.id, {'balance': new_balance})
         if extend == 'C':
-            key = get_key(order.country)
-            update_order(order.id, {'key': key})
+            key = get_key(order.country, order.id)
             await message.answer(
                 text=get_success_created_key_text(key)
             )

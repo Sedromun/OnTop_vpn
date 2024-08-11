@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
+from config import KEYS_URL
 from database import session
 from schemas import OrderModel
 from logs import Logger

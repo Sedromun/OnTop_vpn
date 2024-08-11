@@ -1,6 +1,27 @@
 from aiogram import types
 
-from config import bot, PAYMENTS_PROVIDER_TOKEN
+from config import bot, PAYMENTS_PROVIDER_TOKEN, KEYS_URL
+# from yookassa import Payment, Configuration
+
+# Configuration.account_id = <Идентификатор магазина>
+# Configuration.secret_key = <Секретный ключ>
+
+# payment = Payment.create({
+#     "amount": {
+#         "value": "2.00",
+#         "currency": "RUB"
+#     },
+#     "payment_method_data": {
+#         "type": "bank_card"
+#     },
+#     "confirmation": {
+#         "type": "redirect",
+#         "return_url": "https://www.example.com/return_url"
+#     },
+#     "capture": True,
+#     "description": "Заказ №72",
+#     "save_payment_method": True
+# })
 
 
 async def buy_handle(callback, callback_data, amount: int, order_id: int, extend: bool = False, add_money: bool = False):
@@ -17,3 +38,7 @@ async def buy_handle(callback, callback_data, amount: int, order_id: int, extend
     )
     await callback.message.delete()
     await callback.answer()
+
+
+def get_order_perm_key(order_id: int) -> str:
+    return KEYS_URL + str(order_id)
