@@ -25,6 +25,11 @@ async def get_key_id(
     return key
 
 
+@app.get("/")
+async def root():
+    return "Hello!"
+
+
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
