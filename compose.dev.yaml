@@ -4,6 +4,14 @@ volumes:
   db_volume:
 
 services:
+  proxy:
+    build: ./nginx
+    container_name: proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "8000:8000"
+
   bot:
     build:
       context: ./
@@ -14,7 +22,7 @@ services:
       - database
       - backend
     volumes:
-      - .:/app
+      - ./:/app
     env_file:
       - ./.env
 
@@ -27,7 +35,7 @@ services:
     depends_on:
       - database
     volumes:
-      - .:/app
+      - ./:/app
     env_file:
       - ./.env
 
