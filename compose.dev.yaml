@@ -10,7 +10,7 @@ services:
     restart: always
     ports:
       - "80:80"
-      - "8000:8000"
+      - "3000:3000"
 
   bot:
     build:

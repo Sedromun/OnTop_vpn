@@ -2,6 +2,7 @@ FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 8000
+EXPOSE 80
+EXPOSE 3000
 
 CMD ["nginx", "-g", "daemon off;"]
