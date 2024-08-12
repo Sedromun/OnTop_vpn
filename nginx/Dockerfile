@@ -7,5 +7,6 @@ EXPOSE 3000
 
 COPY ontopvpn.crt /etc/ssl/ontopvpn.crt
 COPY ontopvpn.key /etc/ssl/ontopvpn.key
+COPY ca.crt /etc/ssl/ca.crt
 
 CMD ["nginx", "-g", "daemon off;"]
