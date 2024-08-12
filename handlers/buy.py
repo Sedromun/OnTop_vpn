@@ -34,8 +34,8 @@ buy_router = Router(name="buy")
 async def choose_country_callback(
     callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
-    await callback.message.edit_text(
-        text=get_payment_choose_country_text(),
+    await callback.message.edit_caption(
+        caption=get_payment_choose_country_text(),
         reply_markup=get_payment_countries_keyboard(
             duration=callback_data.duration, price=callback_data.price
         ),
@@ -47,8 +47,8 @@ async def choose_country_callback(
 async def choose_payment_callback(
     callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
-    await callback.message.edit_text(
-        text=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(extend=False)
+    await callback.message.edit_caption(
+        caption=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(extend=False)
     )
     await callback.answer()
 
@@ -58,8 +58,8 @@ async def choose_payment_callback(
     callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     user = get_user(callback.from_user.id)
-    await callback.message.edit_text(
-        text=get_payment_option_text(callback_data.price, user.balance),
+    await callback.message.edit_caption(
+        caption=get_payment_option_text(callback_data.price, user.balance),
         reply_markup=get_payment_options_keyboard(
             duration=callback_data.duration,
             price=callback_data.price,
@@ -78,8 +78,8 @@ async def choose_payment_callback(
 async def buy_balance_callback(
     callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
-    await callback.message.edit_text(
-        text=get_payment_choose_country_text(),
+    await callback.message.edit_caption(
+        caption=get_payment_choose_country_text(),
         reply_markup=get_payment_countries_keyboard(
             duration=callback_data.duration, price=callback_data.price
         ),
@@ -112,14 +112,14 @@ async def buy_balance_callback(
             callback.from_user.id, {"balance": user.balance - callback_data.price}
         )
 
-        await callback.message.edit_text(
-            text=get_success_created_key_text(get_order_perm_key(order.id))
+        await callback.message.edit_caption(
+            caption=get_success_created_key_text(get_order_perm_key(order.id))
         )
 
         return
     else:
-        await callback.message.edit_text(
-            text=get_not_enough_money_text(callback_data.price - user.balance),
+        await callback.message.edit_caption(
+            caption=get_not_enough_money_text(callback_data.price - user.balance),
             reply_markup=get_balance_add_money_keyboard(
                 duration=callback_data.duration,
                 price=callback_data.price,
@@ -137,8 +137,8 @@ async def add_money_callback(
     callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
-    await callback.message.edit_text(
-        text=get_payment_option_text(callback_data.price, user.balance),
+    await callback.message.edit_caption(
+        caption=get_payment_option_text(callback_data.price, user.balance),
         reply_markup=get_payment_options_keyboard(
             duration=callback_data.duration,
             price=callback_data.price,

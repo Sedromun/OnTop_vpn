@@ -39,8 +39,11 @@ GB_CERT_SHA256 = str(os.getenv("GB_CERT_SHA256"))
 USA_API_URL = str(os.getenv("USA_API_URL"))
 USA_CERT_SHA256 = str(os.getenv("USA_CERT_SHA256"))
 
-AUSTRIAN_API_URL = str(os.getenv("AUSTRIAN_API_URL"))
-AUSTRIAN_CERT_SHA256 = str(os.getenv("AUSTRIAN_CERT_SHA256"))
+LATVIA_API_URL = str(os.getenv("LATVIA_API_URL"))
+LATVIA_CERT_SHA256 = str(os.getenv("LATVIA_CERT_SHA256"))
+
+ESTONIA_API_URL = str(os.getenv("ESTONIA_API_URL"))
+ESTONIA_CERT_SHA256 = str(os.getenv("ESTONIA_CERT_SHA256"))
 
 NETHERLAND_API_URL = str(os.getenv("NETHERLAND_API_URL"))
 NETHERLAND_CERT_SHA256 = str(os.getenv("NETHERLAND_CERT_SHA256"))
@@ -60,14 +63,16 @@ outline_client = {
     "Франция": OutlineVPN(api_url=FRANCE_API_URL, cert_sha256=FRANCE_CERT_SHA256),
     "Великобритания": OutlineVPN(api_url=GB_API_URL, cert_sha256=GB_CERT_SHA256),
     "США": OutlineVPN(api_url=USA_API_URL, cert_sha256=USA_CERT_SHA256),
-    "Австрия": OutlineVPN(api_url=AUSTRIAN_API_URL, cert_sha256=AUSTRIAN_CERT_SHA256),
+    "Латвия": OutlineVPN(api_url=LATVIA_API_URL, cert_sha256=LATVIA_CERT_SHA256),
     "Нидерланды": OutlineVPN(api_url=NETHERLAND_API_URL, cert_sha256=NETHERLAND_CERT_SHA256),
     "Финляндия": OutlineVPN(api_url=FINLAND_API_URL, cert_sha256=FINLAND_CERT_SHA256),
+    "Эстония": OutlineVPN(api_url=ESTONIA_API_URL, cert_sha256=ESTONIA_CERT_SHA256),
 }
 
 PAYMENTS_PROVIDER_TOKEN = str(os.getenv("PAYMENTS_PROVIDER_TOKEN"))
 MIN_ADD_AMOUNT = 90
-SUPPORT_TAG = str(os.getenv("SUPPORT_TAG"))
+TECH_SUPPORT_TAG = str(os.getenv("TECH_SUPPORT_TAG"))
+TECH_SUPPORT_LINK = "https://t.me/" + TECH_SUPPORT_TAG
 RECALLS_TGC_TAG = str(os.getenv("RECALLS_TGC_TAG"))
 RECALLS_TGC_LINK = "https://t.me/" + RECALLS_TGC_TAG
 CONNECT_INSTR_URL = str(os.getenv("CONNECT_INSTR_URL"))
