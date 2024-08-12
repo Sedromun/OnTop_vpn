@@ -2,6 +2,7 @@ import asyncio
 
 import uvicorn
 from fastapi import FastAPI
+from starlette.responses import HTMLResponse
 
 from config import bot, dp, HOST, PORT
 from database.controllers.order import get_order
@@ -22,7 +23,7 @@ async def get_key_id(
 ):
     order = get_order(int(order_id))
     key = get_key(order.country, order_id)
-    return key
+    return HTMLResponse(key)
 
 
 @app.get("/")
