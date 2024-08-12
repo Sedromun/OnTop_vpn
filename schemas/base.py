@@ -1,8 +1,7 @@
 import datetime
-from typing import List
 
-from sqlalchemy import DateTime, func, ForeignKey, inspect
-from sqlalchemy.orm import Mapped, as_declarative, mapped_column, relationship
+from sqlalchemy import DateTime, func, inspect
+from sqlalchemy.orm import Mapped, as_declarative, mapped_column
 
 
 @as_declarative()
@@ -18,5 +17,4 @@ class BaseModel:
     )
 
     def _asdict(self):
-        return {c.key: getattr(self, c.key)
-                for c in inspect(self).mapper.column_attrs}
+        return {c.key: getattr(self, c.key) for c in inspect(self).mapper.column_attrs}

@@ -1,7 +1,8 @@
 from typing import List
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship, registry
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import BigInteger
+
 from .base import BaseModel
 
 

@@ -1,5 +1,3 @@
-import datetime
-
 from database.controllers.order import get_order
 from text.texts import get_key_data
 from utils.country import COUNTRIES

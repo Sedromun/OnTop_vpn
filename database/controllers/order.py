@@ -1,10 +1,9 @@
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from config import KEYS_URL
 from database import session
-from schemas import OrderModel
 from logs import Logger
+from schemas import OrderModel
 
 
 def get_order(order_id: int) -> OrderModel | None:
@@ -13,9 +12,7 @@ def get_order(order_id: int) -> OrderModel | None:
 
 
 def create_order(data: dict) -> OrderModel | None:
-    order = OrderModel(
-        **data
-    )
+    order = OrderModel(**data)
 
     session.add(order)
 
@@ -51,5 +48,7 @@ def delete_order(order_id: int, model_name: str) -> bool:
         return True
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(e, f"Integrity error in delete_order '{model_name}' - can't commit in db")
+        Logger.exception(
+            e, f"Integrity error in delete_order '{model_name}' - can't commit in db"
+        )
         return False

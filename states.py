@@ -1,4 +1,4 @@
-from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.state import State, StatesGroup
 
 
 class UserRegistration(StatesGroup):
@@ -62,8 +62,10 @@ class UserChatStates(StatesGroup):
     in_chat = State()
     in_chat_admin = State()
 
+
 class ClientOrders(StatesGroup):
     choosing_order = State()
+
 
 class ClientFinishOrder(StatesGroup):
     choosing_order = State()
@@ -80,9 +82,11 @@ class ClientDisputeStates(StatesGroup):
     choosing_order = State()
     writing_problem = State()
 
+
 class SolverDisputeStates(StatesGroup):
     choosing_order = State()
     writing_problem = State()
+
 
 class AdminBaseStates(StatesGroup):
     main_menu = State()

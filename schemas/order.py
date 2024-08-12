@@ -1,12 +1,12 @@
 import datetime
 from typing import List
 
-from sqlalchemy import ForeignKey, DateTime, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship, registry
+from sqlalchemy import DateTime, ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.types import BigInteger
 
 from .base import BaseModel
 from .user import UserModel
-from sqlalchemy.types import BigInteger
 
 
 class OrderModel(BaseModel):
@@ -17,11 +17,14 @@ class OrderModel(BaseModel):
     )
 
     user_id: Mapped[int] = mapped_column(ForeignKey(UserModel.id))
-    country: Mapped[str] = mapped_column(nullable=False, default='Россия')
+    country: Mapped[str] = mapped_column(nullable=False, default="Россия")
 
-    begin_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=func.now())
-    expiration_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), nullable=False,
-                                                               default=func.now())
+    begin_date: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=func.now()
+    )
+    expiration_date: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=func.now()
+    )
 
     price: Mapped[int] = mapped_column(nullable=False, default=0)
 

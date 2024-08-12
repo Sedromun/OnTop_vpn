@@ -1,13 +1,11 @@
 import asyncio
 
-import uvicorn
 from fastapi import FastAPI
 from starlette.responses import HTMLResponse
 
-from config import bot, dp, HOST, PORT
+from config import bot, dp
 from database.controllers.order import get_order
-
-from handlers import main_router, buy_router, profile_router, info_router
+from handlers import buy_router, info_router, main_router, profile_router
 from servers.outline_keys import get_key
 
 dp.include_router(buy_router)
@@ -19,9 +17,7 @@ app = FastAPI()
 
 
 @app.get("/keys/{order_id}")
-async def get_key_id(
-        order_id: int
-):
+async def get_key_id(order_id: int):
     order = get_order(int(order_id))
     key = get_key(order.country, order_id)
     return HTMLResponse(key)

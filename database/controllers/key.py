@@ -23,9 +23,7 @@ def get_order_country_key(order_id: int, country: str) -> KeyModel | None:
 
 
 def create_key(data: dict) -> KeyModel | None:
-    key = KeyModel(
-        **data
-    )
+    key = KeyModel(**data)
 
     session.add(key)
 
@@ -61,5 +59,7 @@ def delete_key(key_id: int) -> bool:
         return True
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(e, f"Integrity error in delete_key 'KeyModel' - can't commit in db")
+        Logger.exception(
+            e, "Integrity error in delete_key 'KeyModel' - can't commit in db"
+        )
         return False

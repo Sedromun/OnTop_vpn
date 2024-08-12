@@ -22,7 +22,7 @@ def get_user(tg_id: int) -> UserModel | None:
     return user
 
 
-def register_user(tg_id: int) -> UserModel  | None:
+def register_user(tg_id: int) -> UserModel | None:
     creating_user = UserModel(id=tg_id)
 
     session.add(creating_user)
@@ -33,7 +33,9 @@ def register_user(tg_id: int) -> UserModel  | None:
         return creating_user
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(e, f"Integrity error in register_user '{str(tg_id)}' - can't commit in db")
+        Logger.exception(
+            e, f"Integrity error in register_user '{str(tg_id)}' - can't commit in db"
+        )
         return None
 
 
@@ -45,5 +47,7 @@ def update_user(tg_id: int, updates: dict) -> bool:
         return True
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(e, f"Integrity error in update_user '{str(tg_id)}' - can't commit in db")
+        Logger.exception(
+            e, f"Integrity error in update_user '{str(tg_id)}' - can't commit in db"
+        )
         return False

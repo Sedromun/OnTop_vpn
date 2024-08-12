@@ -1,39 +1,30 @@
 from aiogram import types
 
-from config import bot, PAYMENTS_PROVIDER_TOKEN, KEYS_URL, YOOMONEY_OAUTH_TOKEN
-# from yookassa import Payment, Configuration
-#
-# Configuration.configure_auth_token(YOOMONEY_OAUTH_TOKEN)
-#
-# payment = Payment.create({
-#     "amount": {
-#         "value": "2.00",
-#         "currency": "RUB"
-#     },
-#     "payment_method_data": {
-#         "type": "bank_card"
-#     },
-#     "confirmation": {
-#         "type": "redirect",
-#         "return_url": "https://www.example.com/return_url"
-#     },
-#     "capture": True,
-#     "description": "Заказ №72",
-#     "save_payment_method": True
-# })
+from config import KEYS_URL, PAYMENTS_PROVIDER_TOKEN, bot
 
 
-async def buy_handle(callback, callback_data, amount: int, order_id: int, extend: bool = False, add_money: bool = False):
+async def buy_handle(
+    callback,
+    callback_data,
+    amount: int,
+    order_id: int,
+    extend: bool = False,
+    add_money: bool = False,
+):
     await bot.send_invoice(
         callback.from_user.id,
         title="Оплата",
         description="Оплата",
         provider_token=PAYMENTS_PROVIDER_TOKEN,
-        currency='rub',
+        currency="rub",
         is_flexible=False,
-        prices=[types.LabeledPrice(label='VPN', amount=amount * 100)],
-        start_parameter='top-vpn-payment-deeplink',
-        payload=('E' if extend else ('A' if add_money else 'C')) + '_' + str(order_id) + '_' + str(callback_data.duration),
+        prices=[types.LabeledPrice(label="VPN", amount=amount * 100)],
+        start_parameter="top-vpn-payment-deeplink",
+        payload=("E" if extend else ("A" if add_money else "C"))
+        + "_"
+        + str(order_id)
+        + "_"
+        + str(callback_data.duration),
     )
     await callback.message.delete()
     await callback.answer()
