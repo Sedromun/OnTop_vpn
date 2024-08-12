@@ -19,8 +19,34 @@ HOST = str(os.getenv("HOST"))
 PORT = int(os.getenv("PORT"))
 
 DOMEN = str(os.getenv("DOMEN"))
+
+
 SWEDEN_API_URL = str(os.getenv("SWEDEN_API_URL"))
 SWEDEN_CERT_SHA256 = str(os.getenv("SWEDEN_CERT_SHA256"))
+
+RUSSIAN_API_URL = str(os.getenv("RUSSIAN_API_URL"))
+RUSSIAN_CERT_SHA256 = str(os.getenv("RUSSIAN_CERT_SHA256"))
+
+GERMAN_API_URL = str(os.getenv("GERMAN_API_URL"))
+GERMAN_CERT_SHA256 = str(os.getenv("GERMAN_CERT_SHA256"))
+
+FRANCE_API_URL = str(os.getenv("FRANCE_API_URL"))
+FRANCE_CERT_SHA256 = str(os.getenv("FRANCE_CERT_SHA256"))
+
+GB_API_URL = str(os.getenv("GB_API_URL"))
+GB_CERT_SHA256 = str(os.getenv("GB_CERT_SHA256"))
+
+USA_API_URL = str(os.getenv("USA_API_URL"))
+USA_CERT_SHA256 = str(os.getenv("USA_CERT_SHA256"))
+
+AUSTRIAN_API_URL = str(os.getenv("AUSTRIAN_API_URL"))
+AUSTRIAN_CERT_SHA256 = str(os.getenv("AUSTRIAN_CERT_SHA256"))
+
+NETHERLAND_API_URL = str(os.getenv("NETHERLAND_API_URL"))
+NETHERLAND_CERT_SHA256 = str(os.getenv("NETHERLAND_CERT_SHA256"))
+
+FINLAND_API_URL = str(os.getenv("FINLAND_API_URL"))
+FINLAND_CERT_SHA256 = str(os.getenv("FINLAND_CERT_SHA256"))
 
 HTTPS = "https"
 SSCONF = "ssconf"
@@ -28,9 +54,15 @@ KEYS_URL = SSCONF + "://" + DOMEN + "/keys" + "/"
 
 
 outline_client = {
-    "Россия": OutlineVPN(api_url=SWEDEN_API_URL, cert_sha256=SWEDEN_CERT_SHA256),
+    "Россия": OutlineVPN(api_url=RUSSIAN_API_URL, cert_sha256=RUSSIAN_CERT_SHA256),
     "Швеция": OutlineVPN(api_url=SWEDEN_API_URL, cert_sha256=SWEDEN_CERT_SHA256),
-    "Германия": OutlineVPN(api_url=SWEDEN_API_URL, cert_sha256=SWEDEN_CERT_SHA256),
+    "Германия": OutlineVPN(api_url=GERMAN_API_URL, cert_sha256=GERMAN_CERT_SHA256),
+    "Франция": OutlineVPN(api_url=FRANCE_API_URL, cert_sha256=FRANCE_CERT_SHA256),
+    "Великобритания": OutlineVPN(api_url=GB_API_URL, cert_sha256=GB_CERT_SHA256),
+    "США": OutlineVPN(api_url=USA_API_URL, cert_sha256=USA_CERT_SHA256),
+    "Австрия": OutlineVPN(api_url=AUSTRIAN_API_URL, cert_sha256=AUSTRIAN_CERT_SHA256),
+    "Нидерланды": OutlineVPN(api_url=NETHERLAND_API_URL, cert_sha256=NETHERLAND_CERT_SHA256),
+    "Финляндия": OutlineVPN(api_url=FINLAND_API_URL, cert_sha256=FINLAND_CERT_SHA256),
 }
 
 PAYMENTS_PROVIDER_TOKEN = str(os.getenv("PAYMENTS_PROVIDER_TOKEN"))
