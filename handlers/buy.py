@@ -3,6 +3,7 @@ import datetime
 from aiogram import F, Router, types
 from aiogram.types import CallbackQuery, PreCheckoutQuery
 
+from config import PERCENT_REFERRAL, bot
 from database.controllers.order import create_order, get_order, update_order
 from database.controllers.user import get_user, update_user
 from keyboards.buy import (
@@ -23,7 +24,7 @@ from text.texts import (
     get_not_enough_money_text,
     get_payment_choose_country_text,
     get_payment_option_text,
-    get_success_created_key_text,
+    get_success_created_key_text, get_referral_bought,
 )
 from utils.buy_options import duration_to_str
 from utils.payment import buy_handle, get_order_perm_key
@@ -172,6 +173,13 @@ async def process_successful_payment(message: types.Message):
     extend, order_id, duration_str = payload.split("_")
     user = get_user(message.from_user.id)
     amount = message.successful_payment.total_amount // 100
+
+    if user.referrer_id is not None:
+        referrer = get_user(user.referrer_id)
+        add_amount = (amount * PERCENT_REFERRAL // 100)
+        update_user(user.referrer_id, {'balance': referrer.balance + add_amount})
+        bot.send_message(referrer.id, text=get_referral_bought(add_amount))
+
 
     if extend == "E" or extend == "C":
         order = get_order(int(order_id))

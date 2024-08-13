@@ -7,11 +7,10 @@ from keyboards.info import (
     get_back_keyboard,
     get_info_keyboard,
 )
-from text.info import get_countries_text, get_recalls_text
+from text.info import get_countries_text, get_referral_program_text
 from text.keyboard_text import (
     countries,
-    recalls,
-    tech_support,
+    referral_program,
 )
 from text.texts import (
     get_information_text,
@@ -26,6 +25,16 @@ async def info_countries_callback(
 ):
     await callback.message.edit_caption(
         caption=get_countries_text(), reply_markup=get_back_keyboard()
+    )
+    await callback.answer()
+
+
+@info_router.callback_query(InfoCallbackFactory.filter(F.text == referral_program))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoCallbackFactory
+):
+    await callback.message.edit_caption(
+        caption=get_referral_program_text(callback.from_user.id), reply_markup=get_back_keyboard()
     )
     await callback.answer()
 

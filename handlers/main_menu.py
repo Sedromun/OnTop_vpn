@@ -2,8 +2,8 @@ from aiogram import F, Router
 from aiogram.filters import Command, StateFilter
 from aiogram.types import Message, FSInputFile
 
-from config import WELCOME_PHOTO, PROFILE_PHOTO, INFO_PHOTO, BUY_PHOTO
-from database.controllers.user import get_user, register_user
+from config import WELCOME_PHOTO, PROFILE_PHOTO, INFO_PHOTO, BUY_PHOTO, WELCOME_PRESENT
+from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
 from keyboards.main_keyboard import get_main_keyboard
@@ -22,9 +22,25 @@ main_router = Router(name="main")
 
 @main_router.message(StateFilter(None), Command("start"))
 async def start_handler(message: Message):
-    user = get_user(message.from_user.id)
+    user_id = message.from_user.id
+    user = get_user(user_id)
+    referrer = None
     if user is None:
+
+        if " " in message.text:
+            referrer_candidate = message.text.split()[1]
+
+            try:
+                referrer_candidate = int(referrer_candidate)
+                ref_can = get_user(referrer_candidate)
+                if ref_can is not None and user_id != referrer_candidate:
+                    referrer = ref_can
+            except ValueError:
+                pass
         _ = register_user(message.from_user.id)
+
+    if referrer is not None:
+        update_user(user_id, {'balance': WELCOME_PRESENT, 'referrer_id': referrer.id})
 
     await message.answer_photo(
         WELCOME_PHOTO,

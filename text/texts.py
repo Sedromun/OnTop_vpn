@@ -73,3 +73,8 @@ def get_key_data(order):
         f"(осталось {(order.expiration_date - datetime.datetime.now(datetime.timezone.utc)).days} дней)\n\n"
         f"Ключ:\n<code>{get_order_perm_key(order.id)}</code>"
     )
+
+
+def get_referral_bought(amount: int):
+    return (f"🎉 Поздравляем, по вашей реферальной ссылке была совершена покупка - вам начислена награда: {amount}₽"
+            f" - уже зачислены на ваш баланс")

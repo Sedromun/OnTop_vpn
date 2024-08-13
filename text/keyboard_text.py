@@ -14,6 +14,7 @@ change_country = "🌎 Изменить страну"
 back = "⬅️ Назад"
 extend_key = "🔑 Продлить ключ"
 connect_instr = "⚙️ Инструкция по подключению"
+referral_program = "👫 Реферальная программа"
 
 
 def get_order_short_text(order_id: int, country: str):

@@ -95,3 +95,8 @@ WELCOME_PHOTO = FSInputFile("photos/welcome.jpg")
 BUY_PHOTO = FSInputFile("photos/buy.jpg")
 INFO_PHOTO = FSInputFile("photos/info.jpg")
 PROFILE_PHOTO = FSInputFile("photos/profile.jpg")
+
+PERCENT_REFERRAL = 10
+WELCOME_PRESENT = 50
+BOT_LINK = "https://t.me/OnTop_vpn_bot"
+REFS_PARAM = "?start="
