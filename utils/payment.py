@@ -9,13 +9,15 @@ async def buy_handle(
     callback_data,
     amount: int,
     order_id: int,
+    title: str,
+    description: str,
     extend: bool = False,
-    add_money: bool = False,
+    add_money: bool = False
 ):
     await bot.send_invoice(
         callback.from_user.id,
-        title="Оплата",
-        description="Оплата",
+        title=title,
+        description=description,
         provider_token=PAYMENTS_PROVIDER_TOKEN,
         currency="rub",
         is_flexible=False,

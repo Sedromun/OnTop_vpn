@@ -19,3 +19,19 @@ LiteralDuration = {"неделя": 7, "месяц": 30, "месяца": 30, "м�
 def get_option_duration(option: str) -> int:
     num, literal = option.split(" ")
     return int(num) * LiteralDuration[literal]
+
+
+def duration_to_str(duration: int) -> str:
+    if duration // 365 > 0:
+        return "1 год"
+    if duration // 30 > 0:
+        if duration // 30 == 1:
+            return "1 месяц"
+        if duration // 30 == 3:
+            return "3 месяца"
+        if duration // 30 == 6:
+            return "6 месяцев"
+        return str(duration // 30) + " месяцев"
+    if duration // 7 == 1:
+        return "1 неделя"
+    return str(duration) + " дней"

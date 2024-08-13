@@ -147,7 +147,7 @@ def get_balance_add_money_keyboard(
 
     if add >= MIN_ADD_AMOUNT:
         builder.button(
-            text=str(add),
+            text=str(add) + "₽",
             callback_data=PaymentAddMoneyCallbackFactory(
                 duration=duration,
                 price=price,
@@ -158,7 +158,7 @@ def get_balance_add_money_keyboard(
         )
     else:
         builder.button(
-            text=str(MIN_ADD_AMOUNT),
+            text=str(MIN_ADD_AMOUNT) + "₽",
             callback_data=PaymentAddMoneyCallbackFactory(
                 duration=duration,
                 price=price,
@@ -174,7 +174,7 @@ def get_balance_add_money_keyboard(
         if amount >= add:
             col += 1
             builder.button(
-                text=str(amount),
+                text=str(amount)+"₽",
                 callback_data=PaymentAddMoneyCallbackFactory(
                     duration=duration,
                     price=price,

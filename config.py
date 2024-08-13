@@ -87,7 +87,7 @@ CRYPTO_KEY = str(os.getenv("CRYPTO_KEY"))
 
 FERNET = Fernet(CRYPTO_KEY)
 
-bot = Bot(BOT_TOKEN.get_secret_value(), parse_mode="HTML")
+bot = Bot(BOT_TOKEN.get_secret_value(), parse_mode="HTML", disable_web_page_preview=True)
 
 dp = Dispatcher()
 

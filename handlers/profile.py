@@ -39,6 +39,7 @@ from text.texts import (
     get_payment_option_text,
     get_profile_text,
 )
+from utils.buy_options import duration_to_str
 from utils.payment import buy_handle
 
 profile_router = Router(name="profile")
@@ -147,6 +148,8 @@ async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFa
         callback_data.price,
         order_id=callback_data.order_id,
         extend=True,
+        title="Продление ключа",
+        description=f"VPN - продление ({duration_to_str(callback_data.duration)})"
     )
 
 
@@ -213,6 +216,8 @@ async def add_money_balance_callback(
         callback_data.amount,
         callback_data.order_id,
         extend=True,
+        title="Пополнение баланса",
+        description=f"Продление ключа VPN ({duration_to_str(callback_data.duration)})"
     )
 
 
@@ -239,7 +244,7 @@ async def changing_country_callback(
     update_order(order.id, {"country": callback_data.country})
     get_key(callback_data.country, order.id)
     await callback.message.edit_caption(
-        caption=get_country_changed_text(callback_data.country)
+        caption=get_country_changed_text()
         + get_order_info_text(callback_data.id),
         reply_markup=get_order_changes_keyboard(callback_data.id),
     )
@@ -272,4 +277,12 @@ async def add_money_callback(
 async def add_money_callback(
     callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
-    await buy_handle(callback, callback_data, callback_data.amount, 0, add_money=True)
+    await buy_handle(
+        callback,
+        callback_data,
+        callback_data.amount,
+        0,
+        add_money=True,
+        title="Пополнение баланса",
+        description=f"Баланс - аккаунт ID: {callback.from_user.id}"
+    )

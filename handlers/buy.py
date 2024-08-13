@@ -17,7 +17,7 @@ from keyboards.buy import (
     get_payment_options_keyboard,
 )
 from servers.outline_keys import get_key
-from text.profile import get_money_added_text, get_success_extended_key_text
+from text.profile import get_money_added_text, get_success_extended_key_text, get_order_info_text
 from text.texts import (
     get_buy_vpn_text,
     get_not_enough_money_text,
@@ -25,6 +25,7 @@ from text.texts import (
     get_payment_option_text,
     get_success_created_key_text,
 )
+from utils.buy_options import duration_to_str
 from utils.payment import buy_handle, get_order_perm_key
 
 buy_router = Router(name="buy")
@@ -32,7 +33,7 @@ buy_router = Router(name="buy")
 
 @buy_router.callback_query(BuyCallbackFactory.filter(F.extend == False))
 async def choose_country_callback(
-    callback: CallbackQuery, callback_data: BuyCallbackFactory
+        callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
     await callback.message.edit_caption(
         caption=get_payment_choose_country_text(),
@@ -45,7 +46,7 @@ async def choose_country_callback(
 
 @buy_router.callback_query(ChooseCountryCallbackFactory.filter(F.back == True))
 async def choose_payment_callback(
-    callback: CallbackQuery, callback_data: PaymentCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     await callback.message.edit_caption(
         caption=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(extend=False)
@@ -55,7 +56,7 @@ async def choose_payment_callback(
 
 @buy_router.callback_query(ChooseCountryCallbackFactory.filter(F.back == False))
 async def choose_payment_callback(
-    callback: CallbackQuery, callback_data: PaymentCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     user = get_user(callback.from_user.id)
     await callback.message.edit_caption(
@@ -76,7 +77,7 @@ async def choose_payment_callback(
     )
 )
 async def buy_balance_callback(
-    callback: CallbackQuery, callback_data: PaymentCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     await callback.message.edit_caption(
         caption=get_payment_choose_country_text(),
@@ -93,7 +94,7 @@ async def buy_balance_callback(
     )
 )
 async def buy_balance_callback(
-    callback: CallbackQuery, callback_data: PaymentCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     user = get_user(callback.from_user.id)
     if user.balance >= callback_data.price:
@@ -134,7 +135,7 @@ async def buy_balance_callback(
     PaymentAddMoneyCallbackFactory.filter((F.order_id == -1) & (F.back == True))
 )
 async def add_money_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
     await callback.message.edit_caption(
@@ -153,10 +154,11 @@ async def add_money_callback(
     PaymentAddMoneyCallbackFactory.filter((F.order_id == -1) & (F.back == False))
 )
 async def add_money_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     order = create_new_order(callback, callback_data)
-    await buy_handle(callback, callback_data, callback_data.amount, order.id)
+    await buy_handle(callback, callback_data, callback_data.amount, order.id, title="Пополнение баланса",
+                     description="Покупка VPN - " + duration_to_str(callback_data.duration))
 
 
 @buy_router.pre_checkout_query()
@@ -179,7 +181,7 @@ async def process_successful_payment(message: types.Message):
         if extend == "C":
             get_key(order.country, order.id)
             await message.answer(
-                text=get_success_created_key_text(get_order_perm_key(order.id))
+                text=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id)
             )
         else:
             begin = order.expiration_date
@@ -200,7 +202,14 @@ async def process_successful_payment(message: types.Message):
 )
 async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFactory):
     order = create_new_order(callback, callback_data)
-    await buy_handle(callback, callback_data, callback_data.price, order.id)
+    await buy_handle(
+        callback,
+        callback_data,
+        callback_data.price,
+        order.id,
+        title="VPN",
+        description=f"Покупка VPN - {duration_to_str(callback_data.duration)}"
+    )
 
 
 def create_new_order(callback, callback_data):
