@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from database import session
 from database.controllers.order import get_order
 from logs import Logger
+from schemas import OrderModel
 from schemas.key import KeyModel
 
 
@@ -12,8 +13,7 @@ def get_key(key_id: int) -> KeyModel | None:
     return key
 
 
-def get_order_country_key(order_id: int, country: str) -> KeyModel | None:
-    order = get_order(order_id)
+def get_order_country_key(order: OrderModel, country: str) -> KeyModel | None:
     keys = order.keys
 
     for key in keys:
