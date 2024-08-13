@@ -1,8 +1,10 @@
 import os
 
 from aiogram import Bot, Dispatcher
+from aiogram.types import FSInputFile
 from dotenv import load_dotenv
 from pydantic import SecretStr
+from cryptography.fernet import Fernet
 
 from outline.outline_vpn.outline_vpn import OutlineVPN
 
@@ -81,8 +83,15 @@ RECALLS_TGC_TAG = str(os.getenv("RECALLS_TGC_TAG"))
 RECALLS_TGC_LINK = "https://t.me/" + RECALLS_TGC_TAG
 CONNECT_INSTR_URL = str(os.getenv("CONNECT_INSTR_URL"))
 
+CRYPTO_KEY = str(os.getenv("CRYPTO_KEY"))
+
+FERNET = Fernet(CRYPTO_KEY)
 
 bot = Bot(BOT_TOKEN.get_secret_value(), parse_mode="HTML")
 
-
 dp = Dispatcher()
+
+WELCOME_PHOTO = FSInputFile("photos/welcome.jpg")
+BUY_PHOTO = FSInputFile("photos/buy.jpg")
+INFO_PHOTO = FSInputFile("photos/info.jpg")
+PROFILE_PHOTO = FSInputFile("photos/profile.jpg")

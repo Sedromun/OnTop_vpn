@@ -3,7 +3,7 @@ import asyncio
 from fastapi import FastAPI
 from starlette.responses import HTMLResponse
 
-from config import bot, dp
+from config import bot, dp, FERNET
 from database.controllers.order import get_order
 from handlers import buy_router, info_router, main_router, profile_router
 from servers.outline_keys import get_key
@@ -16,8 +16,9 @@ dp.include_router(info_router)
 app = FastAPI()
 
 
-@app.get("/keys/{order_id}")
-async def get_key_id(order_id: int):
+@app.get("/keys/{order_id_enc}")
+async def get_key_id(order_id_enc: str):
+    order_id = FERNET.decrypt(order_id_enc.encode()).decode()
     order = get_order(int(order_id))
     key = get_key(order.country, order_id)
     return HTMLResponse(key)

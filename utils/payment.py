@@ -1,6 +1,7 @@
+import zlib
 from aiogram import types
 
-from config import KEYS_URL, PAYMENTS_PROVIDER_TOKEN, bot
+from config import KEYS_URL, PAYMENTS_PROVIDER_TOKEN, bot, FERNET
 
 
 async def buy_handle(
@@ -31,4 +32,6 @@ async def buy_handle(
 
 
 def get_order_perm_key(order_id: int) -> str:
-    return KEYS_URL + str(order_id)
+    to_encrypt = str(order_id)
+    order_id_enc = FERNET.encrypt(to_encrypt.encode())
+    return KEYS_URL + order_id_enc.decode()

@@ -13,7 +13,9 @@ def get_order_choose_country_text(country):
 
 
 def get_country_changed_text(country):
-    return f"🌎 <b>Страна успешно изменена</b>:\n {country} {COUNTRIES[country]}\n\n"
+    return (f"🌎 <b>Страна успешно изменена</b>\n"
+            f"<i>После смены страны не забудьте перезапустить vpn в приложении outline</i>\n"
+            f" {country} {COUNTRIES[country]}\n\n")
 
 
 def get_success_extended_key_text():
