@@ -115,7 +115,7 @@ async def buy_balance_callback(
         )
 
         await callback.message.edit_caption(
-            caption=get_success_created_key_text(get_order_perm_key(order.id))
+            caption=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id)
         )
 
         return
@@ -179,7 +179,6 @@ async def process_successful_payment(message: types.Message):
         add_amount = (amount * PERCENT_REFERRAL // 100)
         update_user(user.referrer_id, {'balance': referrer.balance + add_amount})
         bot.send_message(referrer.id, text=get_referral_bought(add_amount))
-
 
     if extend == "E" or extend == "C":
         order = get_order(int(order_id))
