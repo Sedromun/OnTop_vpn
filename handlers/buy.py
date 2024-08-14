@@ -178,7 +178,7 @@ async def process_successful_payment(message: types.Message):
         referrer = get_user(user.referrer_id)
         add_amount = (amount * PERCENT_REFERRAL // 100)
         update_user(user.referrer_id, {'balance': referrer.balance + add_amount})
-        bot.send_message(referrer.id, text=get_referral_bought(add_amount))
+        await bot.send_message(referrer.id, text=get_referral_bought(add_amount))
 
     if extend == "E" or extend == "C":
         order = get_order(int(order_id))
