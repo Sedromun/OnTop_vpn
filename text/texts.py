@@ -70,7 +70,7 @@ def get_key_data(order):
     return (
         f"Страна: {order.country} {COUNTRIES[order.country]}\n\n"
         f"Дата истечения: {order.expiration_date.strftime(datetime_format)}\n"
-        f"(осталось {(order.expiration_date - datetime.datetime.now(datetime.timezone.utc)).days} дней)\n\n"
+        f"(осталось {(order.expiration_date.astimezone(datetime.timezone.utc) - datetime.datetime.now(datetime.timezone.utc)).days} дней)\n\n"
         f"Ключ:\n<code>{get_order_perm_key(order.id)}</code>"
     )
 
