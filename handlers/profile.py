@@ -124,6 +124,11 @@ async def profile_extend_key_callback(
             ),
         )
     else:
+        order = get_order(callback_data.order_id)
+        if order is None:
+            await callback.answer("Время действия ключа истекло")
+            await callback.message.delete()
+            return
         await callback.message.edit_text(
             text=get_payment_option_text(callback_data.price, user.balance),
             reply_markup=get_payment_options_keyboard(
@@ -149,6 +154,11 @@ async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFa
             ),
         )
     else:
+        order = get_order(callback_data.order_id)
+        if order is None:
+            await callback.answer("Время действия ключа истекло")
+            await callback.message.delete()
+            return
         await callback.message.edit_text(
             text=get_buy_vpn_text(),
             reply_markup=get_buy_vpn_keyboard(
@@ -183,6 +193,10 @@ async def buy_balance_callback(
 ):
     user = get_user(callback.from_user.id)
     order = get_order(callback_data.order_id)
+    if order is None:
+        await callback.answer("Время действия ключа истекло")
+        await callback.message.delete()
+        return
     if user.balance >= callback_data.price:
         update_user(
             callback.from_user.id, {"balance": user.balance - callback_data.price}
@@ -227,6 +241,11 @@ async def add_money_balance_back_callback(
     callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
+    order = get_order(callback_data.order_id)
+    if order is None:
+        await callback.answer("Время действия ключа истекло")
+        await callback.message.delete()
+        return
     if callback.message.photo is not None:
         await callback.message.edit_caption(
             caption=get_payment_option_text(callback_data.price, user.balance),
@@ -337,8 +356,14 @@ async def add_money_callback(
 
 @profile_router.callback_query(OrderExpiringCallbackFactory.filter())
 async def profile_extend_expiring_key_callback(
-    callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
+    callback: CallbackQuery, callback_data: OrderExpiringCallbackFactory
 ):
+    order = get_order(callback_data.id)
+    if order is None:
+        await callback.answer("Время действия ключа истекло")
+        await callback.message.delete()
+        return
+
     await callback.message.edit_text(
         text=get_buy_vpn_text(),
         reply_markup=get_buy_vpn_keyboard(
