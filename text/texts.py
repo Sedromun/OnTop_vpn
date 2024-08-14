@@ -56,9 +56,9 @@ def get_payment_choose_country_text():
 
 def get_not_enough_money_text(add: int):
     return (
-        "На балансе недостаточно средств\n<i>Не достаточно: " + str(add)
-        + "₽</i>\n\n<b>Выберите сумму для пополнения</b>"
-        + ("\nминимальная сумма пополнения 90₽" if add < MIN_ADD_AMOUNT else "")
+            "На балансе недостаточно средств\n<i>Не достаточно: " + str(add)
+            + "₽</i>\n\n<b>Выберите сумму для пополнения</b>"
+            + ("\nминимальная сумма пополнения 90₽" if add < MIN_ADD_AMOUNT else "")
     )
 
 
@@ -69,7 +69,10 @@ def get_pay_text():
 def get_key_data(order):
     return (
         f"Страна: {order.country} {COUNTRIES[order.country]}\n\n"
-        f"Дата истечения: {order.expiration_date.strftime(datetime_format)}\n"
+        f"Дата истечения: {
+            (order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3))
+            .strftime(datetime_format)
+        }\n"
         f"(осталось {(order.expiration_date.astimezone(datetime.timezone.utc) - datetime.datetime.now(datetime.timezone.utc)).days} дней)\n\n"
         f"Ключ:\n<code>{get_order_perm_key(order.id)}</code>"
     )
