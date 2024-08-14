@@ -196,7 +196,7 @@ async def process_successful_payment(message: types.Message):
             end = begin + datetime.timedelta(days=int(duration_str))
             update_order(order.id, {"expiration_date": end})
 
-            await message.answer(text=get_success_extended_key_text())
+            await message.answer(text=get_success_extended_key_text() + get_order_info_text(order.id))
     else:
         new_balance = user.balance + amount
         update_user(message.from_user.id, {"balance": new_balance})

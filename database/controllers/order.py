@@ -11,6 +11,11 @@ def get_order(order_id: int) -> OrderModel | None:
     return order
 
 
+def get_all_orders() -> list[OrderModel]:
+    orders = session.scalars(select(OrderModel)).all()
+    return orders
+
+
 def create_order(data: dict) -> OrderModel | None:
     order = OrderModel(**data)
 
@@ -39,16 +44,16 @@ def update_order(order_id: int, updates: dict) -> bool:
         return False
 
 
-def delete_order(order_id: int, model_name: str) -> bool:
+def delete_order(order_id: int) -> bool:
     session.query(OrderModel).filter(OrderModel.id == order_id).delete()
 
     try:
         session.commit()
-        Logger.info(model_name + " '" + str(order_id) + "' successfully deleted!")
+        Logger.info("OrderModel '" + str(order_id) + "' successfully deleted!")
         return True
     except IntegrityError as e:
         session.rollback()
         Logger.exception(
-            e, f"Integrity error in delete_order '{model_name}' - can't commit in db"
+            e, f"Integrity error in delete_order 'OrderModel' - can't commit in db"
         )
         return False

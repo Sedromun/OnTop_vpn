@@ -22,7 +22,7 @@ from keyboards.profile import (
     get_add_money_keyboard,
     get_order_changes_keyboard,
     get_order_countries_keyboard,
-    get_profile_keyboard,
+    get_profile_keyboard, OrderExpiringCallbackFactory,
 )
 from servers.outline_keys import get_key
 from text.keyboard_text import back, change_country, extend_key
@@ -112,16 +112,28 @@ async def profile_extend_key_callback(
     callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
-    await callback.message.edit_caption(
-        caption=get_payment_option_text(callback_data.price, user.balance),
-        reply_markup=get_payment_options_keyboard(
-            duration=callback_data.duration,
-            price=callback_data.price,
-            country="",
-            extend=True,
-            order_id=callback_data.order_id,
-        ),
-    )
+    if callback.message.photo is not None:
+        await callback.message.edit_caption(
+            caption=get_payment_option_text(callback_data.price, user.balance),
+            reply_markup=get_payment_options_keyboard(
+                duration=callback_data.duration,
+                price=callback_data.price,
+                country="",
+                extend=True,
+                order_id=callback_data.order_id,
+            ),
+        )
+    else:
+        await callback.message.edit_text(
+            text=get_payment_option_text(callback_data.price, user.balance),
+            reply_markup=get_payment_options_keyboard(
+                duration=callback_data.duration,
+                price=callback_data.price,
+                country="",
+                extend=True,
+                order_id=callback_data.order_id,
+            ),
+        )
     await callback.answer()
 
 
@@ -129,12 +141,20 @@ async def profile_extend_key_callback(
     PaymentCallbackFactory.filter((F.option == Payment.Back.value) & (F.extend == True))
 )
 async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFactory):
-    await callback.message.edit_caption(
-        caption=get_buy_vpn_text(),
-        reply_markup=get_buy_vpn_keyboard(
-            extend=True, order_id=callback_data.order_id, need_back=True
-        ),
-    )
+    if callback.message.photo is not None:
+        await callback.message.edit_caption(
+            caption=get_buy_vpn_text(),
+            reply_markup=get_buy_vpn_keyboard(
+                extend=True, order_id=callback_data.order_id, need_back=True
+            ),
+        )
+    else:
+        await callback.message.edit_text(
+            text=get_buy_vpn_text(),
+            reply_markup=get_buy_vpn_keyboard(
+                extend=True, order_id=callback_data.order_id, need_back=True
+            ),
+        )
     await callback.answer()
 
 
@@ -170,19 +190,33 @@ async def buy_balance_callback(
         begin = order.expiration_date
         end = begin + datetime.timedelta(days=callback_data.duration)
         update_order(order.id, {"expiration_date": end})
-
-        await callback.message.edit_caption(caption=get_success_extended_key_text())
+        if callback.message.photo is not None:
+            await callback.message.edit_caption(caption=get_success_extended_key_text())
+        else:
+            await callback.message.edit_text(text=get_success_extended_key_text())
     else:
-        await callback.message.edit_caption(
-            caption=get_not_enough_money_text(callback_data.price - user.balance),
-            reply_markup=get_balance_add_money_keyboard(
-                duration=callback_data.duration,
-                price=callback_data.price,
-                country=callback_data.country,
-                add=callback_data.price - user.balance,
-                order_id=callback_data.order_id,
-            ),
-        )
+        if callback.message.photo is not None:
+            await callback.message.edit_caption(
+                caption=get_not_enough_money_text(callback_data.price - user.balance),
+                reply_markup=get_balance_add_money_keyboard(
+                    duration=callback_data.duration,
+                    price=callback_data.price,
+                    country=callback_data.country,
+                    add=callback_data.price - user.balance,
+                    order_id=callback_data.order_id,
+                ),
+            )
+        else:
+            await callback.message.edit_text(
+                text=get_not_enough_money_text(callback_data.price - user.balance),
+                reply_markup=get_balance_add_money_keyboard(
+                    duration=callback_data.duration,
+                    price=callback_data.price,
+                    country=callback_data.country,
+                    add=callback_data.price - user.balance,
+                    order_id=callback_data.order_id,
+                ),
+            )
     await callback.answer()
 
 
@@ -193,16 +227,28 @@ async def add_money_balance_back_callback(
     callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
-    await callback.message.edit_caption(
-        caption=get_payment_option_text(callback_data.price, user.balance),
-        reply_markup=get_payment_options_keyboard(
-            duration=callback_data.duration,
-            price=callback_data.price,
-            country="",
-            extend=True,
-            order_id=callback_data.order_id,
-        ),
-    )
+    if callback.message.photo is not None:
+        await callback.message.edit_caption(
+            caption=get_payment_option_text(callback_data.price, user.balance),
+            reply_markup=get_payment_options_keyboard(
+                duration=callback_data.duration,
+                price=callback_data.price,
+                country="",
+                extend=True,
+                order_id=callback_data.order_id,
+            ),
+        )
+    else:
+        await callback.message.edit_text(
+            text=get_payment_option_text(callback_data.price, user.balance),
+            reply_markup=get_payment_options_keyboard(
+                duration=callback_data.duration,
+                price=callback_data.price,
+                country="",
+                extend=True,
+                order_id=callback_data.order_id,
+            ),
+        )
     await callback.answer()
 
 
@@ -267,6 +313,7 @@ async def add_money_callback(
     callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     id = callback.from_user.id
+
     await callback.message.edit_caption(
         caption=get_profile_text(id), reply_markup=get_profile_keyboard(id)
     )
@@ -286,3 +333,17 @@ async def add_money_callback(
         title="Пополнение баланса",
         description=f"Баланс - аккаунт ID: {callback.from_user.id}"
     )
+
+
+@profile_router.callback_query(OrderExpiringCallbackFactory.filter())
+async def profile_extend_expiring_key_callback(
+    callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
+):
+    await callback.message.edit_text(
+        text=get_buy_vpn_text(),
+        reply_markup=get_buy_vpn_keyboard(
+            extend=True, order_id=callback_data.id, need_back=False
+        ),
+    )
+    await callback.answer()
+

@@ -22,6 +22,7 @@ services:
     depends_on:
       - database
       - backend
+      - checker
     volumes:
       - ./:/app
     env_file:
@@ -41,6 +42,17 @@ services:
     env_file:
       - ./.env
 
+
+  checker:
+    build:
+      context: ./
+      dockerfile: Dockerfile.check
+    container_name: checker
+    restart: always
+    volumes:
+      - ./:/app
+    env_file:
+      - ./.env
 
   database:
     build:

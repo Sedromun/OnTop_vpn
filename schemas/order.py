@@ -20,10 +20,10 @@ class OrderModel(BaseModel):
     country: Mapped[str] = mapped_column(nullable=False, default="Россия")
 
     begin_date: Mapped[datetime.datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=func.now()
+        DateTime(), nullable=False, default=func.now()
     )
     expiration_date: Mapped[datetime.datetime] = mapped_column(
-        DateTime(timezone=True), nullable=False, default=func.now()
+        DateTime(), nullable=False, default=func.now()
     )
 
     price: Mapped[int] = mapped_column(nullable=False, default=0)

@@ -92,3 +92,18 @@ class ProfileAddMoneyCallbackFactory(CallbackData, prefix="profile_add_money"):
     amount: int
     duration: int
     back: bool = False
+
+
+def get_order_expiring_keyboard(order_id: int):
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text=extend_key,
+        callback_data=OrderExpiringCallbackFactory(id=order_id),
+    )
+    builder.adjust(3, 3, 3, 1)
+    return builder.as_markup()
+
+
+class OrderExpiringCallbackFactory(CallbackData, prefix="profile_order_expiring"):
+    id: int

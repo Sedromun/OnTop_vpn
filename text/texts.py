@@ -70,7 +70,7 @@ def get_key_data(order):
     return (
         f"Страна: {order.country} {COUNTRIES[order.country]}\n\n"
         f"Дата истечения: {order.expiration_date.strftime(datetime_format)}\n"
-        f"(осталось {(order.expiration_date - datetime.datetime.now(datetime.timezone.utc)).days} дней)\n\n"
+        f"(осталось {(order.expiration_date - datetime.datetime.now()).days} дней)\n\n"
         f"Ключ:\n<code>{get_order_perm_key(order.id)}</code>"
     )
 
@@ -78,3 +78,13 @@ def get_key_data(order):
 def get_referral_bought(amount: int):
     return (f"🎉 Поздравляем, по вашей реферальной ссылке была совершена покупка - вам начислена награда: {amount}₽"
             f" - уже зачислены на ваш баланс")
+
+
+def order_expired_text(order_id: int):
+    return (f"Время действия вашего VPN ключа {order_id} истекло.\n\nСпасибо что выбрали нас!\n\n"
+            f"Не забудьте оформить новый ключ!")
+
+
+def order_going_to_expired_text(order_id: int, time: str):
+    return (f"Время действия вашего VPN ключа {order_id} истекает через {time}.\n\nНе забудьте продлить время его"
+            f" действия")

@@ -22,7 +22,6 @@ PORT = int(os.getenv("PORT"))
 
 DOMEN = str(os.getenv("DOMEN"))
 
-
 SWEDEN_API_URL = str(os.getenv("SWEDEN_API_URL"))
 SWEDEN_CERT_SHA256 = str(os.getenv("SWEDEN_CERT_SHA256"))
 
@@ -59,7 +58,6 @@ AUSTRIA_CERT_SHA256 = str(os.getenv("AUSTRIA_CERT_SHA256"))
 HTTPS = "https"
 SSCONF = "ssconf"
 KEYS_URL = SSCONF + "://" + DOMEN + "/keys" + "/"
-
 
 outline_client = {
     "Россия": OutlineVPN(api_url=RUSSIAN_API_URL, cert_sha256=RUSSIAN_CERT_SHA256),
@@ -100,3 +98,5 @@ PERCENT_REFERRAL = 10
 WELCOME_PRESENT = 50
 BOT_LINK = "https://t.me/OnTop_vpn_bot"
 REFS_PARAM = "?start="
+
+INTERVAL = 5  # mins
