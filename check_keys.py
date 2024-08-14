@@ -28,6 +28,7 @@ async def order_going_to_expired(order: OrderModel, time: str):
 
 async def check_expired():
     now = datetime.datetime.now()
+    print(now)
     orders = get_all_orders()
     for order in orders:
         expire = order.expiration_date
@@ -36,7 +37,9 @@ async def check_expired():
         five_mins_before = now + datetime.timedelta(hours=0, minutes=5)
         day_before = now + datetime.timedelta(days=1)
         interval = datetime.timedelta(minutes=INTERVAL, seconds=10)
-
+        print(hour_before - interval)
+        print(expire)
+        print(hour_before)
         if expire <= now:
             await order_expired(order)
         elif five_mins_before - interval < expire <= five_mins_before:
