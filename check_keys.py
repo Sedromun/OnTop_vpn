@@ -28,15 +28,15 @@ async def order_going_to_expired(order: OrderModel, time: str):
 
 
 async def check_expired():
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(datetime.timezone.utc)
     logging.log(level=logging.INFO, msg=str(now))
     orders = get_all_orders()
     for order in orders:
         expire = order.expiration_date
-        hour_before = now + datetime.timedelta(hours=1, minutes=0)
-        fift_mins_before = now + datetime.timedelta(hours=0, minutes=15)
-        five_mins_before = now + datetime.timedelta(hours=0, minutes=5)
-        day_before = now + datetime.timedelta(days=1)
+        hour_before = now - datetime.timedelta(hours=1, minutes=0)
+        fift_mins_before = now - datetime.timedelta(hours=0, minutes=15)
+        five_mins_before = now - datetime.timedelta(hours=0, minutes=5)
+        day_before = now - datetime.timedelta(days=1)
         interval = datetime.timedelta(minutes=INTERVAL, seconds=10)
         logging.log(level=logging.INFO, msg=str(hour_before - interval))
         logging.log(level=logging.INFO, msg=str(expire))

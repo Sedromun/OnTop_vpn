@@ -99,7 +99,7 @@ async def buy_balance_callback(
 ):
     user = get_user(callback.from_user.id)
     if user.balance >= callback_data.price:
-        begin = datetime.datetime.now()
+        begin = datetime.datetime.now(datetime.timezone.utc)
         end = begin + datetime.timedelta(days=callback_data.duration)
         order = create_order(
             {
@@ -220,7 +220,7 @@ async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFa
 
 
 def create_new_order(callback, callback_data):
-    begin = datetime.datetime.now()
+    begin = datetime.datetime.now(datetime.timezone.utc)
     end = begin + datetime.timedelta(days=callback_data.duration)
     return create_order(
         {
