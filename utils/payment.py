@@ -21,20 +21,7 @@ async def buy_handle(
         provider_token=PAYMENTS_PROVIDER_TOKEN,
         need_email=True,
         send_email_to_provider=True,
-        provider_data={
-            "receipt": {
-                "items":
-                    [{
-                        "description": "VPN",
-                        "quantity": "1",
-                        "amount": {
-                            "value": amount,
-                            "currency": "RUB"
-                        },
-                        "vat_code": 1
-                    }],
-            }
-        },
+        provider_data='{"receipt": {"items": [{"description": "VPN", "quantity": "1", "amount": {"value": ' + str(amount) + ', "currency": "RUB"},"vat_code": 1}],}}',
         currency="rub",
         is_flexible=False,
         prices=[types.LabeledPrice(label="VPN", amount=amount * 100)],
