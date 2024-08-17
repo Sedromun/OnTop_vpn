@@ -2,7 +2,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import CONNECT_INSTR_URL
-from database.controllers.user import get_user_orders
+from database.controllers.user import get_user_orders, register_user, get_user
 from text.keyboard_text import *
 
 
@@ -12,6 +12,9 @@ def get_profile_keyboard(id: int):
         text=top_up_balance,
         callback_data=ProfileCallbackFactory(balance=True, order_id=-1),
     )
+    user = get_user(id)
+    if user is None:
+        register_user(id)
     orders = get_user_orders(id)
     for order in orders:
         builder.button(

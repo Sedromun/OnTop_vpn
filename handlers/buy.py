@@ -5,7 +5,7 @@ from aiogram.types import CallbackQuery, PreCheckoutQuery
 
 from config import PERCENT_REFERRAL, bot
 from database.controllers.order import create_order, get_order, update_order
-from database.controllers.user import get_user, update_user
+from database.controllers.user import get_user, update_user, register_user
 from keyboards.buy import (
     BuyCallbackFactory,
     ChooseCountryCallbackFactory,
@@ -60,6 +60,8 @@ async def choose_payment_callback(
         callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     user = get_user(callback.from_user.id)
+    if user is None:
+        register_user(callback.from_user.id)
     await callback.message.edit_caption(
         caption=get_payment_option_text(callback_data.price, user.balance),
         reply_markup=get_payment_options_keyboard(
@@ -98,6 +100,8 @@ async def buy_balance_callback(
         callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     user = get_user(callback.from_user.id)
+    if user is None:
+        register_user(callback.from_user.id)
     if user.balance >= callback_data.price:
         begin = datetime.datetime.now(datetime.timezone.utc)
         end = begin + datetime.timedelta(days=callback_data.duration)
@@ -139,6 +143,8 @@ async def add_money_callback(
         callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
+    if user is None:
+        register_user(callback.from_user.id)
     await callback.message.edit_caption(
         caption=get_payment_option_text(callback_data.price, user.balance),
         reply_markup=get_payment_options_keyboard(
@@ -172,6 +178,8 @@ async def process_successful_payment(message: types.Message):
     payload = message.successful_payment.invoice_payload
     extend, order_id, duration_str = payload.split("_")
     user = get_user(message.from_user.id)
+    if user is None:
+        register_user(message.from_user.id)
     amount = message.successful_payment.total_amount // 100
 
     if user.referrer_id is not None:

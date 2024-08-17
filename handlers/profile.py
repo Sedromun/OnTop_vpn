@@ -4,7 +4,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
 from database.controllers.order import get_order, update_order
-from database.controllers.user import get_user, update_user
+from database.controllers.user import get_user, update_user, register_user
 from keyboards.buy import (
     BuyCallbackFactory,
     Payment,
@@ -112,6 +112,8 @@ async def profile_extend_key_callback(
     callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
+    if user is None:
+        register_user(callback.from_user.id)
     if callback.message.photo is not None:
         await callback.message.edit_caption(
             caption=get_payment_option_text(callback_data.price, user.balance),
@@ -192,6 +194,8 @@ async def buy_balance_callback(
     callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     user = get_user(callback.from_user.id)
+    if user is None:
+        register_user(callback.from_user.id)
     order = get_order(callback_data.order_id)
     if order is None:
         await callback.answer("Время действия ключа истекло")
@@ -241,6 +245,8 @@ async def add_money_balance_back_callback(
     callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
+    if user is None:
+        register_user(callback.from_user.id)
     order = get_order(callback_data.order_id)
     if order is None:
         await callback.answer("Время действия ключа истекло")

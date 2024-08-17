@@ -1,7 +1,7 @@
 import datetime
 
 from config import CONNECT_INSTR_URL, MIN_ADD_AMOUNT
-from database.controllers.user import get_user
+from database.controllers.user import get_user, register_user
 from utils.common import datetime_format
 from utils.country import COUNTRIES
 from utils.payment import get_order_perm_key
@@ -32,6 +32,8 @@ def get_information_text():
 
 def get_profile_text(id: int):
     user = get_user(id)
+    if user is None:
+        register_user(id)
     return f"🏦Ваш баланс: {str(user.balance)} ₽\n\n" f"🙋🏻‍♂️ID: {str(id)}\n"
 
 
