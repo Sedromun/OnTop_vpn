@@ -68,6 +68,9 @@ async def info_handler(message: Message):
 @main_router.message(StateFilter(None), F.text == profile)
 async def profile_handler(message: Message):
     id = message.from_user.id
+    user = get_user(id)
+    if user is None:
+        register_user(id)
     await message.answer_photo(
         PROFILE_PHOTO,
         caption=get_profile_text(id), reply_markup=get_profile_keyboard(id)
