@@ -17,7 +17,7 @@ def get_recalls_text():
 def get_referral_program_text(user_id: int):
     return ("В рамках нашей реферальной программы\n\n⚡️ С каждого приглашенного вами пользователя,"
             f" вам на баланс будут начислены <i>{PERCENT_REFERRAL}%</i> с каждой его покупки!\n\n⚡️Приглашенному "
-            f"пользователю"
+            f"пользователю "
             f"начислят <i>{WELCOME_PRESENT}₽</i> на баланс в качестве приветсвенного бонуса!\n\nВаша реферальная "
             f"ссылка:\n"
             f"<code>{get_referral_link(user_id)}</code>")
