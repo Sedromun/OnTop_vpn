@@ -35,16 +35,13 @@ async def check_expired():
             continue
         expire = order.expiration_date.astimezone(datetime.timezone.utc)
         hour_before = now + datetime.timedelta(hours=1, minutes=0)
-        fift_mins_before = now + datetime.timedelta(hours=0, minutes=15)
         five_mins_before = now + datetime.timedelta(hours=0, minutes=5)
         day_before = now + datetime.timedelta(days=1)
         interval = datetime.timedelta(minutes=INTERVAL, seconds=10)
         if expire <= now:
             await order_expired(order)
         elif five_mins_before - interval < expire <= five_mins_before:
-            await order_going_to_expired(order, str((expire - now).seconds // 60) + " минут")
-        elif fift_mins_before - interval < expire <= fift_mins_before:
-            await order_going_to_expired(order, str((expire - now).seconds // 60) + " минут")
+            await order_going_to_expired(order, "5 минут")
         elif hour_before - interval < expire <= hour_before:
             await order_going_to_expired(order, "1 час")
         elif day_before - interval < expire <= day_before:
