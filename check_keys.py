@@ -31,6 +31,8 @@ async def check_expired():
     now = datetime.datetime.now(datetime.timezone.utc)
     orders = get_all_orders()
     for order in orders:
+        if not order.keys:
+            continue
         expire = order.expiration_date.astimezone(datetime.timezone.utc)
         hour_before = now + datetime.timedelta(hours=1, minutes=0)
         fift_mins_before = now + datetime.timedelta(hours=0, minutes=15)
