@@ -4,6 +4,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import MIN_ADD_AMOUNT
+from database.controllers.user import get_user
 from text.keyboard_text import (
     back,
     balance,
@@ -11,12 +12,24 @@ from text.keyboard_text import (
     get_buy_option_text,
     get_country_text,
 )
-from utils.buy_options import BuyOptions, get_option_duration, get_option_price
+from utils.buy_options import BuyOptions, get_option_duration, get_option_price, ONE_DAY
 from utils.country import COUNTRIES
 
 
-def get_buy_vpn_keyboard(extend: bool, order_id: int = -1, need_back: bool = False):
+def get_buy_vpn_keyboard(extend: bool, order_id: int = -1, need_back: bool = False, user_id: int = -1):
     builder = InlineKeyboardBuilder()
+    if user_id != -1:
+        user = get_user(user_id)
+        if not user.present:
+            builder.button(
+                text=get_buy_option_text(ONE_DAY),
+                callback_data=BuyCallbackFactory(
+                    duration=get_option_duration(ONE_DAY),
+                    price=get_option_price(ONE_DAY),
+                    extend=extend,
+                    order_id=order_id,
+                ).pack(),
+            )
     for option in BuyOptions:
         builder.button(
             text=get_buy_option_text(option),

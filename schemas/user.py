@@ -15,3 +15,4 @@ class UserModel(BaseModel):
     balance: Mapped[int] = mapped_column(nullable=False, default=0)
     referrer_id: Mapped[int] = mapped_column(BigInteger, nullable=True)
     orders: Mapped[List["OrderModel"]] = relationship(back_populates="user")
+    present: Mapped[bool] = mapped_column(nullable=True, default=False)

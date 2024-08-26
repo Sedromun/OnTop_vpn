@@ -53,7 +53,7 @@ async def start_handler(message: Message):
 async def buy_handler(message: Message):
     await message.answer_photo(
         BUY_PHOTO,
-        caption=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(extend=False)
+        caption=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(user_id=message.from_user.id, extend=False)
     )
 
 

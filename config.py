@@ -100,3 +100,8 @@ BOT_LINK = "https://t.me/OnTop_vpn_bot"
 REFS_PARAM = "?start="
 
 INTERVAL = 5  # mins
+
+SAVVA_ADMIN = str(os.getenv("SAVVA_ADMIN"))
+EVGENIY_ADMIN = str(os.getenv("EVGENIY_ADMIN"))
+
+ADMINS = [SAVVA_ADMIN, EVGENIY_ADMIN]

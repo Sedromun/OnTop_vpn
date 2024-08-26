@@ -17,6 +17,11 @@ def get_user_orders(tg_id: int) -> list[OrderModel] | None:
     return res
 
 
+def get_all_users() -> list[UserModel]:
+    users = session.scalars(select(UserModel)).all()
+    return users
+
+
 def get_user(tg_id: int) -> UserModel | None:
     user = session.scalar(select(UserModel).where(UserModel.id == tg_id))
     return user

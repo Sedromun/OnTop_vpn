@@ -6,12 +6,14 @@ from starlette.responses import HTMLResponse
 from config import bot, dp, FERNET
 from database.controllers.order import get_order
 from handlers import buy_router, info_router, main_router, profile_router
+from handlers.admin import admin_router
 from servers.outline_keys import get_key
 
+dp.include_router(admin_router)
 dp.include_router(buy_router)
-dp.include_router(main_router)
 dp.include_router(profile_router)
 dp.include_router(info_router)
+dp.include_router(main_router)
 
 app = FastAPI()
 

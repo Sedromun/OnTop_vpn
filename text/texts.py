@@ -75,10 +75,19 @@ def get_key_data(order):
             (order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3))
             .strftime(datetime_format)
         }\n"
-        f"(осталось {(order.expiration_date.astimezone(datetime.timezone.utc) - datetime.datetime.now(datetime.timezone.utc)).days} дней)\n\n"
+        f"(осталось {get_left_time(order.expiration_date.astimezone(datetime.timezone.utc))})\n\n"
         f"Ключ:\n<code>{get_order_perm_key(order.id)}</code>"
     )
 
+
+def get_left_time(expiration_date: datetime.datetime):
+    current = datetime.datetime.now(datetime.timezone.utc)
+    if (expiration_date - current).days > 0:
+        return str((expiration_date - current).days) + " дней"
+    elif (expiration_date - current).seconds // 3600 > 0:
+        return str((expiration_date - current).seconds // 3600) + " часов"
+    else:
+        return str((expiration_date - current).seconds // 60) + " минут"
 
 def get_referral_bought(amount: int):
     return (f"🎉 Поздравляем, по вашей реферальной ссылке была совершена покупка - вам начислена награда: {amount}₽"

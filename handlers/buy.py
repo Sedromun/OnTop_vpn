@@ -62,15 +62,32 @@ async def choose_payment_callback(
     user = get_user(callback.from_user.id)
     if user is None:
         register_user(callback.from_user.id)
-    await callback.message.edit_caption(
-        caption=get_payment_option_text(callback_data.price, user.balance),
-        reply_markup=get_payment_options_keyboard(
-            duration=callback_data.duration,
-            price=callback_data.price,
-            country=callback_data.country,
-            extend=False,
-        ),
-    )
+    if callback_data.price == 0:
+        update_user(callback.from_user.id, {'present': True})
+        begin = datetime.datetime.now(datetime.timezone.utc)
+        end = begin + datetime.timedelta(days=callback_data.duration)
+        order = create_order(
+            {
+                "user_id": user.id,
+                "country": callback_data.country,
+                "begin_date": begin,
+                "expiration_date": end,
+            }
+        )
+        get_key(callback_data.country, order.id)
+        await callback.message.edit_caption(
+            caption=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id)
+        )
+    else:
+        await callback.message.edit_caption(
+            caption=get_payment_option_text(callback_data.price, user.balance),
+            reply_markup=get_payment_options_keyboard(
+                duration=callback_data.duration,
+                price=callback_data.price,
+                country=callback_data.country,
+                extend=False,
+            ),
+        )
     await callback.answer()
 
 
