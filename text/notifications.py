@@ -1,9 +1,9 @@
-from config import ONE_DAY_SALE
+from config import ONE_DAY_SALE, BUY_INSTR_URL
 
 
 def new_user_notification_text():
-    return ("Если тебе нужна помощь по использованию бота, можешь воспользоваться инструкцией\n"
-            "А чтобы уже сейчас начать пользоваться VPN, нажми кнопку «Купить»")
+    return (f"Если тебе нужна помощь по использованию бота, можешь воспользоваться <a href='{BUY_INSTR_URL}'>инструкцией</a>\n\n"
+            "А чтобы уже сейчас начать пользоваться VPN, нажми кнопку <i>«Купить»</i>")
 
 
 def sale_one_day_notification_text():
