@@ -1,8 +1,8 @@
 from aiogram import F, Router
 from aiogram.filters import Command, StateFilter
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message
 
-from config import WELCOME_PHOTO, PROFILE_PHOTO, INFO_PHOTO, BUY_PHOTO, WELCOME_PRESENT
+from config import WELCOME_PRESENT
 from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
@@ -42,26 +42,23 @@ async def start_handler(message: Message):
     if referrer is not None:
         update_user(user_id, {'balance': WELCOME_PRESENT, 'referrer_id': referrer.id})
 
-    await message.answer_photo(
-        WELCOME_PHOTO,
-        caption=get_greeting_text(),
+    await message.answer(
+        text=get_greeting_text(),
         reply_markup=get_main_keyboard()
     )
 
 
 @main_router.message(StateFilter(None), F.text == buy)
 async def buy_handler(message: Message):
-    await message.answer_photo(
-        BUY_PHOTO,
-        caption=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(user_id=message.from_user.id, extend=False)
+    await message.answer(
+        text=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(user_id=message.from_user.id, extend=False)
     )
 
 
 @main_router.message(StateFilter(None), F.text == info)
 async def info_handler(message: Message):
-    await message.answer_photo(
-        INFO_PHOTO,
-        caption=get_information_text(), reply_markup=get_info_keyboard()
+    await message.answer(
+        text=get_information_text(), reply_markup=get_info_keyboard()
     )
 
 
@@ -71,9 +68,8 @@ async def profile_handler(message: Message):
     user = get_user(id)
     if user is None:
         register_user(id)
-    await message.answer_photo(
-        PROFILE_PHOTO,
-        caption=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+    await message.answer(
+        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
     )
 
 

@@ -1,12 +1,14 @@
 import datetime
 
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from config import ADMINS
+from config import ADMINS, bot
 from database.controllers.order import get_all_orders
 from database.controllers.user import get_all_users, update_user, get_user
+from states import AdminBaseStates, MainBaseState
 from text.texts import get_incorrect_command
 
 admin_router = Router(name="admin")
@@ -73,3 +75,61 @@ async def choose_country_callback(message: Message):
         await message.answer("Такого юзера нет")
 
     update_user(user_id, {'balance': user.balance + money})
+
+
+@admin_router.message(Command("send_message_to_all_users"))
+async def choose_country_callback(message: Message, state: FSMContext):
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    await state.set_state(AdminBaseStates.send_to_all)
+    await message.answer("Введите сообщение которое нужно разослать ВСЕМ пользователям\n"
+                         "/cancel - для отмены")
+
+
+@admin_router.message(AdminBaseStates.send_to_all, Command("cancel"))
+async def choose_country_callback(message: Message, state: FSMContext):
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    await state.clear()
+    await message.answer("Отменено")
+
+
+@admin_router.message(AdminBaseStates.send_to_all)
+async def choose_country_callback(message: Message, state: FSMContext):
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    await state.set_state(AdminBaseStates.confirm)
+    await state.set_data({'message_id': message.message_id})
+    await message.answer("Подтвердите, что все верно - для этого необходимо написать 'confirm - подтверждаю'")
+
+
+@admin_router.message(AdminBaseStates.confirm, F.text == "confirm - подтверждаю")
+async def choose_country_callback(message: Message, state: FSMContext):
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    message_id = (await state.get_data())['message_id']
+
+    users = get_all_users()
+    for user in users:
+        await bot.copy_message(user.id, message.chat.id, message_id)
+
+    await state.clear()
+    await message.answer("сообщение разослано")
+
+
+@admin_router.message(AdminBaseStates.confirm)
+async def choose_country_callback(message: Message, state: FSMContext):
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    await state.clear()
+    await message.answer("отменено")

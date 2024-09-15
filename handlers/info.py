@@ -23,8 +23,8 @@ info_router = Router(name="info")
 async def info_countries_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
-    await callback.message.edit_caption(
-        caption=get_countries_text(), reply_markup=get_back_keyboard()
+    await callback.message.edit_text(
+        text=get_countries_text(), reply_markup=get_back_keyboard()
     )
     await callback.answer()
 
@@ -33,8 +33,8 @@ async def info_countries_callback(
 async def info_countries_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
-    await callback.message.edit_caption(
-        caption=get_referral_program_text(callback.from_user.id), reply_markup=get_back_keyboard()
+    await callback.message.edit_text(
+        text=get_referral_program_text(callback.from_user.id), reply_markup=get_back_keyboard()
     )
     await callback.answer()
 
@@ -43,7 +43,7 @@ async def info_countries_callback(
 async def info_countries_callback(
         callback: CallbackQuery, callback_data: InfoBackCallbackFactory
 ):
-    await callback.message.edit_caption(
-        caption=get_information_text(), reply_markup=get_info_keyboard()
+    await callback.message.edit_text(
+        text=get_information_text(), reply_markup=get_info_keyboard()
     )
     await callback.answer()

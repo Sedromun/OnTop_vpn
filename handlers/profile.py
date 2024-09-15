@@ -49,8 +49,8 @@ profile_router = Router(name="profile")
 async def profile_order_info_callback(
     callback: CallbackQuery, callback_data: ProfileCallbackFactory
 ):
-    await callback.message.edit_caption(
-        caption=get_order_info_text(callback_data.order_id),
+    await callback.message.edit_text(
+        text=get_order_info_text(callback_data.order_id),
         reply_markup=get_order_changes_keyboard(callback_data.order_id),
     )
     await callback.answer()
@@ -63,8 +63,8 @@ async def profile_change_country_callback(
     callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
 ):
     order = get_order(callback_data.id)
-    await callback.message.edit_caption(
-        caption=get_order_choose_country_text(order.country),
+    await callback.message.edit_text(
+        text=get_order_choose_country_text(order.country),
         reply_markup=get_order_countries_keyboard(id=order.id),
     )
     await callback.answer()
@@ -75,8 +75,8 @@ async def profile_back_order_info_country_callback(
     callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
 ):
     id = callback.from_user.id
-    await callback.message.edit_caption(
-        caption=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+    await callback.message.edit_text(
+        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
     )
     await callback.answer()
 
@@ -85,8 +85,8 @@ async def profile_back_order_info_country_callback(
 async def profile_extend_key_callback(
     callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
 ):
-    await callback.message.edit_caption(
-        caption=get_buy_vpn_text(),
+    await callback.message.edit_text(
+        text=get_buy_vpn_text(),
         reply_markup=get_buy_vpn_keyboard(
             extend=True, order_id=callback_data.id, need_back=True
         ),
@@ -98,8 +98,8 @@ async def profile_extend_key_callback(
 async def profile_extend_key_callback(
     callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
-    await callback.message.edit_caption(
-        caption=get_order_info_text(callback_data.order_id),
+    await callback.message.edit_text(
+        text=get_order_info_text(callback_data.order_id),
         reply_markup=get_order_changes_keyboard(callback_data.order_id),
     )
     await callback.answer()
@@ -115,8 +115,8 @@ async def profile_extend_key_callback(
     if user is None:
         register_user(callback.from_user.id)
     if callback.message.photo is not None:
-        await callback.message.edit_caption(
-            caption=get_payment_option_text(callback_data.price, user.balance),
+        await callback.message.edit_text(
+            text=get_payment_option_text(callback_data.price, user.balance),
             reply_markup=get_payment_options_keyboard(
                 duration=callback_data.duration,
                 price=callback_data.price,
@@ -149,8 +149,8 @@ async def profile_extend_key_callback(
 )
 async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFactory):
     if callback.message.photo is not None:
-        await callback.message.edit_caption(
-            caption=get_buy_vpn_text(),
+        await callback.message.edit_text(
+            text=get_buy_vpn_text(),
             reply_markup=get_buy_vpn_keyboard(
                 extend=True, order_id=callback_data.order_id, need_back=True
             ),
@@ -209,13 +209,13 @@ async def buy_balance_callback(
         end = begin + datetime.timedelta(days=callback_data.duration)
         update_order(order.id, {"expiration_date": end})
         if callback.message.photo is not None:
-            await callback.message.edit_caption(caption=get_success_extended_key_text())
+            await callback.message.edit_text(text=get_success_extended_key_text())
         else:
             await callback.message.edit_text(text=get_success_extended_key_text())
     else:
         if callback.message.photo is not None:
-            await callback.message.edit_caption(
-                caption=get_not_enough_money_text(callback_data.price - user.balance),
+            await callback.message.edit_text(
+                text=get_not_enough_money_text(callback_data.price - user.balance),
                 reply_markup=get_balance_add_money_keyboard(
                     duration=callback_data.duration,
                     price=callback_data.price,
@@ -253,8 +253,8 @@ async def add_money_balance_back_callback(
         await callback.message.delete()
         return
     if callback.message.photo is not None:
-        await callback.message.edit_caption(
-            caption=get_payment_option_text(callback_data.price, user.balance),
+        await callback.message.edit_text(
+            text=get_payment_option_text(callback_data.price, user.balance),
             reply_markup=get_payment_options_keyboard(
                 duration=callback_data.duration,
                 price=callback_data.price,
@@ -298,8 +298,8 @@ async def add_money_balance_callback(
 async def changing_country_back_callback(
     callback: CallbackQuery, callback_data: ChooseCountryChangeCallbackFactory
 ):
-    await callback.message.edit_caption(
-        caption=get_order_info_text(callback_data.id),
+    await callback.message.edit_text(
+        text=get_order_info_text(callback_data.id),
         reply_markup=get_order_changes_keyboard(callback_data.id),
     )
     await callback.answer()
@@ -314,8 +314,8 @@ async def changing_country_callback(
     order = get_order(callback_data.id)
     update_order(order.id, {"country": callback_data.country})
     get_key(callback_data.country, order.id)
-    await callback.message.edit_caption(
-        caption=get_country_changed_text()
+    await callback.message.edit_text(
+        text=get_country_changed_text()
         + get_order_info_text(callback_data.id),
         reply_markup=get_order_changes_keyboard(callback_data.id),
     )
@@ -326,8 +326,8 @@ async def changing_country_callback(
 async def profile_order_info_callback(
     callback: CallbackQuery, callback_data: ProfileCallbackFactory
 ):
-    await callback.message.edit_caption(
-        caption=get_profile_add_money_text(),
+    await callback.message.edit_text(
+        text=get_profile_add_money_text(),
         reply_markup=get_add_money_keyboard(),
     )
     await callback.answer()
@@ -339,8 +339,8 @@ async def add_money_callback(
 ):
     id = callback.from_user.id
 
-    await callback.message.edit_caption(
-        caption=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+    await callback.message.edit_text(
+        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
     )
     await callback.answer()
 
