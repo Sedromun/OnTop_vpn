@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-from config import ADMINS, bot
+from config import ADMINS, bot, outline_client
 from database.controllers.order import get_all_orders, get_all_country_orders
 from database.controllers.user import get_all_users, update_user, get_user
 from states import AdminBaseStates, MainBaseState
@@ -147,5 +147,23 @@ async def choose_country_callback(message: Message):
     for country in COUNTRIES.keys():
         orders = get_all_country_orders(country)
         msg += country + " : " + str(len(orders)) + "\n"
+
+    await message.answer("Статистика по странам:\n\n" + msg)
+
+
+@admin_router.message(Command("countries_server_stat"))
+async def choose_country_callback(message: Message):
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    msg = ""
+
+    for country, client in outline_client.items():
+        data = client.get_transferred_data()
+        res = 0
+        for byte in data['bytesTransferredByUserId'].values():
+            res += byte
+        msg += country + ": " + str(res / 10**9 * 100 // 10 / 10) + " Gb\n"
 
     await message.answer("Статистика по странам:\n\n" + msg)
