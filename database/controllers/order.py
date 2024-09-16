@@ -16,6 +16,11 @@ def get_all_orders() -> list[OrderModel]:
     return orders
 
 
+def get_all_country_orders(country: str) -> list[OrderModel]:
+    orders = session.scalars(select(OrderModel).where(OrderModel.country == country)).all()
+    return orders
+
+
 def create_order(data: dict) -> OrderModel | None:
     order = OrderModel(**data)
 

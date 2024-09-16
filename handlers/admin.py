@@ -6,10 +6,11 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from config import ADMINS, bot
-from database.controllers.order import get_all_orders
+from database.controllers.order import get_all_orders, get_all_country_orders
 from database.controllers.user import get_all_users, update_user, get_user
 from states import AdminBaseStates, MainBaseState
 from text.texts import get_incorrect_command
+from utils.country import COUNTRIES
 
 admin_router = Router(name="admin")
 
@@ -133,3 +134,18 @@ async def choose_country_callback(message: Message, state: FSMContext):
 
     await state.clear()
     await message.answer("отменено")
+
+
+@admin_router.message(Command("countries_stat"))
+async def choose_country_callback(message: Message):
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    msg = ""
+
+    for country in COUNTRIES.keys():
+        orders = get_all_country_orders(country)
+        msg += country + " : " + str(len(orders)) + "\n"
+
+    await message.answer("Статистика по странам:\n\n" + msg)
