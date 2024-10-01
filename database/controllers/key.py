@@ -2,15 +2,19 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from database import session
-from database.controllers.order import get_order
 from logs import Logger
 from schemas import OrderModel
 from schemas.key import KeyModel
 
 
 def get_key(key_id: int) -> KeyModel | None:
-    key = session.scalar(select(KeyModel).where(KeyModel.id == key_id))
-    return key
+    try:
+        key = session.scalar(select(KeyModel).where(KeyModel.id == key_id))
+        return key
+    except IntegrityError:
+        session.rollback()
+        return None
+
 
 
 def get_order_country_key(order: OrderModel, country: str) -> KeyModel | None:
@@ -25,9 +29,8 @@ def get_order_country_key(order: OrderModel, country: str) -> KeyModel | None:
 def create_key(data: dict) -> KeyModel | None:
     key = KeyModel(**data)
 
-    session.add(key)
-
     try:
+        session.add(key)
         session.commit()
         Logger.info("key '" + str(key.id) + "' successfully created!")
         return key
@@ -38,9 +41,8 @@ def create_key(data: dict) -> KeyModel | None:
 
 
 def update_key(key_id: int, updates: dict) -> bool:
-    session.query(KeyModel).filter(KeyModel.id == key_id).update(updates)
-
     try:
+        session.query(KeyModel).filter(KeyModel.id == key_id).update(updates)
         session.commit()
         Logger.info("key '" + str(key_id) + "' successfully updated!")
         return True
@@ -51,9 +53,8 @@ def update_key(key_id: int, updates: dict) -> bool:
 
 
 def delete_key(key_id: int) -> bool:
-    session.query(KeyModel).filter(KeyModel.id == key_id).delete()
-
     try:
+        session.query(KeyModel).filter(KeyModel.id == key_id).delete()
         session.commit()
         Logger.info("KeyModel" + " '" + str(key_id) + "' successfully deleted!")
         return True

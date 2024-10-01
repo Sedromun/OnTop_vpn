@@ -116,7 +116,6 @@ ONE_DAY_SALE = 30
 SHOP_ID = str(os.getenv("SHOP_ID"))
 SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
-Configuration.account_id = SHOP_ID
-Configuration.secret_key = SECRET_KEY
+
 
 BOT_URL = str(os.getenv("BOT_URL"))

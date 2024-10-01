@@ -4,10 +4,10 @@ import datetime
 from aiogram.types import message
 from fastapi import FastAPI
 from starlette.responses import HTMLResponse
-from yookassa import Payment
+from yookassa import Payment, Configuration
 from yookassa.domain.notification import WebhookNotification
 
-from config import bot, dp, FERNET, PERCENT_REFERRAL
+from config import bot, dp, FERNET, PERCENT_REFERRAL, SHOP_ID, SECRET_KEY
 from database.controllers.order import get_order, update_order
 from database.controllers.user import get_user, register_user, update_user
 from handlers import buy_router, info_router, main_router, profile_router
@@ -89,4 +89,6 @@ async def main():
 
 
 if __name__ == "__main__":
+    Configuration.account_id = SHOP_ID
+    Configuration.secret_key = SECRET_KEY
     asyncio.run(main())

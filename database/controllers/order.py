@@ -37,9 +37,8 @@ def create_order(data: dict) -> OrderModel | None:
 
 
 def update_order(order_id: int, updates: dict) -> bool:
-    session.query(OrderModel).filter(OrderModel.id == order_id).update(updates)
-
     try:
+        session.query(OrderModel).filter(OrderModel.id == order_id).update(updates)
         session.commit()
         Logger.info("order '" + str(order_id) + "' successfully updated!")
         return True
@@ -50,9 +49,8 @@ def update_order(order_id: int, updates: dict) -> bool:
 
 
 def delete_order(order_id: int) -> bool:
-    session.query(OrderModel).filter(OrderModel.id == order_id).delete()
-
     try:
+        session.query(OrderModel).filter(OrderModel.id == order_id).delete()
         session.commit()
         Logger.info("OrderModel '" + str(order_id) + "' successfully deleted!")
         return True

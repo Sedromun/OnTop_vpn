@@ -36,6 +36,6 @@ async def buy_handle(
 
     await callback.message.edit_text(
         get_payment_text(),
-        reply_markup=get_payment_to_yookassa_keyboard(url=payment.confirmation)
+        reply_markup=get_payment_to_yookassa_keyboard(url=payment.confirmation['confirmation_url'])
     )
     await callback.answer()
