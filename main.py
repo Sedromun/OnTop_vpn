@@ -12,6 +12,7 @@ from database.controllers.order import get_order, update_order
 from database.controllers.user import get_user, register_user, update_user
 from handlers import buy_router, info_router, main_router, profile_router
 from handlers.admin import admin_router
+from schemas.Notification import NotificationSchema
 from schemas.Payment import PaymentSchema
 from servers.outline_keys import get_key
 from text.profile import get_order_info_text, get_success_extended_key_text, get_money_added_text
@@ -28,8 +29,9 @@ app = FastAPI()
 
 
 @app.post("/yoomoney/order_info")
-async def check_payment(payment: PaymentSchema):
-    print(str(payment))
+async def check_payment(notification: NotificationSchema):
+    print(str(notification))
+    payment = notification.object
     if payment.status == "succeeded":
         duration_str = payment.metadata['duration']
         order_id = int(payment.metadata['order_id'])
