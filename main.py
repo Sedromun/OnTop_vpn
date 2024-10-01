@@ -31,18 +31,18 @@ app = FastAPI()
 @app.post("/yoomoney/order_info")
 async def check_payment(notification: NotificationSchema):
     print(str(notification))
-    payment = PaymentSchema.model_validate(notification.object)
-    if payment.status == "succeeded":
-        duration_str = payment.metadata['duration']
-        order_id = int(payment.metadata['order_id'])
-        extend = payment.metadata['extend']
+    payment = notification.object
+    if payment['status'] == "succeeded":
+        duration_str = payment['metadata']['duration']
+        order_id = int(payment['metadata']['order_id'])
+        extend = payment['metadata']['extend']
         order = get_order(order_id)
         user_id = order.user_id
         user = get_user(user_id)
         if user is None:
             register_user(user_id)
 
-        amount = payment.amount.value // 100
+        amount = payment['amount']['value'] // 100
 
         if user.referrer_id is not None:
             referrer = get_user(user.referrer_id)
