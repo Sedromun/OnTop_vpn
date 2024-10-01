@@ -31,7 +31,7 @@ app = FastAPI()
 @app.post("/yoomoney/order_info")
 async def check_payment(notification: NotificationSchema):
     print(str(notification))
-    payment = notification.object
+    payment = PaymentSchema.model_validate(notification.object)
     if payment.status == "succeeded":
         duration_str = payment.metadata['duration']
         order_id = int(payment.metadata['order_id'])
