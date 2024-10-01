@@ -1,0 +1,26 @@
+[
+  {
+    "user_id": 100,
+    "balance": 1000,
+    "referrals": 3,
+    "actions" : [
+      {
+        "time": "18-08-2004 04:59:00",
+        "type": "start",
+        "result" : "yes"
+      }
+    ],
+    "orders" : [
+      {
+        "rate" : "1 месяц",
+        "country" : "Россия",
+        "traffic_used": 20
+      },
+      {
+        "rate" : "1 день",
+        "country" : "Германия",
+        "traffic_used": 3
+      }
+    ]
+  }
+]

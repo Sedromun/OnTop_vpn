@@ -11,9 +11,9 @@ from text.keyboard_text import (
     balance,
     card,
     get_buy_option_text,
-    get_country_text, get_buy_option_sale_text,
+    get_country_text, get_buy_option_sale_text, pay,
 )
-from utils.buy_options import BuyOptions, get_option_duration, get_option_price, ONE_DAY, get_option_sale_price
+from utils.buy_options import BuyOptions, get_option_duration, get_option_price, THREE_DAYS, get_option_sale_price
 from utils.country import COUNTRIES
 
 
@@ -23,10 +23,10 @@ def get_buy_vpn_keyboard(extend: bool, order_id: int = -1, need_back: bool = Fal
         user = get_user(user_id)
         if not user.present:
             builder.button(
-                text=get_buy_option_text(ONE_DAY),
+                text=get_buy_option_text(THREE_DAYS),
                 callback_data=BuyCallbackFactory(
-                    duration=get_option_duration(ONE_DAY),
-                    price=get_option_price(ONE_DAY),
+                    duration=get_option_duration(THREE_DAYS),
+                    price=get_option_price(THREE_DAYS),
                     extend=extend,
                     order_id=order_id,
                 ).pack(),
@@ -240,3 +240,15 @@ class PaymentAddMoneyCallbackFactory(CallbackData, prefix="pay_add_money"):
     country: str
     order_id: int
     back: bool = False
+
+
+def get_payment_to_yookassa_keyboard(url: str):
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text=pay,
+        url=url,
+    )
+    builder.adjust(1)
+    return builder.as_markup()
+
+

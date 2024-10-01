@@ -5,6 +5,7 @@ from aiogram.types import FSInputFile
 from dotenv import load_dotenv
 from pydantic import SecretStr
 from cryptography.fernet import Fernet
+from yookassa import Configuration
 
 from outline.outline_vpn.outline_vpn import OutlineVPN
 
@@ -110,3 +111,12 @@ TECH_SUPPORT_ADMIN = str(os.getenv("TECH_SUPPORT_ADMIN"))
 ADMINS = [SAVVA_ADMIN, EVGENIY_ADMIN, TECH_SUPPORT_ADMIN]
 
 ONE_DAY_SALE = 30
+
+
+SHOP_ID = str(os.getenv("SHOP_ID"))
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
+
+Configuration.account_id = SHOP_ID
+Configuration.secret_key = SECRET_KEY
+
+BOT_URL = str(os.getenv("BOT_URL"))

@@ -2,10 +2,10 @@ from config import ONE_DAY_SALE
 
 BuyOptions = ["1 неделя", "1 месяц", "3 месяца", "6 месяцев", "1 год"]
 
-ONE_DAY = "1 день"
+THREE_DAYS = "3 дня"
 
 Prices = {
-    ONE_DAY: 0,
+    THREE_DAYS: 0,
     "1 неделя": 90,
     "1 месяц": 169,
     "3 месяца": 459,
@@ -22,7 +22,7 @@ def get_option_sale_price(option: str):
     return Prices[option] - Prices[option] * ONE_DAY_SALE // 100
 
 
-LiteralDuration = {"день": 1, "неделя": 7, "месяц": 30, "месяца": 30, "месяцев": 30, "год": 365}
+LiteralDuration = {"дня": 1, "неделя": 7, "месяц": 30, "месяца": 30, "месяцев": 30, "год": 365}
 
 
 def get_option_duration(option: str) -> int:

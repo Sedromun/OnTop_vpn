@@ -104,3 +104,8 @@ def order_expired_text(order_id: int):
 def order_going_to_expired_text(order_id: int, time: str):
     return (f"⏰ Время действия вашего VPN ключа {order_id} истекает через {time}.\n\nНе забудьте продлить время его"
             f" действия")
+
+
+def get_payment_text():
+    return "Оплатите по ссылке"
+

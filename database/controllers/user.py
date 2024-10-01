@@ -56,3 +56,7 @@ def update_user(tg_id: int, updates: dict) -> bool:
             e, f"Integrity error in update_user '{str(tg_id)}' - can't commit in db"
         )
         return False
+
+
+def get_referrals(user_id: int):
+    return session.scalars(select(UserModel).where(UserModel.referrer_id == user_id)).all()

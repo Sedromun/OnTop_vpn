@@ -5,8 +5,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 EXPOSE 3000
 
-COPY ontopvpn.crt /etc/ssl/ontopvpn.crt
-COPY ontopvpn.key /etc/ssl/ontopvpn.key
+COPY clique-vpn.crt /etc/ssl/clique-vpn.crt
+COPY clique-vpn.key /etc/ssl/clique-vpn.key
 COPY ca.crt /etc/ssl/ca.crt
 
 CMD ["nginx", "-g", "daemon off;"]

@@ -120,7 +120,10 @@ async def choose_country_callback(message: Message, state: FSMContext):
 
     users = get_all_users()
     for user in users:
-        await bot.copy_message(user.id, message.chat.id, message_id)
+        try:
+            await bot.copy_message(user.id, message.chat.id, message_id)
+        except Exception:
+            pass
 
     await state.clear()
     await message.answer("сообщение разослано")

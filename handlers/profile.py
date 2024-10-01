@@ -40,7 +40,7 @@ from text.texts import (
     get_profile_text,
 )
 from utils.buy_options import duration_to_str
-from utils.payment import buy_handle
+from utils.payment_handle import buy_handle
 
 profile_router = Router(name="profile")
 
