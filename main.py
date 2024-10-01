@@ -42,7 +42,7 @@ async def check_payment(notification: NotificationSchema):
         if user is None:
             register_user(user_id)
 
-        amount = (int(float(payment['amount']['value']))) // 100
+        amount = (int(float(payment['amount']['value'])))
 
         if user.referrer_id is not None:
             referrer = get_user(user.referrer_id)
