@@ -242,13 +242,28 @@ class PaymentAddMoneyCallbackFactory(CallbackData, prefix="pay_add_money"):
     back: bool = False
 
 
-def get_payment_to_yookassa_keyboard(url: str):
+def get_payment_to_yookassa_keyboard(url: str, purpose: int, order_data: dict, order_id: int, payment_id: str):
     builder = InlineKeyboardBuilder()
     builder.button(
         text=pay,
         url=url,
     )
+    builder.button(
+        text=back,
+        callback_data=BackFromPaymentCallbackFactory(
+            purpose=purpose,
+            order_data=order_data,
+            order_id=order_id,
+            payment_id=payment_id
+        )
+    )
     builder.adjust(1)
     return builder.as_markup()
 
+
+class BackFromPaymentCallbackFactory(CallbackData, prefix="back_from_pay"):
+    payment_id: str
+    order_data: dict
+    order_id: int = -1
+    purpose: int
 

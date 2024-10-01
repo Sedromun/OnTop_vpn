@@ -31,3 +31,5 @@ class OrderModel(BaseModel):
     keys: Mapped[List["KeyModel"]] = relationship(back_populates="order")
 
     user: Mapped["UserModel"] = relationship(back_populates="orders")
+
+    payed: Mapped[bool] = mapped_column(nullable=False, default=False)

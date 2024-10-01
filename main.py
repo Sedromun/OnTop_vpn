@@ -30,12 +30,11 @@ app = FastAPI()
 
 @app.post("/yoomoney/order_info")
 async def check_payment(notification: NotificationSchema):
-    print(str(notification))
     payment = notification.object
     if payment['status'] == "succeeded":
         duration_str = payment['metadata']['duration']
         order_id = int(payment['metadata']['order_id'])
-        extend = payment['metadata']['extend']
+        purpose = payment['metadata']['purpose']
         order = get_order(order_id)
         user_id = order.user_id
         user = get_user(user_id)
@@ -50,12 +49,12 @@ async def check_payment(notification: NotificationSchema):
             update_user(user.referrer_id, {'balance': referrer.balance + add_amount})
             await bot.send_message(referrer.id, text=get_referral_bought(add_amount))
 
-        if extend == "E" or extend == "C":
+        if purpose == "E" or purpose == "C":
             order = get_order(int(order_id))
             price = order.price
             new_balance = user.balance + amount - price
             update_user(user.id, {"balance": new_balance})
-            if extend == "C":
+            if purpose == "C":
                 get_key(order.country, order.id)
                 await bot.send_message(user_id,
                     text=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id)

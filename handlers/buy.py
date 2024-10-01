@@ -3,7 +3,10 @@ import datetime
 from aiogram import F, Router
 from aiogram.types import CallbackQuery, PreCheckoutQuery
 
-from database.controllers.order import create_order
+from yookassa import Payment as YookassaPayment
+
+
+from database.controllers.order import create_order, get_order, delete_order
 from database.controllers.user import get_user, update_user, register_user
 from keyboards.buy import (
     BuyCallbackFactory,
@@ -14,7 +17,7 @@ from keyboards.buy import (
     get_balance_add_money_keyboard,
     get_buy_vpn_keyboard,
     get_payment_countries_keyboard,
-    get_payment_options_keyboard,
+    get_payment_options_keyboard, BackFromPaymentCallbackFactory,
 )
 from servers.outline_keys import get_key
 from text.profile import get_order_info_text
@@ -27,7 +30,7 @@ from text.texts import (
 )
 from utils.buy_options import duration_to_str
 from utils.payment import get_order_perm_key
-from utils.payment_handle import buy_handle
+from utils.payment_handle import buy_handle, PaymentPurpose, check_not_payed
 
 buy_router = Router(name="buy")
 
@@ -63,6 +66,10 @@ async def choose_payment_callback(
     if user is None:
         register_user(callback.from_user.id)
     if callback_data.price == 0:
+        if not user.present:
+            await callback.message.delete()
+            return
+
         update_user(callback.from_user.id, {'present': True})
         begin = datetime.datetime.now(datetime.timezone.utc)
         end = begin + datetime.timedelta(days=callback_data.duration)
@@ -181,9 +188,16 @@ async def add_money_callback(
 async def add_money_callback(
         callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
-    order = create_new_order(callback, callback_data)
-    await buy_handle(callback, callback_data, callback_data.amount, order.id, title="Пополнение баланса",
-                     description="Покупка VPN - " + duration_to_str(callback_data.duration))
+    order_data = get_order_data(callback, callback_data)
+    await buy_handle(
+        callback,
+        callback_data,
+        callback_data.amount,
+        order_data,
+        purpose=PaymentPurpose.BUY_ADD_MONEY,
+        title="Пополнение баланса",
+        description="Покупка VPN - " + duration_to_str(callback_data.duration)
+    )
 
 
 @buy_router.pre_checkout_query()
@@ -197,26 +211,69 @@ async def pre_checkout_handler(pre_checkout_query: PreCheckoutQuery):
     )
 )
 async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFactory):
-    order = create_new_order(callback, callback_data)
+    order_data = get_order_data(callback, callback_data)
     await buy_handle(
         callback,
         callback_data,
         callback_data.price,
-        order.id,
+        purpose=PaymentPurpose.BUY_CARD,
         title="VPN",
-        description=f"Покупка VPN - {duration_to_str(callback_data.duration)}"
+        description=f"Покупка VPN - {duration_to_str(callback_data.duration)}",
+        order_data=order_data,
     )
 
 
-def create_new_order(callback, callback_data):
+def get_order_data(callback, callback_data) -> dict:
     begin = datetime.datetime.now(datetime.timezone.utc)
     end = begin + datetime.timedelta(days=callback_data.duration)
-    return create_order(
-        {
+    return {
             "user_id": callback.from_user.id,
             "country": callback_data.country,
             "begin_date": begin,
             "expiration_date": end,
             "price": callback_data.price,
         }
+
+
+@buy_router.callback_query(
+    BackFromPaymentCallbackFactory.filter(
+        F.purpose == PaymentPurpose.BUY_CARD.value
     )
+)
+async def back_from_payment_callback(callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory):
+    await check_not_payed(callback, callback_data)
+    user = get_user(callback.from_user.id)
+
+    await callback.message.edit_text(
+        text=get_payment_option_text(callback_data.price, user.balance),
+        reply_markup=get_payment_options_keyboard(
+            duration=callback_data.duration,
+            price=callback_data.price,
+            country=callback_data.country,
+            extend=False,
+        ),
+    )
+
+    await callback.answer()
+
+
+@buy_router.callback_query(
+    BackFromPaymentCallbackFactory.filter(
+        F.purpose == PaymentPurpose.BUY_ADD_MONEY.value
+    )
+)
+async def back_from_payment_callback(callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory):
+    await check_not_payed(callback, callback_data)
+    user = get_user(callback.from_user.id)
+
+    await callback.message.edit_text(
+        text=get_not_enough_money_text(callback_data.price - user.balance),
+        reply_markup=get_balance_add_money_keyboard(
+            duration=callback_data.duration,
+            price=callback_data.price,
+            country=callback_data.country,
+            add=callback_data.price - user.balance,
+        ),
+    )
+
+    await callback.answer()
