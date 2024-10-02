@@ -50,7 +50,7 @@ async def check_payment(notification: NotificationSchema):
         user_id = -1
         amount = (int(float(payment['amount']['value'])))
 
-        if purpose == PaymentPurpose.BUY_CARD.value() or purpose == PaymentPurpose.BUY_ADD_MONEY.value():
+        if purpose == PaymentPurpose.BUY_CARD.value or purpose == PaymentPurpose.BUY_ADD_MONEY.value:
             begin = datetime.datetime.now(datetime.timezone.utc)
             end = begin + datetime.timedelta(days=int(data['duration']))
             user_id = int(data['user_id'])
@@ -71,7 +71,7 @@ async def check_payment(notification: NotificationSchema):
                     get_order_perm_key(order.id)) + get_order_info_text(order.id)
             )
 
-        if purpose == PaymentPurpose.EXTEND_ADD_MONEY.value() or purpose == PaymentPurpose.BUY_ADD_MONEY.value():
+        if purpose == PaymentPurpose.EXTEND_ADD_MONEY.value or purpose == PaymentPurpose.BUY_ADD_MONEY.value:
             price = order.price
             user_id = order.user_id
             user = get_user(user_id)
@@ -84,7 +84,7 @@ async def check_payment(notification: NotificationSchema):
 
             await bot.send_message(user_id, text=get_success_extended_key_text() + get_order_info_text(order.id))
 
-        if purpose == PaymentPurpose.ADD_MONEY.value():
+        if purpose == PaymentPurpose.ADD_MONEY.value:
             user_id = order.user_id
             user = get_user(user_id)
             new_balance = user.balance + amount
