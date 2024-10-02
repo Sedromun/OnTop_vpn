@@ -273,10 +273,10 @@ async def add_money_balance_callback(
         callback,
         callback_data,
         callback_data.amount,
-        callback_data.order_id,
         purpose=PaymentPurpose.EXTEND_ADD_MONEY,
         title="Пополнение баланса",
-        description=f"Продление ключа VPN ({duration_to_str(callback_data.duration)})"
+        description=f"Продление ключа VPN ({duration_to_str(callback_data.duration)})",
+        order_id=callback_data.order_id
     )
 
 
@@ -372,15 +372,15 @@ async def profile_extend_expiring_key_callback(
     )
 )
 async def back_from_payment_callback(callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory):
-    await check_not_payed(callback, callback_data)
+    data = await check_not_payed(callback, callback_data)
     user = get_user(callback.from_user.id)
 
     await callback.message.edit_text(
-        text=get_payment_option_text(callback_data.price, user.balance),
+        text=get_payment_option_text(int(data['price']), user.balance),
         reply_markup=get_payment_options_keyboard(
-            duration=callback_data.duration,
-            price=callback_data.price,
-            country=callback_data.country,
+            duration=int(data['duration']),
+            price=int(data['price']),
+            country=data['country'],
             extend=True,
         ),
     )
@@ -394,17 +394,17 @@ async def back_from_payment_callback(callback: CallbackQuery, callback_data: Bac
     )
 )
 async def back_from_payment_callback(callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory):
-    await check_not_payed(callback, callback_data)
+    data = await check_not_payed(callback, callback_data)
     user = get_user(callback.from_user.id)
 
     await callback.message.edit_text(
-        text=get_not_enough_money_text(callback_data.price - user.balance),
+        text=get_not_enough_money_text(int(data['price']) - user.balance),
         reply_markup=get_balance_add_money_keyboard(
-            duration=callback_data.duration,
-            price=callback_data.price,
-            country=callback_data.country,
-            add=callback_data.price - user.balance,
-            order_id=callback_data.order_id,
+            duration=int(data['duration']),
+            price=int(data['price']),
+            country=data['country'],
+            add=int(data['price']) - user.balance,
+            order_id=int(data['order_id']),
         ),
     )
 

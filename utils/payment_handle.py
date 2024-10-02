@@ -19,7 +19,7 @@ class PaymentPurpose(Enum):
     ADD_MONEY = 4
 
 
-async def check_not_payed(callback: CallbackQuery, callback_data: CallbackData):
+async def check_not_payed(callback: CallbackQuery, callback_data: CallbackData) -> dict:
     user = get_user(callback.from_user.id)
     if user is None:
         await callback.message.delete()
@@ -34,7 +34,7 @@ async def check_not_payed(callback: CallbackQuery, callback_data: CallbackData):
             pass
         return
 
-    Payment.cancel(callback_data.payment_id)
+    return payment.metadata
 
 
 async def buy_handle(
@@ -47,6 +47,13 @@ async def buy_handle(
         order_data: dict = None,
         order_id: int = -1
 ):
+    metadata = {
+            "order_id": order_id,
+            "message_id": callback.message.message_id,
+            "duration": callback_data.duration,
+            "purpose": purpose.value
+        } | order_data
+
     payment = Payment.create({
         "amount": {"value": amount, "currency": "RUB"},
         "confirmation": {
@@ -56,23 +63,15 @@ async def buy_handle(
         "capture": True,
         "description": title + "\n" + description,
         "save_payment_method": True,
-        "metadata": {
-            "order_data": order_data,
-            "order_id": order_id,
-            "message_id": callback.message.message_id,
-            "duration": callback_data.duration,
-            "purpose": purpose.value
-        }
+        "metadata": metadata
     })
 
     await callback.message.edit_text(
         get_payment_text(),
         reply_markup=get_payment_to_yookassa_keyboard(
             url=payment.confirmation['confirmation_url'],
-            purpose=purpose.value,
-            order_data=order_data,
-            order_id=order_id,
-            payment_id=payment.id
+            payment_id=payment.id,
+            purpose=purpose
         )
     )
     await callback.answer()

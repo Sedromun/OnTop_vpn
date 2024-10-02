@@ -193,10 +193,10 @@ async def add_money_callback(
         callback,
         callback_data,
         callback_data.amount,
-        order_data,
         purpose=PaymentPurpose.BUY_ADD_MONEY,
         title="Пополнение баланса",
-        description="Покупка VPN - " + duration_to_str(callback_data.duration)
+        description="Покупка VPN - " + duration_to_str(callback_data.duration),
+        order_data=order_data,
     )
 
 
@@ -224,13 +224,12 @@ async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFa
 
 
 def get_order_data(callback, callback_data) -> dict:
-    begin = datetime.datetime.now(datetime.timezone.utc)
-    end = begin + datetime.timedelta(days=callback_data.duration)
+    # begin = datetime.datetime.now(datetime.timezone.utc)
+    # end = begin + datetime.timedelta(days=callback_data.duration)
     return {
             "user_id": callback.from_user.id,
             "country": callback_data.country,
-            "begin_date": begin,
-            "expiration_date": end,
+            "duration": callback_data.duration,
             "price": callback_data.price,
         }
 
@@ -241,15 +240,15 @@ def get_order_data(callback, callback_data) -> dict:
     )
 )
 async def back_from_payment_callback(callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory):
-    await check_not_payed(callback, callback_data)
+    data = await check_not_payed(callback, callback_data)
     user = get_user(callback.from_user.id)
 
     await callback.message.edit_text(
-        text=get_payment_option_text(callback_data.price, user.balance),
+        text=get_payment_option_text(int(data['price']), user.balance),
         reply_markup=get_payment_options_keyboard(
-            duration=callback_data.duration,
-            price=callback_data.price,
-            country=callback_data.country,
+            duration=int(data['duration']),
+            price=int(data['price']),
+            country=data['country'],
             extend=False,
         ),
     )
@@ -263,16 +262,16 @@ async def back_from_payment_callback(callback: CallbackQuery, callback_data: Bac
     )
 )
 async def back_from_payment_callback(callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory):
-    await check_not_payed(callback, callback_data)
+    data = await check_not_payed(callback, callback_data)
     user = get_user(callback.from_user.id)
 
     await callback.message.edit_text(
-        text=get_not_enough_money_text(callback_data.price - user.balance),
+        text=get_not_enough_money_text(int(data['price']) - user.balance),
         reply_markup=get_balance_add_money_keyboard(
-            duration=callback_data.duration,
-            price=callback_data.price,
-            country=callback_data.country,
-            add=callback_data.price - user.balance,
+            duration=int(data['duration']),
+            price=int(data['price']),
+            country=data['country'],
+            add=int(data['price']) - user.balance,
         ),
     )
 

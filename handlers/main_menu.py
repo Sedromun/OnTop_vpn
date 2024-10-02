@@ -50,6 +50,9 @@ async def start_handler(message: Message):
 
 @main_router.message(StateFilter(None), F.text == buy)
 async def buy_handler(message: Message):
+    user = get_user(message.from_user.id)
+    if user is None:
+        register_user(message.from_user.id)
     await message.answer(
         text=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(user_id=message.from_user.id, extend=False)
     )
