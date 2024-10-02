@@ -149,25 +149,17 @@ async def profile_extend_key_callback(
     PaymentCallbackFactory.filter((F.option == Payment.Back.value) & (F.extend == True))
 )
 async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFactory):
-    if callback.message.photo is not None:
-        await callback.message.edit_text(
-            text=get_buy_vpn_text(),
-            reply_markup=get_buy_vpn_keyboard(
-                extend=True, order_id=callback_data.order_id, need_back=True
-            ),
-        )
-    else:
-        order = get_order(callback_data.order_id)
-        if order is None:
-            await callback.answer("Время действия ключа истекло")
-            await callback.message.delete()
-            return
-        await callback.message.edit_text(
-            text=get_buy_vpn_text(),
-            reply_markup=get_buy_vpn_keyboard(
-                extend=True, order_id=callback_data.order_id, need_back=True
-            ),
-        )
+    order = get_order(callback_data.order_id)
+    if order is None:
+        await callback.answer("Время действия ключа истекло")
+        await callback.message.delete()
+        return
+    await callback.message.edit_text(
+        text=get_buy_vpn_text(),
+        reply_markup=get_buy_vpn_keyboard(
+            extend=True, order_id=callback_data.order_id, need_back=True
+        ),
+    )
     await callback.answer()
 
 
@@ -388,6 +380,7 @@ async def back_from_payment_callback(callback: CallbackQuery, callback_data: Bac
             duration=int(data['duration']),
             price=int(data['price']),
             country=data['country'],
+            order_id=data['order_id'],
             extend=True,
         ),
     )
