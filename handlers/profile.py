@@ -84,15 +84,7 @@ async def profile_extend_key_callback(
     await callback.answer()
 
 
-@profile_router.callback_query(BuyCallbackFactory.filter(F.back == True))
-async def profile_extend_key_callback(
-    callback: CallbackQuery, callback_data: BuyCallbackFactory
-):
-    await callback.message.edit_text(
-        text=get_order_info_text(callback_data.order_id),
-        reply_markup=get_order_changes_keyboard(callback_data.order_id),
-    )
-    await callback.answer()
+
 
 
 @profile_router.callback_query(

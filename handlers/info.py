@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery
 
 from database.controllers.order import get_order
 from database.controllers.user import get_user
-from keyboards.buy import get_buy_vpn_keyboard
+from keyboards.buy import get_buy_vpn_keyboard, BuyCallbackFactory
 from keyboards.info import (
     InfoBackCallbackFactory,
     InfoCallbackFactory,
@@ -101,6 +101,16 @@ async def info_countries_callback(
             text=choose_order_to_extend(),
             reply_markup=get_choose_order_keyboard(callback.from_user.id, extend_key=True)
         )
+    await callback.answer()
+
+
+@info_router.callback_query(BuyCallbackFactory.filter(F.back == True))
+async def profile_extend_key_callback(
+    callback: CallbackQuery, callback_data: BuyCallbackFactory
+):
+    await callback.message.answer(
+        text=get_information_text(), reply_markup=get_info_keyboard()
+    )
     await callback.answer()
 
 
