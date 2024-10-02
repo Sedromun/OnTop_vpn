@@ -58,7 +58,7 @@ async def check_payment(notification: NotificationSchema):
                 {
                     "user_id": user_id,
                     "country": data['country'],
-                    "begin_data": begin,
+                    "begin_date": begin,
                     "expiration_date": end,
                     "price": int(data['price']),
                 }
