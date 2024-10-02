@@ -8,7 +8,7 @@ from yookassa import Payment, Configuration
 from yookassa.domain.notification import WebhookNotification
 
 from config import bot, dp, FERNET, PERCENT_REFERRAL, SHOP_ID, SECRET_KEY
-from database.controllers.order import get_order, update_order
+from database.controllers.order import get_order, update_order, create_order
 from database.controllers.user import get_user, register_user, update_user
 from handlers import buy_router, info_router, main_router, profile_router
 from handlers.admin import admin_router
@@ -18,6 +18,7 @@ from servers.outline_keys import get_key
 from text.profile import get_order_info_text, get_success_extended_key_text, get_money_added_text
 from text.texts import get_referral_bought, get_success_created_key_text
 from utils.payment import get_order_perm_key
+from utils.payment_handle import PaymentPurpose
 
 dp.include_router(admin_router)
 dp.include_router(buy_router)
@@ -28,47 +29,69 @@ dp.include_router(main_router)
 app = FastAPI()
 
 
+async def check_referral(user_id, amount):
+    user = get_user(user_id)
+    if user is not None and user.referrer_id is not None:
+        referrer = get_user(user.referrer_id)
+        add_amount = (amount * PERCENT_REFERRAL // 100)
+        update_user(user.referrer_id, {'balance': referrer.balance + add_amount})
+        await bot.send_message(referrer.id, text=get_referral_bought(add_amount))
+
+
 @app.post("/yoomoney/order_info")
 async def check_payment(notification: NotificationSchema):
     payment = notification.object
+    data = payment['metadata']
     if payment['status'] == "succeeded":
-        duration_str = payment['metadata']['duration']
-        order_id = int(payment['metadata']['order_id'])
-        purpose = payment['metadata']['purpose']
+        duration_str = data['duration']
+        order_id = int(data['order_id'])
+        purpose = int(data['purpose'])
         order = get_order(order_id)
-        user_id = order.user_id
-        user = get_user(user_id)
-        if user is None:
-            register_user(user_id)
-
+        user_id = -1
         amount = (int(float(payment['amount']['value'])))
 
-        if user.referrer_id is not None:
-            referrer = get_user(user.referrer_id)
-            add_amount = (amount * PERCENT_REFERRAL // 100)
-            update_user(user.referrer_id, {'balance': referrer.balance + add_amount})
-            await bot.send_message(referrer.id, text=get_referral_bought(add_amount))
+        if purpose == PaymentPurpose.BUY_CARD.value() or purpose == PaymentPurpose.BUY_ADD_MONEY.value():
+            begin = datetime.datetime.now(datetime.timezone.utc)
+            end = begin + datetime.timedelta(days=int(data['duration']))
+            user_id = int(data['user_id'])
+            order = create_order(
+                {
+                    "user_id": user_id,
+                    "country": data['country'],
+                    "begin_data": begin,
+                    "expiration_date": end,
+                    "price": int(data['price']),
+                }
+            )
 
-        if purpose == "E" or purpose == "C":
-            order = get_order(int(order_id))
+            get_key(order.country, order.id)
+            await bot.send_message(
+                user_id,
+                text=get_success_created_key_text(
+                    get_order_perm_key(order.id)) + get_order_info_text(order.id)
+            )
+
+        if purpose == PaymentPurpose.EXTEND_ADD_MONEY.value() or purpose == PaymentPurpose.BUY_ADD_MONEY.value():
             price = order.price
+            user_id = order.user_id
+            user = get_user(user_id)
             new_balance = user.balance + amount - price
             update_user(user.id, {"balance": new_balance})
-            if purpose == "C":
-                get_key(order.country, order.id)
-                await bot.send_message(user_id,
-                    text=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id)
-                )
-            else:
-                begin = order.expiration_date
-                end = begin + datetime.timedelta(days=int(duration_str))
-                update_order(order.id, {"expiration_date": end})
 
-                await bot.send_message(user_id,text=get_success_extended_key_text() + get_order_info_text(order.id))
-        else:
+            begin = order.expiration_date
+            end = begin + datetime.timedelta(days=int(duration_str))
+            update_order(order.id, {"expiration_date": end})
+
+            await bot.send_message(user_id, text=get_success_extended_key_text() + get_order_info_text(order.id))
+
+        if purpose == PaymentPurpose.ADD_MONEY.value():
+            user_id = order.user_id
+            user = get_user(user_id)
             new_balance = user.balance + amount
             update_user(user_id, {"balance": new_balance})
             await bot.send_message(user_id, text=get_money_added_text())
+
+        await check_referral(user_id, amount)
 
 
 @app.get("/keys/{order_id_enc}")
