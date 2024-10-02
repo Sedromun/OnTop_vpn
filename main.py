@@ -41,6 +41,7 @@ async def check_referral(user_id, amount):
 @app.post("/yoomoney/order_info")
 async def check_payment(notification: NotificationSchema):
     payment = notification.object
+    print(payment)
     data = payment['metadata']
     if payment['status'] == "succeeded":
         duration_str = data['duration']
