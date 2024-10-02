@@ -5,6 +5,7 @@ from aiogram.types import CallbackQuery
 
 from database.controllers.order import get_order, update_order
 from database.controllers.user import get_user, update_user, register_user
+from handlers import get_order_data
 from keyboards.buy import (
     BuyCallbackFactory,
     Payment,
@@ -174,11 +175,14 @@ async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFa
     PaymentCallbackFactory.filter((F.option == Payment.Card.value) & (F.extend == True))
 )
 async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFactory):
+    order_data = get_order_data(callback, callback_data)
+
     await buy_handle(
         callback,
         callback_data,
         callback_data.price,
         order_id=callback_data.order_id,
+        order_data=order_data,
         purpose=PaymentPurpose.EXTEND_CARD,
         title="Продление ключа",
         description=f"VPN - продление ({duration_to_str(callback_data.duration)})"
@@ -269,6 +273,8 @@ async def add_money_balance_back_callback(
 async def add_money_balance_callback(
     callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
+    order_data = get_order_data(callback, callback_data)
+
     await buy_handle(
         callback,
         callback_data,
@@ -276,7 +282,8 @@ async def add_money_balance_callback(
         purpose=PaymentPurpose.EXTEND_ADD_MONEY,
         title="Пополнение баланса",
         description=f"Продление ключа VPN ({duration_to_str(callback_data.duration)})",
-        order_id=callback_data.order_id
+        order_id=callback_data.order_id,
+        order_data=order_data
     )
 
 
