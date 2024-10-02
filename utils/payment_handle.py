@@ -52,7 +52,7 @@ async def buy_handle(
             "message_id": callback.message.message_id,
             "duration": callback_data.duration,
             "purpose": purpose.value
-        } | order_data
+        } | (order_data if order_data is not None else {})
 
     payment = Payment.create({
         "amount": {"value": amount, "currency": "RUB"},
@@ -71,7 +71,7 @@ async def buy_handle(
         reply_markup=get_payment_to_yookassa_keyboard(
             url=payment.confirmation['confirmation_url'],
             payment_id=payment.id,
-            purpose=purpose
+            purpose=purpose.value
         )
     )
     await callback.answer()
