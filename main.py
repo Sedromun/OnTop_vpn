@@ -91,6 +91,11 @@ async def check_payment(notification: NotificationSchema):
             update_user(user_id, {"balance": new_balance})
             await bot.send_message(user_id, text=get_money_added_text())
 
+        try:
+            await bot.delete_message(user_id, data['message_id'])
+        except Exception:
+            pass
+
         await check_referral(user_id, amount)
 
 
