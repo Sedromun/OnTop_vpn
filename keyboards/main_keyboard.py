@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-from text.keyboard_text import buy, info, profile
+from text.keyboard_text import buy, settings, profile
 
 
 def get_main_keyboard():
@@ -9,7 +9,7 @@ def get_main_keyboard():
 
     builder.add(types.KeyboardButton(text=buy))
     builder.add(types.KeyboardButton(text=profile))
-    builder.add(types.KeyboardButton(text=info))
+    builder.add(types.KeyboardButton(text=settings))
     builder.adjust(1, 2)
 
     return builder.as_markup(one_time_keyboard=False, resize_keyboard=True)

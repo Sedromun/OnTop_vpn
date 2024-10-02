@@ -3,7 +3,7 @@ from utils.buy_options import get_option_price, get_option_sale_price
 from utils.country import COUNTRIES
 
 buy = "🛒 Купить"
-info = "ℹ️ Информация"
+settings = "⚙️ Настройки"
 profile = "👤 Профиль"
 countries = "🌎 Страны"
 tech_support = "👷🏻 Тех. Поддержка"

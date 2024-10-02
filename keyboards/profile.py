@@ -32,14 +32,14 @@ class ProfileCallbackFactory(CallbackData, prefix="profile"):
 
 def get_order_changes_keyboard(id: int):
     builder = InlineKeyboardBuilder()
-    builder.button(
-        text=change_country,
-        callback_data=OrderChangesCallbackFactory(text=change_country, id=id),
-    )
-    builder.button(
-        text=extend_key,
-        callback_data=OrderChangesCallbackFactory(text=extend_key, id=id),
-    )
+    # builder.button(
+    #     text=change_country,
+    #     callback_data=OrderChangesCallbackFactory(text=change_country, id=id),
+    # )
+    # builder.button(
+    #     text=extend_key,
+    #     callback_data=OrderChangesCallbackFactory(text=extend_key, id=id),
+    # )
     builder.button(text=connect_instr, url=CONNECT_INSTR_URL)
     builder.button(
         text=back, callback_data=OrderChangesCallbackFactory(text=back, id=id)

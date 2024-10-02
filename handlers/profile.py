@@ -71,17 +71,6 @@ async def profile_change_country_callback(
     await callback.answer()
 
 
-@profile_router.callback_query(OrderChangesCallbackFactory.filter(F.text == back))
-async def profile_back_order_info_country_callback(
-    callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
-):
-    id = callback.from_user.id
-    await callback.message.edit_text(
-        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
-    )
-    await callback.answer()
-
-
 @profile_router.callback_query(OrderChangesCallbackFactory.filter(F.text == extend_key))
 async def profile_extend_key_callback(
     callback: CallbackQuery, callback_data: OrderChangesCallbackFactory

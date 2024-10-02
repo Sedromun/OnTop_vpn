@@ -8,7 +8,7 @@ from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
 from keyboards.main_keyboard import get_main_keyboard
 from keyboards.profile import get_profile_keyboard
-from text.keyboard_text import buy, info, profile
+from text.keyboard_text import buy, settings, profile
 from text.texts import (
     get_buy_vpn_text,
     get_greeting_text,
@@ -58,7 +58,7 @@ async def buy_handler(message: Message):
     )
 
 
-@main_router.message(StateFilter(None), F.text == info)
+@main_router.message(StateFilter(None), F.text == settings)
 async def info_handler(message: Message):
     await message.answer(
         text=get_information_text(), reply_markup=get_info_keyboard()

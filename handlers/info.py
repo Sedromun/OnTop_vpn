@@ -1,19 +1,25 @@
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
+from database.controllers.order import get_order
+from database.controllers.user import get_user
+from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import (
     InfoBackCallbackFactory,
     InfoCallbackFactory,
     get_back_keyboard,
-    get_info_keyboard,
+    get_info_keyboard, get_choose_order_keyboard, InfoChooseOrderCallbackFactory,
 )
-from text.info import get_countries_text, get_referral_program_text
+from keyboards.profile import get_profile_keyboard, get_order_countries_keyboard, OrderChangesCallbackFactory
+from text.info import get_countries_text, get_referral_program_text, choose_order_to_change_country, get_no_orders_text, \
+    choose_order_to_extend
 from text.keyboard_text import (
     countries,
-    referral_program,
+    referral_program, change_country, extend_key, back,
 )
+from text.profile import get_order_choose_country_text
 from text.texts import (
-    get_information_text,
+    get_information_text, get_buy_vpn_text,
 )
 
 info_router = Router(name="info")
@@ -35,6 +41,78 @@ async def info_countries_callback(
 ):
     await callback.message.edit_text(
         text=get_referral_program_text(callback.from_user.id), reply_markup=get_back_keyboard()
+    )
+    await callback.answer()
+
+
+@info_router.callback_query(InfoCallbackFactory.filter(F.text == change_country))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoCallbackFactory
+):
+    user = get_user(callback.from_user.id)
+    orders = user.orders
+    if len(orders) == 0:
+        await callback.message.answer(get_no_orders_text())
+    elif len(orders) == 1:
+        order = get_order(orders[0].id)
+        await callback.message.edit_text(
+            text=get_order_choose_country_text(order.country),
+            reply_markup=get_order_countries_keyboard(id=order.id),
+        )
+    else:
+        await callback.message.edit_text(
+            text=choose_order_to_change_country(),
+            reply_markup=get_choose_order_keyboard(callback.from_user.id, change_country=True)
+        )
+    await callback.answer()
+
+
+@info_router.callback_query(OrderChangesCallbackFactory.filter(F.text == back))
+async def profile_back_order_info_country_callback(
+        callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
+):
+    await callback.message.answer(
+        text=get_information_text(), reply_markup=get_info_keyboard()
+    )
+    await callback.answer()
+
+
+@info_router.callback_query(InfoChooseOrderCallbackFactory.filter(F.change_country))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoChooseOrderCallbackFactory
+):
+    order = get_order(callback_data.order_id)
+    await callback.message.edit_text(
+        text=get_order_choose_country_text(order.country),
+        reply_markup=get_order_countries_keyboard(id=order.id),
+    )
+
+
+@info_router.callback_query(InfoCallbackFactory.filter(F.text == extend_key))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoCallbackFactory
+):
+    user = get_user(callback.from_user.id)
+    orders = user.orders
+    if len(orders) == 0:
+        await callback.message.answer(get_no_orders_text())
+    else:
+        await callback.message.edit_text(
+            text=choose_order_to_extend(),
+            reply_markup=get_choose_order_keyboard(callback.from_user.id, extend_key=True)
+        )
+    await callback.answer()
+
+
+@info_router.callback_query(InfoChooseOrderCallbackFactory.filter(F.extend_key))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoChooseOrderCallbackFactory
+):
+    await callback.message.edit_text(
+        text=get_buy_vpn_text(),
+        reply_markup=get_buy_vpn_keyboard(
+            extend=True, order_id=callback_data.order_id, need_back=True
+        ),
     )
     await callback.answer()
 

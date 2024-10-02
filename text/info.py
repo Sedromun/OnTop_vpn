@@ -1,4 +1,5 @@
 from config import RECALLS_TGC_TAG, WELCOME_PRESENT, PERCENT_REFERRAL
+from text.keyboard_text import buy
 from utils.common import get_referral_link
 from utils.country import COUNTRIES
 
@@ -22,3 +23,15 @@ def get_referral_program_text(user_id: int):
             f"<i>{WELCOME_PRESENT}₽</i> в подарок при первом подключении!\n\n"
             f"<b>Твоя реферальная ссылка:</b>\n"
             f"<code>{get_referral_link(user_id)}</code>")
+
+
+def choose_order_to_change_country():
+    return "Выбери ключ в котором хотите поменять страну"
+
+
+def choose_order_to_extend():
+    return "Выбери ключ для продления"
+
+
+def get_no_orders_text():
+    return f"Ты еще не оформил ни один ключ, воспользуйся кнопкой '{buy}'"

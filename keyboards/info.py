@@ -2,6 +2,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import CONNECT_INSTR_URL, RECALLS_TGC_LINK, TECH_SUPPORT_LINK, BUY_INSTR_URL, CHANGE_COUNTRY_INSTR_URL
+from database.controllers.user import get_user, register_user, get_user_orders
 from text.keyboard_text import *
 
 
@@ -9,6 +10,14 @@ def get_info_keyboard():
     builder = InlineKeyboardBuilder()
     builder.button(text=countries, callback_data=InfoCallbackFactory(text=countries))
     builder.button(text=referral_program, callback_data=InfoCallbackFactory(text=referral_program))
+    builder.button(
+        text=change_country,
+        callback_data=InfoCallbackFactory(text=change_country),
+    )
+    builder.button(
+        text=extend_key,
+        callback_data=InfoCallbackFactory(text=extend_key),
+    )
     builder.button(text=connect_instr, url=CONNECT_INSTR_URL)
     builder.button(text=buy_instr, url=BUY_INSTR_URL)
     builder.button(text=change_country_instr, url=CHANGE_COUNTRY_INSTR_URL)
@@ -31,3 +40,31 @@ def get_back_keyboard():
 
 class InfoBackCallbackFactory(CallbackData, prefix="info_back"):
     back: bool
+
+
+def get_choose_order_keyboard(id: int, change_country: bool = False, extend_key: bool = False):
+    builder = InlineKeyboardBuilder()
+
+    user = get_user(id)
+    if user is None:
+        register_user(id)
+    orders = get_user_orders(id)
+    for order in orders:
+        builder.button(
+            text=get_order_short_text(order.id, order.country),
+            callback_data=InfoChooseOrderCallbackFactory(
+                change_country=change_country,
+                extend_key=extend_key,
+                order_id=order.id
+            ),
+        )
+
+    builder.button(text=back, callback_data=InfoBackCallbackFactory(back=True))
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+class InfoChooseOrderCallbackFactory(CallbackData, prefix="info_cb"):
+    change_country: bool = False
+    extend_key: bool = False
+    order_id: int

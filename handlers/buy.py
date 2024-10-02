@@ -66,8 +66,10 @@ async def choose_payment_callback(
     if user is None:
         register_user(callback.from_user.id)
     if callback_data.price == 0:
-        if not user.present:
+        user = get_user(callback.from_user.id)
+        if user.present:
             await callback.message.delete()
+            await callback.answer()
             return
 
         update_user(callback.from_user.id, {'present': True})
