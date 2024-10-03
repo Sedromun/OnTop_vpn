@@ -39,7 +39,7 @@ def get_order_changes_keyboard(order_id: int = -1, info: bool = False, profile: 
     )
     if info:
         builder.button(
-            text=settings, callback_data=InfoCallbackFactory(order_id=-1, info=info, profile=profile)
+            text=settings, callback_data=BackKeyInfoCallbackFactory(order_id=-1, info=info, profile=profile)
         )
     builder.adjust(1)
     return builder.as_markup()
