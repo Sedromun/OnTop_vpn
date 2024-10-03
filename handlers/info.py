@@ -128,12 +128,20 @@ async def changing_country_callback(
     await callback.answer()
 
 
-@info_router.callback_query(BackKeyInfoCallbackFactory.filter(F.info))
+@info_router.callback_query(BackKeyInfoCallbackFactory.filter(F.info == True & F.order_id != -1))
 async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
     order = get_order(callback_data.order_id)
     await callback.message.edit_text(
         text=get_order_choose_country_text(order.id, order.country),
         reply_markup=get_order_countries_keyboard(id=order.id),
+    )
+    await callback.answer()
+
+
+@info_router.callback_query(BackKeyInfoCallbackFactory.filter(F.info == True & F.order_id == -1))
+async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
+    await callback.message.edit_text(
+        text=get_information_text(), reply_markup=get_info_keyboard()
     )
     await callback.answer()
 

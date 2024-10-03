@@ -3,6 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import INSTR_URL
 from database.controllers.user import get_user_orders, register_user, get_user
+from keyboards.info import InfoCallbackFactory
 from text.keyboard_text import *
 
 
@@ -36,6 +37,10 @@ def get_order_changes_keyboard(order_id: int = -1, info: bool = False, profile: 
     builder.button(
         text=back, callback_data=BackKeyInfoCallbackFactory(order_id=order_id, info=info, profile=profile)
     )
+    if info:
+        builder.button(
+            text=settings, callback_data=InfoCallbackFactory(order_id=-1, info=info, profile=profile)
+        )
     builder.adjust(1)
     return builder.as_markup()
 
