@@ -12,6 +12,7 @@ from database.controllers.order import get_order, update_order, create_order
 from database.controllers.user import get_user, register_user, update_user
 from handlers import buy_router, info_router, main_router, profile_router
 from handlers.admin import admin_router
+from keyboards.info import get_instruction_button_keyboard
 from schemas.Notification import NotificationSchema
 from schemas.Payment import PaymentSchema
 from servers.outline_keys import get_key
@@ -51,7 +52,7 @@ async def check_payment(notification: NotificationSchema):
         user_id = -1
         amount = (int(float(payment['amount']['value'])))
 
-        if purpose == PaymentPurpose.BUY_CARD.value or purpose == PaymentPurpose.BUY_ADD_MONEY.value:
+        if purpose == PaymentPurpose.BUY_CARD.value or purpose == PaymentPurpose.EXTEND_CARD.value:
             begin = datetime.datetime.now(datetime.timezone.utc)
             end = begin + datetime.timedelta(days=int(data['duration']))
             user_id = int(data['user_id'])
@@ -68,8 +69,8 @@ async def check_payment(notification: NotificationSchema):
             get_key(order.country, order.id)
             await bot.send_message(
                 user_id,
-                text=get_success_created_key_text(
-                    get_order_perm_key(order.id)) + get_order_info_text(order.id)
+                text=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id),
+                reply_markup=get_instruction_button_keyboard()
             )
 
         if purpose == PaymentPurpose.EXTEND_ADD_MONEY.value or purpose == PaymentPurpose.BUY_ADD_MONEY.value:

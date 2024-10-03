@@ -23,7 +23,7 @@ from keyboards.profile import (
     get_add_money_keyboard,
     get_order_changes_keyboard,
     get_order_countries_keyboard,
-    get_profile_keyboard, OrderExpiringCallbackFactory,
+    get_profile_keyboard, OrderExpiringCallbackFactory, BackKeyInfoCallbackFactory,
 )
 from servers.outline_keys import get_key
 from text.keyboard_text import back, change_country, extend_key
@@ -48,7 +48,7 @@ profile_router = Router(name="profile")
 
 @profile_router.callback_query(ProfileCallbackFactory.filter(F.balance == False))
 async def profile_order_info_callback(
-    callback: CallbackQuery, callback_data: ProfileCallbackFactory
+        callback: CallbackQuery, callback_data: ProfileCallbackFactory
 ):
     await callback.message.edit_text(
         text=get_order_info_text(callback_data.order_id),
@@ -57,11 +57,23 @@ async def profile_order_info_callback(
     await callback.answer()
 
 
+@profile_router.callback_query(BackKeyInfoCallbackFactory.filter())
+async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
+    id = callback.from_user.id
+    user = get_user(id)
+    if user is None:
+        register_user(id)
+    await callback.message.answer(
+        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+    )
+    await callback.answer()
+
+
 @profile_router.callback_query(
     OrderChangesCallbackFactory.filter(F.text == change_country)
 )
 async def profile_change_country_callback(
-    callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
+        callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
 ):
     order = get_order(callback_data.id)
     await callback.message.edit_text(
@@ -73,7 +85,7 @@ async def profile_change_country_callback(
 
 @profile_router.callback_query(OrderChangesCallbackFactory.filter(F.text == extend_key))
 async def profile_extend_key_callback(
-    callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
+        callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
 ):
     await callback.message.edit_text(
         text=get_buy_vpn_text(),
@@ -84,45 +96,30 @@ async def profile_extend_key_callback(
     await callback.answer()
 
 
-
-
-
 @profile_router.callback_query(
     BuyCallbackFactory.filter((F.extend == True) & (F.back == False))
 )
 async def profile_extend_key_callback(
-    callback: CallbackQuery, callback_data: BuyCallbackFactory
+        callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
     if user is None:
         register_user(callback.from_user.id)
-    if callback.message.photo is not None:
-        await callback.message.edit_text(
-            text=get_payment_option_text(callback_data.price, user.balance),
-            reply_markup=get_payment_options_keyboard(
-                duration=callback_data.duration,
-                price=callback_data.price,
-                country="",
-                extend=True,
-                order_id=callback_data.order_id,
-            ),
-        )
-    else:
-        order = get_order(callback_data.order_id)
-        if order is None:
-            await callback.answer("Время действия ключа истекло")
-            await callback.message.delete()
-            return
-        await callback.message.edit_text(
-            text=get_payment_option_text(callback_data.price, user.balance),
-            reply_markup=get_payment_options_keyboard(
-                duration=callback_data.duration,
-                price=callback_data.price,
-                country="",
-                extend=True,
-                order_id=callback_data.order_id,
-            ),
-        )
+    order = get_order(callback_data.order_id)
+    if order is None:
+        await callback.answer("Время действия ключа истекло")
+        await callback.message.delete()
+        return
+    await callback.message.edit_text(
+        text=get_payment_option_text(callback_data.price, user.balance),
+        reply_markup=get_payment_options_keyboard(
+            duration=callback_data.duration,
+            price=callback_data.price,
+            country="",
+            extend=True,
+            order_id=callback_data.order_id,
+        ),
+    )
     await callback.answer()
 
 
@@ -168,7 +165,7 @@ async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFa
     )
 )
 async def buy_balance_callback(
-    callback: CallbackQuery, callback_data: PaymentCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentCallbackFactory
 ):
     user = get_user(callback.from_user.id)
     if user is None:
@@ -207,7 +204,7 @@ async def buy_balance_callback(
     PaymentAddMoneyCallbackFactory.filter((F.order_id != -1) & (F.back == True))
 )
 async def add_money_balance_back_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     user = get_user(callback.from_user.id)
     if user is None:
@@ -244,7 +241,7 @@ async def add_money_balance_back_callback(
 
 @profile_router.callback_query(PaymentAddMoneyCallbackFactory.filter(F.order_id != -1))
 async def add_money_balance_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     order_data = get_order_data(callback, callback_data)
 
@@ -264,7 +261,7 @@ async def add_money_balance_callback(
     ChooseCountryChangeCallbackFactory.filter(F.back == True)
 )
 async def changing_country_back_callback(
-    callback: CallbackQuery, callback_data: ChooseCountryChangeCallbackFactory
+        callback: CallbackQuery, callback_data: ChooseCountryChangeCallbackFactory
 ):
     await callback.message.edit_text(
         text=get_order_info_text(callback_data.id),
@@ -277,14 +274,14 @@ async def changing_country_back_callback(
     ChooseCountryChangeCallbackFactory.filter(F.back == False)
 )
 async def changing_country_callback(
-    callback: CallbackQuery, callback_data: ChooseCountryChangeCallbackFactory
+        callback: CallbackQuery, callback_data: ChooseCountryChangeCallbackFactory
 ):
     order = get_order(callback_data.id)
     update_order(order.id, {"country": callback_data.country})
     get_key(callback_data.country, order.id)
     await callback.message.edit_text(
         text=get_country_changed_text()
-        + get_order_info_text(callback_data.id),
+             + get_order_info_text(callback_data.id),
         reply_markup=get_order_changes_keyboard(callback_data.id),
     )
     await callback.answer()
@@ -292,7 +289,7 @@ async def changing_country_callback(
 
 @profile_router.callback_query(ProfileCallbackFactory.filter(F.balance == True))
 async def profile_order_info_callback(
-    callback: CallbackQuery, callback_data: ProfileCallbackFactory
+        callback: CallbackQuery, callback_data: ProfileCallbackFactory
 ):
     await callback.message.edit_text(
         text=get_profile_add_money_text(),
@@ -303,7 +300,7 @@ async def profile_order_info_callback(
 
 @profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter(F.back == True))
 async def add_money_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     id = callback.from_user.id
 
@@ -315,7 +312,7 @@ async def add_money_callback(
 
 @profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter(F.back == False))
 async def add_money_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     await buy_handle(
         callback,
@@ -329,7 +326,7 @@ async def add_money_callback(
 
 @profile_router.callback_query(OrderExpiringCallbackFactory.filter())
 async def profile_extend_expiring_key_callback(
-    callback: CallbackQuery, callback_data: OrderExpiringCallbackFactory
+        callback: CallbackQuery, callback_data: OrderExpiringCallbackFactory
 ):
     order = get_order(callback_data.id)
     if order is None:
@@ -405,4 +402,3 @@ async def back_from_payment_callback(callback: CallbackQuery, callback_data: Bac
         text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
     )
     await callback.answer()
-

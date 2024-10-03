@@ -80,9 +80,7 @@ TECH_SUPPORT_TAG = str(os.getenv("TECH_SUPPORT_TAG"))
 TECH_SUPPORT_LINK = "https://t.me/" + TECH_SUPPORT_TAG
 RECALLS_TGC_TAG = str(os.getenv("RECALLS_TGC_TAG"))
 RECALLS_TGC_LINK = "https://t.me/" + RECALLS_TGC_TAG
-CONNECT_INSTR_URL = str(os.getenv("CONNECT_INSTR_URL"))
-BUY_INSTR_URL = str(os.getenv("BUY_INSTR_URL"))
-CHANGE_COUNTRY_INSTR_URL = str(os.getenv("CHANGE_COUNTRY_INSTR_URL"))
+INSTR_URL = str(os.getenv("INSTR_URL"))
 
 CRYPTO_KEY = str(os.getenv("CRYPTO_KEY"))
 

@@ -19,6 +19,7 @@ from keyboards.buy import (
     get_payment_countries_keyboard,
     get_payment_options_keyboard, BackFromPaymentCallbackFactory,
 )
+from keyboards.info import get_instruction_button_keyboard
 from servers.outline_keys import get_key
 from text.profile import get_order_info_text
 from text.texts import (
@@ -85,7 +86,8 @@ async def choose_payment_callback(
         )
         get_key(callback_data.country, order.id)
         await callback.message.edit_text(
-            text=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id)
+            text=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id),
+            reply_markup=get_instruction_button_keyboard()
         )
     else:
         await callback.message.edit_text(
@@ -146,7 +148,8 @@ async def buy_balance_callback(
         )
 
         await callback.message.edit_text(
-            text=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id)
+            text=get_success_created_key_text(get_order_perm_key(order.id)) + get_order_info_text(order.id),
+            reply_markup=get_instruction_button_keyboard()
         )
 
         return
