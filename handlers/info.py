@@ -106,8 +106,8 @@ async def changing_country_back_callback(
         )
     else:
         await callback.message.edit_text(
-            text=get_order_choose_country_text(callback_data.country),
-            reply_markup=get_order_countries_keyboard(id=callback_data.id),
+            text=choose_order_to_change_country(),
+            reply_markup=get_choose_order_keyboard(callback.from_user.id, change_country=True)
         )
     await callback.answer()
 
