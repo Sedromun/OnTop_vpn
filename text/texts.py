@@ -1,6 +1,6 @@
 import datetime
 
-from config import CONNECT_INSTR_URL, MIN_ADD_AMOUNT, CHANGE_COUNTRY_INSTR_URL
+from config import MIN_ADD_AMOUNT
 from database.controllers.user import get_user, register_user
 from utils.common import datetime_format
 from utils.country import COUNTRIES

@@ -63,7 +63,7 @@ async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackK
     user = get_user(id)
     if user is None:
         register_user(id)
-    await callback.message.answer(
+    await callback.message.edit_text(
         text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
     )
     await callback.answer()
