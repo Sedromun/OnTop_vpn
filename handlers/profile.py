@@ -83,6 +83,9 @@ async def profile_change_country_callback(
     await callback.answer()
 
 
+
+
+
 @profile_router.callback_query(OrderChangesCallbackFactory.filter(F.text == extend_key))
 async def profile_extend_key_callback(
         callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
@@ -255,36 +258,6 @@ async def add_money_balance_callback(
         order_id=callback_data.order_id,
         order_data=order_data
     )
-
-
-@profile_router.callback_query(
-    ChooseCountryChangeCallbackFactory.filter(F.back == True)
-)
-async def changing_country_back_callback(
-        callback: CallbackQuery, callback_data: ChooseCountryChangeCallbackFactory
-):
-    await callback.message.edit_text(
-        text=get_order_info_text(callback_data.id),
-        reply_markup=get_order_changes_keyboard(callback_data.id),
-    )
-    await callback.answer()
-
-
-@profile_router.callback_query(
-    ChooseCountryChangeCallbackFactory.filter(F.back == False)
-)
-async def changing_country_callback(
-        callback: CallbackQuery, callback_data: ChooseCountryChangeCallbackFactory
-):
-    order = get_order(callback_data.id)
-    update_order(order.id, {"country": callback_data.country})
-    get_key(callback_data.country, order.id)
-    await callback.message.edit_text(
-        text=get_country_changed_text()
-             + get_order_info_text(callback_data.id),
-        reply_markup=get_order_changes_keyboard(callback_data.id),
-    )
-    await callback.answer()
 
 
 @profile_router.callback_query(ProfileCallbackFactory.filter(F.balance == True))
