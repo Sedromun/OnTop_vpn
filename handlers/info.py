@@ -85,7 +85,7 @@ async def info_countries_callback(
 ):
     order = get_order(callback_data.order_id)
     await callback.message.edit_text(
-        text=get_order_choose_country_text(order.country),
+        text=get_order_choose_country_text(order.id, order.country),
         reply_markup=get_order_countries_keyboard(id=order.id),
     )
 
