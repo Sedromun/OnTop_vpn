@@ -35,7 +35,7 @@ def get_order_changes_keyboard(order_id: int = -1, info: bool = False, profile: 
     builder = InlineKeyboardBuilder()
     builder.button(text=all_instr, url=INSTR_URL)
     builder.button(
-        text=back, callback_data=BackKeyInfoCallbackFactory(order_id=order_id, info=info, profile=profile)
+        text=back, callback_data=BackKeyInfoCallbackFactory(order_id=order_id, back=False, info=info, profile=profile)
     )
     if info:
         builder.button(
