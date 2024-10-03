@@ -123,15 +123,17 @@ async def changing_country_callback(
     get_key(callback_data.country, order.id)
     await callback.message.edit_text(
         text=get_country_changed_text() + get_order_info_text(callback_data.id),
-        reply_markup=get_order_changes_keyboard(info=True),
+        reply_markup=get_order_changes_keyboard(order_id=order.id, info=True),
     )
     await callback.answer()
 
 
 @info_router.callback_query(BackKeyInfoCallbackFactory.filter(F.info))
 async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
+    order = get_order(callback_data.order_id)
     await callback.message.edit_text(
-        text=get_information_text(), reply_markup=get_info_keyboard()
+        text=get_order_choose_country_text(order.id, order.country),
+        reply_markup=get_order_countries_keyboard(id=order.id),
     )
     await callback.answer()
 
