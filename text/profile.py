@@ -8,8 +8,9 @@ def get_order_info_text(order_id):
     return f"🔑 <b>Информация о ключе</b>:\n\n{get_key_data(order)}"
 
 
-def get_order_choose_country_text(country):
-    return f"Выберите <b>страну</b> для изменения\n\n🌎 Текущая страна: {country} {COUNTRIES[country]}\n"
+def get_order_choose_country_text(id, country):
+    return (f"Выберите <b>страну</b> для изменения\n<b>Ключ №{id}</b>\n\n"
+            f"🌎 Текущая страна: {country} {COUNTRIES[country]}\n")
 
 
 def get_country_changed_text():

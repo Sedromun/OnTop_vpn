@@ -30,26 +30,19 @@ class ProfileCallbackFactory(CallbackData, prefix="profile"):
     order_id: int
 
 
-def get_order_changes_keyboard(id: int):
+def get_order_changes_keyboard(info: bool = False, profile: bool = False):
     builder = InlineKeyboardBuilder()
-    # builder.button(
-    #     text=change_country,
-    #     callback_data=OrderChangesCallbackFactory(text=change_country, id=id),
-    # )
-    # builder.button(
-    #     text=extend_key,
-    #     callback_data=OrderChangesCallbackFactory(text=extend_key, id=id),
-    # )
     builder.button(text=all_instr, url=INSTR_URL)
     builder.button(
-        text=back, callback_data=BackKeyInfoCallbackFactory()
+        text=back, callback_data=BackKeyInfoCallbackFactory(info=info, profile=profile)
     )
     builder.adjust(1)
     return builder.as_markup()
 
 
 class BackKeyInfoCallbackFactory(CallbackData, prefix="order_changes"):
-    pass
+    info: bool
+    profile: bool
 
 
 class OrderChangesCallbackFactory(CallbackData, prefix="order_changes"):

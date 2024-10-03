@@ -11,7 +11,7 @@ from keyboards.info import (
     get_info_keyboard, get_choose_order_keyboard, InfoChooseOrderCallbackFactory,
 )
 from keyboards.profile import get_profile_keyboard, get_order_countries_keyboard, OrderChangesCallbackFactory, \
-    ChooseCountryChangeCallbackFactory, get_order_changes_keyboard
+    ChooseCountryChangeCallbackFactory, get_order_changes_keyboard, BackKeyInfoCallbackFactory
 from servers.outline_keys import get_key
 from text.info import get_countries_text, get_referral_program_text, choose_order_to_change_country, get_no_orders_text, \
     choose_order_to_extend
@@ -58,7 +58,7 @@ async def info_countries_callback(
     elif len(orders) == 1:
         order = get_order(orders[0].id)
         await callback.message.edit_text(
-            text=get_order_choose_country_text(order.country),
+            text=get_order_choose_country_text(order.id, order.country),
             reply_markup=get_order_countries_keyboard(id=order.id),
         )
     else:
@@ -123,7 +123,15 @@ async def changing_country_callback(
     get_key(callback_data.country, order.id)
     await callback.message.edit_text(
         text=get_country_changed_text() + get_order_info_text(callback_data.id),
-        reply_markup=get_order_changes_keyboard(callback_data.id),
+        reply_markup=get_order_changes_keyboard(info=True),
+    )
+    await callback.answer()
+
+
+@info_router.callback_query(BackKeyInfoCallbackFactory.filter(F.info))
+async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
+    await callback.message.edit_text(
+        text=get_information_text(), reply_markup=get_info_keyboard()
     )
     await callback.answer()
 

@@ -52,12 +52,12 @@ async def profile_order_info_callback(
 ):
     await callback.message.edit_text(
         text=get_order_info_text(callback_data.order_id),
-        reply_markup=get_order_changes_keyboard(callback_data.order_id),
+        reply_markup=get_order_changes_keyboard(profile=True),
     )
     await callback.answer()
 
 
-@profile_router.callback_query(BackKeyInfoCallbackFactory.filter())
+@profile_router.callback_query(BackKeyInfoCallbackFactory.filter(F.profile))
 async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
     id = callback.from_user.id
     user = get_user(id)
