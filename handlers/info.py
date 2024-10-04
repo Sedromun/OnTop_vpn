@@ -242,6 +242,8 @@ async def info_countries_callback(
         if order.payment_id != '' and order.payment_id is not None:
             on_auto_orders.append(order)
 
+    on_auto_orders.sort(key=lambda ooord: ooord.id)
+
     if len(orders) == 0:
         await callback.message.answer(get_no_orders_text())
     elif len(on_auto_orders) == 1:
