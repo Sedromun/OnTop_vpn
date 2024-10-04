@@ -14,7 +14,7 @@ from keyboards.profile import get_profile_keyboard, get_order_countries_keyboard
     ChooseCountryChangeCallbackFactory, get_order_changes_keyboard, BackKeyInfoCallbackFactory
 from servers.outline_keys import get_key
 from text.info import get_countries_text, get_referral_program_text, choose_order_to_change_country, get_no_orders_text, \
-    choose_order_to_extend
+    choose_order_to_extend, expiration_date_text
 from text.keyboard_text import (
     countries,
     referral_program, change_country, extend_key, back,
@@ -154,6 +154,13 @@ async def info_countries_callback(
     orders = user.orders
     if len(orders) == 0:
         await callback.message.answer(get_no_orders_text())
+    elif len(orders) == 1:
+        await callback.message.edit_text(
+            text=expiration_date_text(orders[0]) + get_buy_vpn_text(),
+            reply_markup=get_buy_vpn_keyboard(
+                extend=True, order_id=orders[0].id, need_back=True
+            ),
+        )
     else:
         await callback.message.edit_text(
             text=choose_order_to_extend(),
@@ -176,10 +183,11 @@ async def profile_extend_key_callback(
 async def info_countries_callback(
         callback: CallbackQuery, callback_data: InfoChooseOrderCallbackFactory
 ):
+    order = get_order(callback_data.order_id)
     await callback.message.edit_text(
-        text=get_buy_vpn_text(),
+        text=expiration_date_text(order) + get_buy_vpn_text(),
         reply_markup=get_buy_vpn_keyboard(
-            extend=True, order_id=callback_data.order_id, need_back=True
+            extend=True, order_id=order.id, need_back=True
         ),
     )
     await callback.answer()

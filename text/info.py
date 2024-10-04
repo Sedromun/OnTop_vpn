@@ -1,6 +1,8 @@
+import datetime
+
 from config import RECALLS_TGC_TAG, WELCOME_PRESENT, PERCENT_REFERRAL
 from text.keyboard_text import buy
-from utils.common import get_referral_link
+from utils.common import get_referral_link, datetime_format
 from utils.country import COUNTRIES
 
 
@@ -35,3 +37,10 @@ def choose_order_to_extend():
 
 def get_no_orders_text():
     return f"Ты еще не оформил ни один ключ, воспользуйся кнопкой '{buy}'"
+
+
+def expiration_date_text(order):
+    return f"Ключ N{order.id} {COUNTRIES[order.country]}\n\nДата истечения: {
+        (order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3))
+        .strftime(datetime_format)
+    }\n\n"

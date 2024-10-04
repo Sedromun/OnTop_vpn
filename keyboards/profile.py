@@ -3,7 +3,6 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import INSTR_URL
 from database.controllers.user import get_user_orders, register_user, get_user
-from keyboards.info import InfoCallbackFactory
 from text.keyboard_text import *
 
 
