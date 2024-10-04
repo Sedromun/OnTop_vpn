@@ -3,7 +3,7 @@ from aiogram.types import CallbackQuery
 
 from database.controllers.order import get_order, update_order
 from database.controllers.user import get_user
-from keyboards.buy import get_buy_vpn_keyboard, BuyCallbackFactory
+from keyboards.buy import get_buy_vpn_keyboard, BuyCallbackFactory, PaymentCallbackFactory, Payment
 from keyboards.info import (
     InfoBackCallbackFactory,
     InfoCallbackFactory,
@@ -166,6 +166,24 @@ async def info_countries_callback(
             text=choose_order_to_extend(),
             reply_markup=get_choose_order_keyboard(callback.from_user.id, extend_key=True)
         )
+    await callback.answer()
+
+
+@info_router.callback_query(
+    PaymentCallbackFactory.filter((F.option == Payment.Back.value) & (F.extend == True))
+)
+async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFactory):
+    order = get_order(callback_data.order_id)
+    if order is None:
+        await callback.answer("Время действия ключа истекло")
+        await callback.message.delete()
+        return
+    await callback.message.edit_text(
+        text=expiration_date_text(order) + get_buy_vpn_text(),
+        reply_markup=get_buy_vpn_keyboard(
+            extend=True, order_id=callback_data.order_id, need_back=True
+        ),
+    )
     await callback.answer()
 
 
