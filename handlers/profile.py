@@ -351,9 +351,9 @@ async def back_from_payment_callback(callback: CallbackQuery, callback_data: Bac
 )
 async def back_from_payment_callback(callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory):
     await check_not_payed(callback, callback_data)
-    id = callback.from_user.id
 
     await callback.message.edit_text(
-        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+        text=get_profile_add_money_text(),
+        reply_markup=get_add_money_keyboard(),
     )
     await callback.answer()
