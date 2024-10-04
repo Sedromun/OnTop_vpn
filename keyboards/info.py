@@ -3,6 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import RECALLS_TGC_LINK, TECH_SUPPORT_LINK, INSTR_URL
 from database.controllers.user import get_user, register_user, get_user_orders
+from schemas import OrderModel
 from text.keyboard_text import *
 
 
@@ -44,13 +45,9 @@ class InfoBackCallbackFactory(CallbackData, prefix="info_back"):
     back: bool
 
 
-def get_choose_order_keyboard(id: int, change_country: bool = False, extend_key: bool = False, off_auto: bool = False):
+def get_choose_order_keyboard(orders: [OrderModel], change_country: bool = False, extend_key: bool = False, off_auto: bool = False):
     builder = InlineKeyboardBuilder()
 
-    user = get_user(id)
-    if user is None:
-        register_user(id)
-    orders = get_user_orders(id)
     for order in orders:
         builder.button(
             text=get_order_short_text(order.id, order.country),

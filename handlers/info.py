@@ -64,7 +64,7 @@ async def info_countries_callback(
     else:
         await callback.message.edit_text(
             text=choose_order_to_change_country(),
-            reply_markup=get_choose_order_keyboard(callback.from_user.id, change_country=True)
+            reply_markup=get_choose_order_keyboard(orders, change_country=True)
         )
     await callback.answer()
 
@@ -107,7 +107,7 @@ async def changing_country_back_callback(
     else:
         await callback.message.edit_text(
             text=choose_order_to_change_country(),
-            reply_markup=get_choose_order_keyboard(callback.from_user.id, change_country=True)
+            reply_markup=get_choose_order_keyboard(orders, change_country=True)
         )
     await callback.answer()
 
@@ -164,7 +164,7 @@ async def info_countries_callback(
     else:
         await callback.message.edit_text(
             text=choose_order_to_extend(),
-            reply_markup=get_choose_order_keyboard(callback.from_user.id, extend_key=True)
+            reply_markup=get_choose_order_keyboard(orders, extend_key=True)
         )
     await callback.answer()
 
@@ -202,7 +202,7 @@ async def profile_extend_key_callback(
     else:
         await callback.message.edit_text(
             text=choose_order_to_extend(),
-            reply_markup=get_choose_order_keyboard(callback.from_user.id, extend_key=True)
+            reply_markup=get_choose_order_keyboard(orders, extend_key=True)
         )
     await callback.answer()
 
@@ -237,9 +237,14 @@ async def info_countries_callback(
 ):
     user = get_user(callback.from_user.id)
     orders = user.orders
+    on_auto_orders = []
+    for order in orders:
+        if order.payemnt_id is not None:
+            on_auto_orders.append(order)
+
     if len(orders) == 0:
         await callback.message.answer(get_no_orders_text())
-    elif len(orders) == 1:
+    elif len(on_auto_orders) == 1:
         update_order(orders[0].id, {'payment_id': ''})
         await callback.message.edit_text(
             text=auto_off_text(orders[0].id) + get_information_text(),
@@ -248,7 +253,7 @@ async def info_countries_callback(
     else:
         await callback.message.edit_text(
             text=choose_order_to_off_auto(),
-            reply_markup=get_choose_order_keyboard(callback.from_user.id, off_auto=True)
+            reply_markup=get_choose_order_keyboard(on_auto_orders, off_auto=True)
         )
     await callback.answer()
 
