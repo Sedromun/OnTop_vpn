@@ -245,7 +245,7 @@ async def info_countries_callback(
     if len(orders) == 0:
         await callback.message.answer(get_no_orders_text())
     elif len(on_auto_orders) == 1:
-        update_order(orders[0].id, {'payment_id': ''})
+        update_order(orders[0].id, {'payment_id': None})
         await callback.message.edit_text(
             text=auto_off_text(orders[0].id) + get_information_text(),
             reply_markup=get_info_keyboard()
