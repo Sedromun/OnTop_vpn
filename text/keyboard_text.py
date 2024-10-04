@@ -20,6 +20,7 @@ buy_instr = "⚙️ Инструкция по покупке VPN"
 change_country_instr = "⚙️ Инструкция по смене страны"
 all_instr = "⚙️ Инструкция"
 pay = "Оплатить"
+off_auto = "Отключить автопродление"
 
 
 def get_order_short_text(order_id: int, country: str):

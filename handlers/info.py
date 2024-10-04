@@ -14,10 +14,10 @@ from keyboards.profile import get_profile_keyboard, get_order_countries_keyboard
     ChooseCountryChangeCallbackFactory, get_order_changes_keyboard, BackKeyInfoCallbackFactory
 from servers.outline_keys import get_key
 from text.info import get_countries_text, get_referral_program_text, choose_order_to_change_country, get_no_orders_text, \
-    choose_order_to_extend, expiration_date_text
+    choose_order_to_extend, expiration_date_text, auto_off_text, choose_order_to_off_auto
 from text.keyboard_text import (
     countries,
-    referral_program, change_country, extend_key, back,
+    referral_program, change_country, extend_key, back, off_auto,
 )
 from text.profile import get_order_choose_country_text, get_order_info_text, get_country_changed_text
 from text.texts import (
@@ -229,3 +229,38 @@ async def info_countries_callback(
         text=get_information_text(), reply_markup=get_info_keyboard()
     )
     await callback.answer()
+
+
+@info_router.callback_query(InfoCallbackFactory.filter(F.text == off_auto))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoCallbackFactory
+):
+    user = get_user(callback.from_user.id)
+    orders = user.orders
+    if len(orders) == 0:
+        await callback.message.answer(get_no_orders_text())
+    elif len(orders) == 1:
+        update_order(orders[0].id, {'payment_id': ''})
+        await callback.message.edit_text(
+            text=auto_off_text(orders[0].id) + get_information_text(),
+            reply_markup=get_info_keyboard()
+        )
+    else:
+        await callback.message.edit_text(
+            text=choose_order_to_off_auto(),
+            reply_markup=get_choose_order_keyboard(callback.from_user.id, off_auto=True)
+        )
+    await callback.answer()
+
+
+@info_router.callback_query(InfoChooseOrderCallbackFactory.filter(F.off_auto))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoChooseOrderCallbackFactory
+):
+    update_order(callback_data.order_id, {'payment_id': ''})
+    await callback.message.edit_text(
+        text=auto_off_text(callback_data.order_id) + get_information_text(),
+        reply_markup=get_info_keyboard()
+    )
+
+

@@ -96,6 +96,8 @@ async def check_payment(notification: NotificationSchema):
             pass
 
         await check_referral(user_id, amount)
+        if purpose != PaymentPurpose.ADD_MONEY.value:
+            update_order(order.id, {'payment_id': payment['payment_method']['id']})
 
 
 @app.get("/keys/{order_id_enc}")

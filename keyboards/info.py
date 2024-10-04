@@ -18,6 +18,10 @@ def get_info_keyboard():
         text=extend_key,
         callback_data=InfoCallbackFactory(text=extend_key),
     )
+    builder.button(
+        text=off_auto,
+        callback_data=InfoCallbackFactory(text=off_auto),
+    )
     builder.button(text=all_instr, url=INSTR_URL)
     builder.button(text=tech_support, url=TECH_SUPPORT_LINK)
     builder.button(text=recalls, url=RECALLS_TGC_LINK)
@@ -40,7 +44,7 @@ class InfoBackCallbackFactory(CallbackData, prefix="info_back"):
     back: bool
 
 
-def get_choose_order_keyboard(id: int, change_country: bool = False, extend_key: bool = False):
+def get_choose_order_keyboard(id: int, change_country: bool = False, extend_key: bool = False, off_auto: bool = False):
     builder = InlineKeyboardBuilder()
 
     user = get_user(id)
@@ -53,6 +57,7 @@ def get_choose_order_keyboard(id: int, change_country: bool = False, extend_key:
             callback_data=InfoChooseOrderCallbackFactory(
                 change_country=change_country,
                 extend_key=extend_key,
+                off_auto=off_auto,
                 order_id=order.id
             ),
         )
@@ -65,6 +70,7 @@ def get_choose_order_keyboard(id: int, change_country: bool = False, extend_key:
 class InfoChooseOrderCallbackFactory(CallbackData, prefix="info_cb"):
     change_country: bool = False
     extend_key: bool = False
+    off_auto: bool = False
     order_id: int
 
 

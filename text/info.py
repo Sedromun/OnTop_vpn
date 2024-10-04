@@ -31,6 +31,10 @@ def choose_order_to_change_country():
     return "Выбери ключ в котором хотите поменять страну"
 
 
+def choose_order_to_off_auto():
+    return "Выбери ключ для отмены автопродления"
+
+
 def choose_order_to_extend():
     return "Выбери ключ для продления"
 
@@ -44,3 +48,7 @@ def expiration_date_text(order):
         (order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3))
         .strftime(datetime_format)
     }\n\n"
+
+
+def auto_off_text(order_id):
+    return f"<b>Автопродление для ключа №{order_id} - отключено</b>\n\n"
