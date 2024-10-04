@@ -49,7 +49,6 @@ async def check_payment(notification: NotificationSchema):
         order_id = int(data['order_id'])
         purpose = int(data['purpose'])
         order = get_order(order_id)
-        user_id = -1
         amount = (int(float(payment['amount']['value'])))
 
         if purpose == PaymentPurpose.BUY_CARD.value or purpose == PaymentPurpose.BUY_ADD_MONEY.value:
@@ -75,6 +74,14 @@ async def check_payment(notification: NotificationSchema):
 
         user_id = order.user_id
         user = get_user(user_id)
+        if purpose == PaymentPurpose.ADD_MONEY.value:
+            new_balance = user.balance + amount
+            update_user(user_id, {"balance": new_balance})
+            await bot.send_message(user_id, text=get_money_added_text())
+        elif purpose == PaymentPurpose.EXTEND_ADD_MONEY.value or purpose == PaymentPurpose.BUY_ADD_MONEY.value:
+            price = order.price
+            new_balance = user.balance + amount - price
+            update_user(user.id, {"balance": new_balance})
 
         if purpose == PaymentPurpose.EXTEND_ADD_MONEY.value or purpose == PaymentPurpose.EXTEND_CARD.value:
             begin = order.expiration_date
@@ -82,15 +89,6 @@ async def check_payment(notification: NotificationSchema):
             update_order(order.id, {"expiration_date": end})
 
             await bot.send_message(user_id, text=get_success_extended_key_text() + get_order_info_text(order.id))
-
-        if purpose == PaymentPurpose.ADD_MONEY.value:
-            new_balance = user.balance + amount
-            update_user(user_id, {"balance": new_balance})
-            await bot.send_message(user_id, text=get_money_added_text())
-        else:
-            price = order.price
-            new_balance = user.balance + amount - price
-            update_user(user.id, {"balance": new_balance})
 
         try:
             await bot.delete_message(user_id, data['message_id'])
