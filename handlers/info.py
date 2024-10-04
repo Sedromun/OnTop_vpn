@@ -239,7 +239,7 @@ async def info_countries_callback(
     orders = user.orders
     on_auto_orders = []
     for order in orders:
-        if order.payment_id is not None:
+        if order.payment_id != '' and order.payment_id is not None:
             on_auto_orders.append(order)
 
     if len(orders) == 0:
