@@ -79,7 +79,8 @@ async def check_payment(notification: NotificationSchema):
             update_user(user_id, {"balance": new_balance})
             await bot.send_message(user_id, text=get_money_added_text())
         elif purpose == PaymentPurpose.EXTEND_ADD_MONEY.value or purpose == PaymentPurpose.BUY_ADD_MONEY.value:
-            price = order.price
+            price = int(data['price'])
+            update_order(order.id, {'price': price})
             new_balance = user.balance + amount - price
             update_user(user.id, {"balance": new_balance})
 
