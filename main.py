@@ -73,6 +73,9 @@ async def check_payment(notification: NotificationSchema):
                 reply_markup=get_instruction_button_keyboard()
             )
 
+        user_id = order.user_id
+        user = get_user(user_id)
+
         if purpose == PaymentPurpose.EXTEND_ADD_MONEY.value or purpose == PaymentPurpose.EXTEND_CARD.value:
             begin = order.expiration_date
             end = begin + datetime.timedelta(days=int(duration_str))
@@ -80,8 +83,6 @@ async def check_payment(notification: NotificationSchema):
 
             await bot.send_message(user_id, text=get_success_extended_key_text() + get_order_info_text(order.id))
 
-        user_id = order.user_id
-        user = get_user(user_id)
         if purpose == PaymentPurpose.ADD_MONEY.value:
             new_balance = user.balance + amount
             update_user(user_id, {"balance": new_balance})
