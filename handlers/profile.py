@@ -170,10 +170,7 @@ async def buy_balance_callback(
         begin = order.expiration_date
         end = begin + datetime.timedelta(days=callback_data.duration)
         update_order(order.id, {"expiration_date": end})
-        if callback.message.photo is not None:
-            await callback.message.edit_text(text=get_success_extended_key_text())
-        else:
-            await callback.message.edit_text(text=get_success_extended_key_text())
+        await callback.message.edit_text(text=get_success_extended_key_text() + get_order_info_text(order.id))
     else:
         await callback.message.edit_text(
             text=get_not_enough_money_text(callback_data.price - user.balance),

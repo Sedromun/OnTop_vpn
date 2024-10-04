@@ -19,7 +19,7 @@ def get_country_changed_text():
 
 
 def get_success_extended_key_text():
-    return "🎉 <b>Ключ успешно продлен!</b>\n"
+    return "🎉 <b>Ключ успешно продлен!</b>\n\n"
 
 
 def get_profile_add_money_text():
