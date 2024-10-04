@@ -51,7 +51,8 @@ async def buy_handle(
             "order_id": order_id,
             "message_id": callback.message.message_id,
             "duration": callback_data.duration,
-            "purpose": purpose.value
+            "purpose": purpose.value,
+            "user_id": callback.from_user.id,
         } | (order_data if order_data is not None else {})
 
     payment = Payment.create({
