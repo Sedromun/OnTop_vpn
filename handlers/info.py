@@ -173,9 +173,19 @@ async def info_countries_callback(
 async def profile_extend_key_callback(
     callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
-    await callback.message.answer(
-        text=get_information_text(), reply_markup=get_info_keyboard()
-    )
+    user = get_user(callback.from_user.id)
+    orders = user.orders
+    if len(orders) == 0:
+        await callback.message.answer(get_no_orders_text())
+    elif len(orders) == 1:
+        await callback.message.answer(
+            text=get_information_text(), reply_markup=get_info_keyboard()
+        )
+    else:
+        await callback.message.edit_text(
+            text=choose_order_to_extend(),
+            reply_markup=get_choose_order_keyboard(callback.from_user.id, extend_key=True)
+        )
     await callback.answer()
 
 

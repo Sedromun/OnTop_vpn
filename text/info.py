@@ -40,7 +40,7 @@ def get_no_orders_text():
 
 
 def expiration_date_text(order):
-    return f"Ключ N{order.id} {COUNTRIES[order.country]}\n\nДата истечения: {
+    return f"Ключ №{order.id} {COUNTRIES[order.country]}\n\nДата истечения: {
         (order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3))
         .strftime(datetime_format)
     }\n\n"
