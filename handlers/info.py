@@ -9,8 +9,9 @@ from keyboards.info import (
     InfoCallbackFactory,
     get_back_keyboard,
     get_info_keyboard, get_choose_order_keyboard, InfoChooseOrderCallbackFactory, get_my_keys_keyboard,
+    get_profile_keyboard,
 )
-from keyboards.profile import get_profile_keyboard, get_order_countries_keyboard, OrderChangesCallbackFactory, \
+from keyboards.profile import get_order_countries_keyboard, OrderChangesCallbackFactory, \
     ChooseCountryChangeCallbackFactory, get_order_changes_keyboard, BackKeyInfoCallbackFactory
 from schemas import OrderModel
 from servers.outline_keys import get_key
@@ -32,12 +33,12 @@ info_router = Router(name="info")
 async def info_profile_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
-    id = callback.message.from_user.id
+    id = callback.from_user.id
     user = get_user(id)
     if user is None:
         register_user(id)
     await callback.message.edit_text(
-        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+        text=get_profile_text(id), reply_markup=get_profile_keyboard()
     )
 
 
@@ -133,7 +134,7 @@ async def changing_country_callback(
     get_key(callback_data.country, order.id)
     await callback.message.edit_text(
         text=get_country_changed_text() + get_order_info_text(callback_data.id),
-        reply_markup=get_order_changes_keyboard(order_id=order.id),
+        reply_markup=get_order_changes_keyboard(),
     )
     await callback.answer()
 
@@ -181,19 +182,7 @@ async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFa
 async def profile_extend_key_callback(
         callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
-    user = get_user(callback.from_user.id)
-    orders = user.orders
-    if len(orders) == 0:
-        await callback.message.answer(get_no_orders_text())
-    elif len(orders) == 1:
-        await callback.message.answer(
-            text=get_information_text(), reply_markup=get_info_keyboard()
-        )
-    else:
-        await callback.message.edit_text(
-            text=choose_order_to_extend(),
-            reply_markup=get_choose_order_keyboard(orders, extend_key=True)
-        )
+    await my_key(callback, order=get_order(callback_data.order_id))
     await callback.answer()
 
 

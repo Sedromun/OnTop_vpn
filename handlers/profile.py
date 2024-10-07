@@ -15,14 +15,14 @@ from keyboards.buy import (
     get_buy_vpn_keyboard,
     get_payment_options_keyboard, BackFromPaymentCallbackFactory,
 )
+from keyboards.info import ProfileCallbackFactory, get_profile_keyboard
 from keyboards.profile import (
     ChooseCountryChangeCallbackFactory,
     OrderChangesCallbackFactory,
     ProfileAddMoneyCallbackFactory,
-    ProfileCallbackFactory,
     get_add_money_keyboard,
     get_order_countries_keyboard,
-    get_profile_keyboard, OrderExpiringCallbackFactory,
+    OrderExpiringCallbackFactory,
 )
 from servers.outline_keys import get_key
 from text.keyboard_text import back, change_country, extend_key
@@ -57,9 +57,6 @@ async def profile_change_country_callback(
         reply_markup=get_order_countries_keyboard(id=order.id),
     )
     await callback.answer()
-
-
-
 
 
 @profile_router.callback_query(OrderChangesCallbackFactory.filter(F.text == extend_key))
@@ -100,9 +97,6 @@ async def profile_extend_key_callback(
         ),
     )
     await callback.answer()
-
-
-
 
 
 @profile_router.callback_query(
@@ -218,7 +212,7 @@ async def add_money_balance_callback(
     )
 
 
-@profile_router.callback_query(ProfileCallbackFactory.filter(F.balance == True))
+@profile_router.callback_query(ProfileCallbackFactory.filter())
 async def profile_order_info_callback(
         callback: CallbackQuery, callback_data: ProfileCallbackFactory
 ):
@@ -236,7 +230,7 @@ async def add_money_callback(
     id = callback.from_user.id
 
     await callback.message.edit_text(
-        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+        text=get_profile_text(id), reply_markup=get_profile_keyboard()
     )
     await callback.answer()
 

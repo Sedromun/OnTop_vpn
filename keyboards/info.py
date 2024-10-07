@@ -79,3 +79,21 @@ def get_instruction_button_keyboard():
     builder.button(text=all_instr, url=INSTR_URL)
     builder.adjust(1)
     return builder.as_markup()
+
+
+def get_profile_keyboard():
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text=top_up_balance,
+        callback_data=ProfileCallbackFactory(),
+    )
+    builder.button(
+        text=back,
+        callback_data=InfoBackCallbackFactory(back=True),
+    )
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+class ProfileCallbackFactory(CallbackData, prefix="profile"):
+    pass

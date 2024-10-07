@@ -6,28 +6,7 @@ from database.controllers.user import get_user_orders, register_user, get_user
 from text.keyboard_text import *
 
 
-def get_profile_keyboard(id: int):
-    builder = InlineKeyboardBuilder()
-    builder.button(
-        text=top_up_balance,
-        callback_data=ProfileCallbackFactory(balance=True, order_id=-1),
-    )
-    user = get_user(id)
-    if user is None:
-        register_user(id)
-    orders = get_user_orders(id)
-    for order in orders:
-        builder.button(
-            text=get_order_short_text(order.id, order.country),
-            callback_data=ProfileCallbackFactory(balance=False, order_id=order.id),
-        )
-    builder.adjust(1)
-    return builder.as_markup()
 
-
-class ProfileCallbackFactory(CallbackData, prefix="profile"):
-    balance: bool
-    order_id: int
 
 
 def get_order_changes_keyboard():
