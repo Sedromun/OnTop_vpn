@@ -2,7 +2,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
 from database.controllers.order import get_order, update_order
-from database.controllers.user import get_user
+from database.controllers.user import get_user, register_user
 from keyboards.buy import get_buy_vpn_keyboard, BuyCallbackFactory, PaymentCallbackFactory, Payment
 from keyboards.info import (
     InfoBackCallbackFactory,
@@ -18,15 +18,27 @@ from text.info import get_countries_text, get_referral_program_text, choose_orde
     choose_order_to_extend, expiration_date_text, auto_off_text, choose_order_to_off_auto, get_my_keys_text
 from text.keyboard_text import (
     countries,
-    referral_program, change_country, extend_key, back, off_auto, my_keys,
+    referral_program, change_country, extend_key, back, off_auto, my_keys, profile,
 )
 from text.profile import get_order_choose_country_text, get_order_info_text, get_country_changed_text
 from text.texts import (
-    get_information_text, get_buy_vpn_text,
+    get_information_text, get_buy_vpn_text, get_profile_text,
 )
 
 info_router = Router(name="info")
 
+
+@info_router.callback_query(InfoCallbackFactory.filter(F.text == profile))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoCallbackFactory
+):
+    id = callback.message.from_user.id
+    user = get_user(id)
+    if user is None:
+        register_user(id)
+    await callback.message.edit_text(
+        text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+    )
 
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == my_keys))
 async def info_countries_callback(
