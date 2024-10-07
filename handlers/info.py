@@ -29,7 +29,7 @@ info_router = Router(name="info")
 
 
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == profile))
-async def info_countries_callback(
+async def info_profile_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
     id = callback.message.from_user.id
@@ -42,7 +42,7 @@ async def info_countries_callback(
 
 
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == my_keys))
-async def info_countries_callback(
+async def info_my_keys_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
     user = get_user(callback.from_user.id)
@@ -77,7 +77,7 @@ async def my_keys_callback(callback: CallbackQuery, callback_data: InfoChooseOrd
 
 
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == back))
-async def info_countries_callback(
+async def back_from_my_keys_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
     user = get_user(callback.from_user.id)
@@ -87,12 +87,12 @@ async def info_countries_callback(
             text=get_information_text(), reply_markup=get_info_keyboard()
         )
     else:
-        await info_countries_callback(callback, callback_data)
+        await info_my_keys_callback(callback, callback_data)
     await callback.answer()
 
 
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == change_country))
-async def info_countries_callback(
+async def info_change_country_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
     order = get_order(callback_data.order_id)
@@ -147,7 +147,7 @@ async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackK
 
 
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == extend_key))
-async def info_countries_callback(
+async def extend_key_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
     order = get_order(callback_data.order_id)
@@ -198,7 +198,7 @@ async def profile_extend_key_callback(
 
 
 @info_router.callback_query(InfoChooseOrderCallbackFactory.filter(F.extend_key))
-async def info_countries_callback(
+async def extend_key_prices_callback(
         callback: CallbackQuery, callback_data: InfoChooseOrderCallbackFactory
 ):
     order = get_order(callback_data.order_id)
@@ -212,7 +212,7 @@ async def info_countries_callback(
 
 
 @info_router.callback_query(InfoBackCallbackFactory.filter())
-async def info_countries_callback(
+async def back_to_info_start_callback(
         callback: CallbackQuery, callback_data: InfoBackCallbackFactory
 ):
     await callback.message.edit_text(
@@ -222,24 +222,13 @@ async def info_countries_callback(
 
 
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == off_auto))
-async def info_countries_callback(
+async def off_auto_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
 ):
     order_id = callback_data.order_id
     update_order(order_id, {'payment_id': None})
     await callback.message.edit_text(
-        text=auto_off_text(order_id) + get_information_text(),
-        reply_markup=get_info_keyboard()
-    )
-    await callback.answer()
-
-
-@info_router.callback_query(InfoChooseOrderCallbackFactory.filter(F.off_auto))
-async def info_countries_callback(
-        callback: CallbackQuery, callback_data: InfoChooseOrderCallbackFactory
-):
-    update_order(callback_data.order_id, {'payment_id': ''})
-    await callback.message.edit_text(
         text=auto_off_text(callback_data.order_id),
         reply_markup=get_back_keyboard()
     )
+    await callback.answer()
