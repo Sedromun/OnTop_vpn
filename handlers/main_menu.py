@@ -66,11 +66,8 @@ async def info_handler(message: Message):
     )
 
 
-
-
-
 @main_router.callback_query(StateFilter(None), F.text == referral_program)
-async def info_countries_handler(message: Message):
+async def referral_handler(message: Message):
     await message.answer(
         text=get_referral_program_text(message.from_user.id)
     )
