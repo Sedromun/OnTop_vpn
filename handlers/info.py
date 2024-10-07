@@ -3,6 +3,7 @@ from aiogram.types import CallbackQuery
 
 from database.controllers.order import get_order, update_order
 from database.controllers.user import get_user, register_user
+from handlers import info_handler
 from keyboards.buy import get_buy_vpn_keyboard, BuyCallbackFactory, PaymentCallbackFactory, Payment
 from keyboards.info import (
     InfoBackCallbackFactory,
@@ -40,6 +41,7 @@ async def info_countries_callback(
         text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
     )
 
+
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == my_keys))
 async def info_countries_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
@@ -75,6 +77,19 @@ async def my_keys_callback(callback: CallbackQuery, callback_data: InfoChooseOrd
     await my_key(callback, order=order)
 
 
+@info_router.callback_query(InfoCallbackFactory.filter(F.text == back))
+async def info_countries_callback(
+        callback: CallbackQuery, callback_data: InfoCallbackFactory
+):
+    user = get_user(callback.from_user.id)
+    orders = user.orders
+    if len(orders) <= 1:
+        await info_handler(callback.message)
+    else:
+        await info_countries_callback(callback, callback_data)
+    await callback.answer()
+
+
 @info_router.callback_query(InfoCallbackFactory.filter(F.text == change_country))
 async def info_countries_callback(
         callback: CallbackQuery, callback_data: InfoCallbackFactory
@@ -96,36 +111,13 @@ async def profile_back_order_info_country_callback(
     await callback.answer()
 
 
-@info_router.callback_query(InfoChooseOrderCallbackFactory.filter(F.change_country))
-async def info_countries_callback(
-        callback: CallbackQuery, callback_data: InfoChooseOrderCallbackFactory
-):
-    order = get_order(callback_data.order_id)
-    await callback.message.edit_text(
-        text=get_order_choose_country_text(order.id, order.country),
-        reply_markup=get_order_countries_keyboard(id=order.id),
-    )
-
-
 @info_router.callback_query(
     ChooseCountryChangeCallbackFactory.filter(F.back == True)
 )
 async def changing_country_back_callback(
         callback: CallbackQuery, callback_data: ChooseCountryChangeCallbackFactory
 ):
-    user = get_user(callback.from_user.id)
-    orders = user.orders
-    if len(orders) == 0:
-        await callback.message.edit_text(get_no_orders_text())
-    elif len(orders) == 1:
-        await callback.message.edit_text(
-            text=get_information_text(), reply_markup=get_info_keyboard()
-        )
-    else:
-        await callback.message.edit_text(
-            text=choose_order_to_change_country(),
-            reply_markup=get_choose_order_keyboard(orders, change_country=True)
-        )
+    await my_key(callback, order=get_order(callback_data.id))
     await callback.answer()
 
 
@@ -145,21 +137,9 @@ async def changing_country_callback(
     await callback.answer()
 
 
-@info_router.callback_query(BackKeyInfoCallbackFactory.filter(F.info == True))
+@info_router.callback_query(BackKeyInfoCallbackFactory.filter())
 async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
-    order = get_order(callback_data.order_id)
-    await callback.message.edit_text(
-        text=get_order_choose_country_text(order.id, order.country),
-        reply_markup=get_order_countries_keyboard(id=order.id),
-    )
-    await callback.answer()
-
-
-@info_router.callback_query(BackKeyInfoCallbackFactory.filter(F.back == True))
-async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
-    await callback.message.edit_text(
-        text=get_information_text(), reply_markup=get_info_keyboard()
-    )
+    await info_handler(callback.message)
     await callback.answer()
 
 
