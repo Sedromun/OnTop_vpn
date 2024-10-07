@@ -7,7 +7,6 @@ from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
 from keyboards.main_keyboard import get_main_keyboard
-from keyboards.profile import get_profile_keyboard
 from text.info import get_referral_program_text
 from text.keyboard_text import buy, settings, profile, referral_program
 from text.texts import (
