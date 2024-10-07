@@ -38,6 +38,7 @@ def get_my_keys_keyboard(off_auto_need: bool, order_id: int):
             text=off_auto,
             callback_data=InfoCallbackFactory(text=off_auto, order_id=order_id),
         )
+    builder.adjust(1)
     return builder.as_markup()
 
 

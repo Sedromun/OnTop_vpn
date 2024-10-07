@@ -140,7 +140,7 @@ async def changing_country_callback(
     get_key(callback_data.country, order.id)
     await callback.message.edit_text(
         text=get_country_changed_text() + get_order_info_text(callback_data.id),
-        reply_markup=get_order_changes_keyboard(order_id=order.id, info=True),
+        reply_markup=get_order_changes_keyboard(order_id=order.id),
     )
     await callback.answer()
 
