@@ -3,7 +3,6 @@ from aiogram.types import CallbackQuery
 
 from database.controllers.order import get_order, update_order
 from database.controllers.user import get_user, register_user
-from handlers import info_handler
 from keyboards.buy import get_buy_vpn_keyboard, BuyCallbackFactory, PaymentCallbackFactory, Payment
 from keyboards.info import (
     InfoBackCallbackFactory,
@@ -84,7 +83,9 @@ async def info_countries_callback(
     user = get_user(callback.from_user.id)
     orders = user.orders
     if len(orders) <= 1:
-        await info_handler(callback.message)
+        await callback.message.answer(
+            text=get_information_text(), reply_markup=get_info_keyboard()
+        )
     else:
         await info_countries_callback(callback, callback_data)
     await callback.answer()
@@ -139,7 +140,9 @@ async def changing_country_callback(
 
 @info_router.callback_query(BackKeyInfoCallbackFactory.filter())
 async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
-    await info_handler(callback.message)
+    await callback.message.answer(
+        text=get_information_text(), reply_markup=get_info_keyboard()
+    )
     await callback.answer()
 
 
