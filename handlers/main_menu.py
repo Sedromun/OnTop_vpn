@@ -8,7 +8,8 @@ from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
 from keyboards.main_keyboard import get_main_keyboard
 from keyboards.profile import get_profile_keyboard
-from text.keyboard_text import buy, settings, profile
+from text.info import get_referral_program_text
+from text.keyboard_text import buy, settings, profile, referral_program
 from text.texts import (
     get_buy_vpn_text,
     get_greeting_text,
@@ -73,6 +74,13 @@ async def profile_handler(message: Message):
         register_user(id)
     await message.answer(
         text=get_profile_text(id), reply_markup=get_profile_keyboard(id)
+    )
+
+
+@main_router.callback_query(StateFilter(None), F.text == referral_program)
+async def info_countries_handler(message: Message):
+    await message.answer(
+        text=get_referral_program_text(message.from_user.id)
     )
 
 

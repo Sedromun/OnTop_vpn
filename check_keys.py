@@ -49,7 +49,6 @@ async def sale_one_day_notification(user):
         })
 
 
-
 async def check_expired():
     now = datetime.datetime.now(datetime.timezone.utc)
     orders = get_all_orders()

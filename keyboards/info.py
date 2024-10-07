@@ -9,20 +9,8 @@ from text.keyboard_text import *
 
 def get_info_keyboard():
     builder = InlineKeyboardBuilder()
-    builder.button(text=countries, callback_data=InfoCallbackFactory(text=countries))
-    builder.button(text=referral_program, callback_data=InfoCallbackFactory(text=referral_program))
-    builder.button(
-        text=change_country,
-        callback_data=InfoCallbackFactory(text=change_country),
-    )
-    builder.button(
-        text=extend_key,
-        callback_data=InfoCallbackFactory(text=extend_key),
-    )
-    builder.button(
-        text=off_auto,
-        callback_data=InfoCallbackFactory(text=off_auto),
-    )
+    builder.button(text=my_keys, callback_data=InfoCallbackFactory(text=my_keys))
+    builder.button(text=profile, callback_data=InfoCallbackFactory(text=profile))
     builder.button(text=all_instr, url=INSTR_URL)
     builder.button(text=tech_support, url=TECH_SUPPORT_LINK)
     builder.button(text=recalls, url=RECALLS_TGC_LINK)
@@ -32,6 +20,25 @@ def get_info_keyboard():
 
 class InfoCallbackFactory(CallbackData, prefix="info"):
     text: str
+    order_id: int = -1
+
+
+def get_my_keys_keyboard(off_auto_need: bool, order_id: int):
+    builder = InlineKeyboardBuilder()
+    builder.button(
+        text=change_country,
+        callback_data=InfoCallbackFactory(text=change_country, order_id=order_id),
+    )
+    builder.button(
+        text=extend_key,
+        callback_data=InfoCallbackFactory(text=extend_key, order_id=order_id),
+    )
+    if off_auto_need:
+        builder.button(
+            text=off_auto,
+            callback_data=InfoCallbackFactory(text=off_auto, order_id=order_id),
+        )
+    return builder.as_markup()
 
 
 def get_back_keyboard():
@@ -45,16 +52,13 @@ class InfoBackCallbackFactory(CallbackData, prefix="info_back"):
     back: bool
 
 
-def get_choose_order_keyboard(orders: [OrderModel], change_country: bool = False, extend_key: bool = False, off_auto: bool = False):
+def get_choose_order_keyboard(orders: [OrderModel]):
     builder = InlineKeyboardBuilder()
 
     for order in orders:
         builder.button(
             text=get_order_short_text(order.id, order.country),
             callback_data=InfoChooseOrderCallbackFactory(
-                change_country=change_country,
-                extend_key=extend_key,
-                off_auto=off_auto,
                 order_id=order.id
             ),
         )
@@ -65,9 +69,6 @@ def get_choose_order_keyboard(orders: [OrderModel], change_country: bool = False
 
 
 class InfoChooseOrderCallbackFactory(CallbackData, prefix="info_cb"):
-    change_country: bool = False
-    extend_key: bool = False
-    off_auto: bool = False
     order_id: int
 
 
