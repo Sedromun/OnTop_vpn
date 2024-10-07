@@ -84,7 +84,7 @@ async def back_from_my_keys_callback(
     user = get_user(callback.from_user.id)
     orders = user.orders
     if len(orders) <= 1:
-        await callback.message.answer(
+        await callback.message.edit_text(
             text=get_information_text(), reply_markup=get_info_keyboard()
         )
     else:
@@ -141,7 +141,7 @@ async def changing_country_callback(
 
 @info_router.callback_query(BackKeyInfoCallbackFactory.filter())
 async def back_to_profile_callback(callback: CallbackQuery, callback_data: BackKeyInfoCallbackFactory):
-    await callback.message.answer(
+    await callback.message.edit_text(
         text=get_information_text(), reply_markup=get_info_keyboard()
     )
     await callback.answer()
