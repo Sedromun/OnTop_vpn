@@ -64,7 +64,8 @@ async def info_countries_callback(
 async def my_key(callback: CallbackQuery, order: OrderModel):
     await callback.message.edit_text(
         text=get_order_info_text(order_id=order.id),
-        reply_markup=get_my_keys_keyboard(order.payment_id is not None and order.payment_id != "")
+        reply_markup=get_my_keys_keyboard(off_auto_need=order.payment_id is not None and order.payment_id != "",
+                                          order_id=order.id)
     )
 
 

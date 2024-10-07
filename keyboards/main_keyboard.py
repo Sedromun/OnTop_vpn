@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-from text.keyboard_text import buy, settings, profile, referral_program
+from text.keyboard_text import buy, settings, referral_program
 
 
 def get_main_keyboard():
