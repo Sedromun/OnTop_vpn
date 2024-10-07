@@ -5,7 +5,7 @@ from utils.country import COUNTRIES
 
 def get_order_info_text(order_id):
     order = get_order(order_id)
-    return f"🔑 <b>Информация о ключе</b>:\n\n{get_key_data(order)}"
+    return f"🔑 <b>Информация о ключе №{order_id}</b>:\n\n{get_key_data(order)}"
 
 
 def get_order_choose_country_text(id, country):

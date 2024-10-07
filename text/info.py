@@ -51,7 +51,7 @@ def expiration_date_text(order):
 
 
 def auto_off_text(order_id):
-    return f"<b>Автопродление для ключа №{order_id} - отключено</b>\n\n"
+    return f"✅ <b>Автопродление для ключа №{order_id} - отключено</b>\n\n"
 
 
 def get_my_keys_text():

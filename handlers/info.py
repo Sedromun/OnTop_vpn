@@ -257,6 +257,6 @@ async def info_countries_callback(
 ):
     update_order(callback_data.order_id, {'payment_id': ''})
     await callback.message.edit_text(
-        text=auto_off_text(callback_data.order_id) + get_information_text(),
-        reply_markup=get_info_keyboard()
+        text=auto_off_text(callback_data.order_id),
+        reply_markup=get_back_keyboard()
     )
