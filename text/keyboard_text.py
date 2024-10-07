@@ -25,7 +25,7 @@ my_keys = "🔑 Мои ключи"
 
 
 def get_order_short_text(order_id: int, country: str):
-    print(f'"{country}"')
+    print(f"COUNTRY: '{country}'")
     return f"Ключ №{order_id} - {country} {COUNTRIES[country]}"
 
 
