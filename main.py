@@ -2,12 +2,15 @@ import asyncio
 import datetime
 
 from aiogram.types import message
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 from fastapi import FastAPI
 from starlette.responses import HTMLResponse
 from yookassa import Payment, Configuration
 from yookassa.domain.notification import WebhookNotification
 
-from config import bot, dp, FERNET, PERCENT_REFERRAL, SHOP_ID, SECRET_KEY
+from check_keys import check_expired
+from config import bot, dp, FERNET, PERCENT_REFERRAL, SHOP_ID, SECRET_KEY, INTERVAL
 from database.controllers.order import get_order, update_order, create_order
 from database.controllers.user import get_user, register_user, update_user
 from handlers import buy_router, info_router, main_router, profile_router
@@ -140,4 +143,7 @@ async def main():
 if __name__ == "__main__":
     Configuration.account_id = SHOP_ID
     Configuration.secret_key = SECRET_KEY
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(check_expired, trigger=IntervalTrigger(minutes=INTERVAL))
+    scheduler.start()
     asyncio.run(main())
