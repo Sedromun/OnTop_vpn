@@ -14,6 +14,7 @@ from handlers import buy_router, info_router, main_router, profile_router
 from handlers.admin import admin_router
 from keyboards.info import get_instruction_button_keyboard
 from keyboards.profile import get_order_expiring_keyboard
+from logs import backend_logger
 from schemas.Notification import NotificationSchema
 from schemas.Payment import PaymentSchema
 from servers.outline_keys import get_key
@@ -43,6 +44,7 @@ async def check_referral(user_id, amount):
 
 @app.post("/yoomoney/order_info")
 async def check_payment(notification: NotificationSchema):
+    backend_logger.info("POST - /yoomoney/order_info - new notification")
     payment = notification.object
     data = payment['metadata']
 
