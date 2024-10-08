@@ -97,7 +97,7 @@ PROFILE_PHOTO = FSInputFile("photos/profile.jpg")
 
 PERCENT_REFERRAL = 10
 WELCOME_PRESENT = 50
-BOT_LINK = "https://t.me/OnTop_vpn_bot"
+BOT_LINK = "https://t.me/cliquevpnbot"
 REFS_PARAM = "?start="
 
 INTERVAL = 5  # mins
