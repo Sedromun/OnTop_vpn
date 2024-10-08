@@ -1,8 +1,5 @@
-import asyncio
 import datetime
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger
 from yookassa import Payment
 
 from config import INTERVAL, bot, ONE_DAY_SALE
@@ -10,7 +7,7 @@ from database.controllers.key import delete_key
 from database.controllers.order import get_all_orders, delete_order
 from database.controllers.user import get_all_users, update_user
 from keyboards.profile import get_order_expiring_keyboard
-from logs import checker_logger
+from logs import logging
 from schemas import OrderModel
 from text.notifications import new_user_notification_text, sale_one_day_notification_text
 from text.texts import order_expired_text, order_going_to_expired_text
@@ -20,7 +17,7 @@ from utils.buy_options import Prices
 async def order_expired(order: OrderModel):
     payment_id = order.payment_id
     if payment_id is not None and payment_id != "":
-        checker_logger.info(f"created autopayment order {order.id}")
+        logging.info(f"created autopayment order {order.id}")
         payment = Payment.create({
             "amount": {
                 "value": Prices['1 месяц'],
@@ -35,7 +32,7 @@ async def order_expired(order: OrderModel):
             }
         })
     else:
-        checker_logger.info(f"order {order.id} - expired")
+        logging.info(f"order {order.id} - expired")
         for key in order.keys:
             delete_key(key.id)
         order_id = order.id
@@ -45,7 +42,7 @@ async def order_expired(order: OrderModel):
 
 
 async def order_going_to_expired(order: OrderModel, time: str):
-    checker_logger.info(f"soon order {order.id} will be expired, sent notification")
+    logging.info(f"soon order {order.id} will be expired, sent notification")
     if order.payment_id is None or order.payment_id == "":
         await bot.send_message(
             order.user_id,
@@ -55,7 +52,7 @@ async def order_going_to_expired(order: OrderModel, time: str):
 
 
 async def new_user_notification(user, _: str):
-    checker_logger.info(f"new user {user.id} notification")
+    logging.info(f"new user {user.id} notification")
     await bot.send_message(
         user.id,
         new_user_notification_text()
@@ -63,7 +60,7 @@ async def new_user_notification(user, _: str):
 
 
 async def sale_one_day_notification(user, _: str):
-    checker_logger.info(f"user {user.id} got sale notification")
+    logging.info(f"user {user.id} got sale notification")
     await bot.send_message(
         user.id,
         sale_one_day_notification_text()
@@ -97,7 +94,7 @@ USERS_NOTIFICATIONS = [
 
 async def check_expired():
     now = datetime.datetime.now(datetime.timezone.utc)
-    checker_logger.info(f"STARTED checker")
+    logging.info(f"STARTED checker")
     orders = get_all_orders()
     for order in orders:
         if not order.keys:
@@ -128,4 +125,4 @@ async def check_expired():
                     ""
                 )
 
-    checker_logger.info(f"FINISHED checker")
+    logging.info(f"FINISHED checker")
