@@ -22,7 +22,7 @@ services:
     depends_on:
       - database
       - backend
-      - checker
+#      - checker
     volumes:
       - ./:/app
     env_file:
