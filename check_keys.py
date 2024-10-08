@@ -131,11 +131,11 @@ async def check_expired():
     checker_logger.info(f"FINISHED checker")
 
 
-async def main():
+def main():
     scheduler = AsyncIOScheduler()
     scheduler.add_job(check_expired, trigger=IntervalTrigger(minutes=INTERVAL))
     scheduler.start()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
