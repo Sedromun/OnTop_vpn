@@ -144,6 +144,6 @@ if __name__ == "__main__":
     Configuration.account_id = SHOP_ID
     Configuration.secret_key = SECRET_KEY
     scheduler = AsyncIOScheduler()
-    scheduler.add_job(check_expired, trigger=IntervalTrigger(minutes=INTERVAL))
+    scheduler.add_job(check_expired, 'interval', seconds=60 * INTERVAL)
     scheduler.start()
     asyncio.run(main())
