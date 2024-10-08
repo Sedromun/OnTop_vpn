@@ -3,8 +3,8 @@ FROM python
 RUN apt-get update && apt-get -y upgrade
 RUN apt install curl
 RUN curl -y https://sh.rustup.rs -sSf | sh
-RUN source $HOME/.cargo/env
 
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 WORKDIR /app
 
