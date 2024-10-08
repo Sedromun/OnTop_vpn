@@ -146,4 +146,7 @@ if __name__ == "__main__":
     scheduler = AsyncIOScheduler()
     scheduler.add_job(check_expired, 'interval', seconds=60 * INTERVAL)
     scheduler.start()
-    asyncio.run(main())
+    # asyncio.run(main())
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(bot.polling(skip_pending=True))
