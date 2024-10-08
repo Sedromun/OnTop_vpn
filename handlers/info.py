@@ -50,7 +50,7 @@ async def info_my_keys_callback(
     orders = user.orders
     if len(orders) == 0:
         await callback.message.edit_text(
-            text=get_no_orders_text() + get_information_text(),
+            text=get_no_orders_text() + "\n\n" + get_information_text(),
             reply_markup=get_info_keyboard()
         )
     elif len(orders) == 1:

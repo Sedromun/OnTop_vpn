@@ -40,7 +40,7 @@ def choose_order_to_extend():
 
 
 def get_no_orders_text():
-    return f"Ты еще не оформил ни один ключ, воспользуйся кнопкой '{buy}'"
+    return f"Ты еще не оформил ни один ключ, воспользуйся кнопкой \n{buy}"
 
 
 def expiration_date_text(order):

@@ -2,7 +2,8 @@ import asyncio
 import datetime
 import logging
 
-import schedule
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 from yookassa import Payment
 
 from config import INTERVAL, bot, ONE_DAY_SALE
@@ -76,6 +77,7 @@ async def check_on_time(func, now, target_time, interval, after: bool, model, in
     if now - checks_interval < tm < now:
         await func(model, interval_name)
 
+
 ORDERS_NOTIFICATIONS = [
     (order_going_to_expired, datetime.timedelta(hours=1, minutes=0), False, "1 час"),
     (order_going_to_expired, datetime.timedelta(days=1, minutes=0), False, "1 день"),
@@ -121,13 +123,10 @@ async def check_expired():
                 )
 
 
-schedule.every(5).minutes.do(check_expired)
-
-
 async def main():
-    while True:
-        schedule.run_pending()
-        await asyncio.sleep(1)
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(check_expired, trigger=IntervalTrigger(minutes=INTERVAL))
+    scheduler.start()
 
 
 if __name__ == "__main__":
