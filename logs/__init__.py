@@ -2,16 +2,28 @@ import datetime
 import logging
 import traceback
 
-logging.basicConfig(
-    level=logging.INFO,
-    filename=f".logs/{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M')}_bot_log.log",
-    filemode="w",
-    format="%(asctime)s %(levelname)s %(message)s",
-)
-
 bot_logger = logging.getLogger("bot")
 checker_logger = logging.getLogger("checker")
 backend_logger = logging.getLogger("backend")
+
+bot_fh = logging.FileHandler(f".logs/{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M')}_bot_log.log")
+bot_fh.setLevel(logging.INFO)
+
+checker_fh = logging.FileHandler(f".logs/{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M')}_checker_log.log")
+checker_fh.setLevel(logging.INFO)
+
+backend_fh = logging.FileHandler(f".logs/{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M')}_backend_log.log")
+backend_fh.setLevel(logging.INFO)
+
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+bot_fh.setFormatter(formatter)
+checker_fh.setFormatter(formatter)
+backend_fh.setFormatter(formatter)
+
+bot_logger.addHandler(bot_fh)
+checker_logger.addHandler(checker_fh)
+backend_logger.addHandler(backend_fh)
 
 
 # class Logger:
