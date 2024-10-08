@@ -143,10 +143,6 @@ async def main():
 if __name__ == "__main__":
     Configuration.account_id = SHOP_ID
     Configuration.secret_key = SECRET_KEY
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(check_expired, 'interval', seconds=60 * INTERVAL)
-    scheduler.start()
-    # asyncio.run(main())
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(bot.polling(skip_pending=True))
+    asyncio.run(main())
+

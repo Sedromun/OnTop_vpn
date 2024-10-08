@@ -1,5 +1,7 @@
+import asyncio
 import datetime
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from yookassa import Payment
 
 from config import INTERVAL, bot, ONE_DAY_SALE
@@ -126,3 +128,10 @@ async def check_expired():
                 )
 
     logging.info(f"FINISHED checker")
+
+
+if __name__ == "__main__":
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(check_expired, 'interval', seconds=60 * INTERVAL)
+    scheduler.start()
+    asyncio.get_event_loop().run_forever()
