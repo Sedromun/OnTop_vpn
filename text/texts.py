@@ -66,10 +66,7 @@ def get_pay_text():
 def get_key_data(order):
     return (
         f"Страна: {order.country} {COUNTRIES[order.country]}\n\n"
-        f"Дата истечения: {
-        (order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3))
-        .strftime(datetime_format)
-        }\n"
+        f"Дата истечения: {(order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime(datetime_format)}\n"
         f"(осталось {get_left_time(order.expiration_date.astimezone(datetime.timezone.utc))})\n\n"
         f"Ключ:\n<code>{get_order_perm_key(order.id)}</code>"
     )
