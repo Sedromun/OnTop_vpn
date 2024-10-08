@@ -54,7 +54,7 @@ async def check_payment(notification: NotificationSchema):
     if 'extending' in data:
         order = get_order(data['order_id'])
         if payment['status'] == 'succeeded':
-            bot.send_message(order.user_id, text=auto_extended_success(order.id))
+            await bot.send_message(order.user_id, text=auto_extended_success(order.id))
         else:
             update_order(order.id, {
                 "expiration_date": order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(days=1),
