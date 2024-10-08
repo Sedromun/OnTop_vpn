@@ -16,7 +16,7 @@ from text.texts import order_expired_text, order_going_to_expired_text
 from utils.buy_options import Prices
 
 
-async def order_expired(order: OrderModel):
+async def order_expired(order: OrderModel, _: str):
     payment_id = order.payment_id
     if payment_id is not None and payment_id != "":
         logging.info(f"created autopayment order {order.id}")
@@ -96,7 +96,6 @@ USERS_NOTIFICATIONS = [
 
 async def check_expired():
     now = datetime.datetime.now(datetime.timezone.utc)
-    logging.info(f"STARTED checker")
     orders = get_all_orders()
     for order in orders:
         if not order.keys:
@@ -126,8 +125,6 @@ async def check_expired():
                     user,
                     ""
                 )
-
-    logging.info(f"FINISHED checker")
 
 
 if __name__ == "__main__":
