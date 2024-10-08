@@ -4,7 +4,7 @@ import traceback
 
 logging.basicConfig(
     level=logging.INFO,
-    filename=f".logs/{datetime.datetime.now().strftime("%Y_%m_%d_%H_%M")}_bot_log.log",
+    filename=f".logs/{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M')}_bot_log.log",
     filemode="w",
     format="%(asctime)s %(levelname)s %(message)s",
 )
