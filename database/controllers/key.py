@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from database import session
-from logs import Logger
+from logs import bot_logger
 from schemas import OrderModel
 from schemas.key import KeyModel
 
@@ -32,11 +32,11 @@ def create_key(data: dict) -> KeyModel | None:
     try:
         session.add(key)
         session.commit()
-        Logger.info("key '" + str(key.id) + "' successfully created!")
+        bot_logger.info("key '" + str(key.id) + "' successfully created!")
         return key
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(e, "Integrity error in create_key - can't commit in db")
+        bot_logger.exception("Integrity error in create_key - can't commit in db", exc_info=e)
         return None
 
 
@@ -44,11 +44,11 @@ def update_key(key_id: int, updates: dict) -> bool:
     try:
         session.query(KeyModel).filter(KeyModel.id == key_id).update(updates)
         session.commit()
-        Logger.info("key '" + str(key_id) + "' successfully updated!")
+        bot_logger.info("key '" + str(key_id) + "' successfully updated!")
         return True
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(e, "Integrity error in update_key - can't commit in db")
+        bot_logger.exception("Integrity error in update_key - can't commit in db", exc_info=e)
         return False
 
 
@@ -56,11 +56,11 @@ def delete_key(key_id: int) -> bool:
     try:
         session.query(KeyModel).filter(KeyModel.id == key_id).delete()
         session.commit()
-        Logger.info("KeyModel" + " '" + str(key_id) + "' successfully deleted!")
+        bot_logger.info("KeyModel" + " '" + str(key_id) + "' successfully deleted!")
         return True
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(
-            e, "Integrity error in delete_key 'KeyModel' - can't commit in db"
+        bot_logger.exception(
+            "Integrity error in delete_key 'KeyModel' - can't commit in db", exc_info=e
         )
         return False

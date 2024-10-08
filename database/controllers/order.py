@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from database import session
-from logs import Logger
+from logs import bot_logger
 from schemas import OrderModel
 
 
@@ -28,11 +28,11 @@ def create_order(data: dict) -> OrderModel | None:
 
     try:
         session.commit()
-        Logger.info("order '" + str(order.id) + "' successfully created!")
+        bot_logger.info("order '" + str(order.id) + "' successfully created!")
         return order
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(e, "Integrity error in create_order - can't commit in db")
+        bot_logger.exception("Integrity error in create_order - can't commit in db", exc_info=e)
         return None
 
 
@@ -40,11 +40,11 @@ def update_order(order_id: int, updates: dict) -> bool:
     try:
         session.query(OrderModel).filter(OrderModel.id == order_id).update(updates)
         session.commit()
-        Logger.info("order '" + str(order_id) + "' successfully updated!")
+        bot_logger.info("order '" + str(order_id) + "' successfully updated!")
         return True
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(e, "Integrity error in update_order - can't commit in db")
+        bot_logger.exception("Integrity error in update_order - can't commit in db", exc_info=e)
         return False
 
 
@@ -52,11 +52,9 @@ def delete_order(order_id: int) -> bool:
     try:
         session.query(OrderModel).filter(OrderModel.id == order_id).delete()
         session.commit()
-        Logger.info("OrderModel '" + str(order_id) + "' successfully deleted!")
+        bot_logger.info("OrderModel '" + str(order_id) + "' successfully deleted!")
         return True
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(
-            e, f"Integrity error in delete_order 'OrderModel' - can't commit in db"
-        )
+        bot_logger.exception(f"Integrity error in delete_order 'OrderModel' - can't commit in db", exc_info=e)
         return False

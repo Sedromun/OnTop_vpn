@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 from database import session
-from logs import Logger
+from logs import bot_logger
 from schemas import OrderModel, UserModel
 
 
@@ -34,12 +34,13 @@ def register_user(tg_id: int) -> UserModel | None:
 
     try:
         session.commit()
-        Logger.info("User '" + str(tg_id) + "' successfully created!")
+        bot_logger.info("User '" + str(tg_id) + "' successfully created!")
         return creating_user
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(
-            e, f"Integrity error in register_user '{str(tg_id)}' - can't commit in db"
+        bot_logger.exception(
+            f"Integrity error in register_user '{str(tg_id)}' - can't commit in db",
+            exc_info=e
         )
         return None
 
@@ -48,12 +49,13 @@ def update_user(tg_id: int, updates: dict) -> bool:
     session.query(UserModel).filter(UserModel.id == tg_id).update(updates)
     try:
         session.commit()
-        Logger.info("User '" + str(tg_id) + "' successfully updated!")
+        bot_logger.info("User '" + str(tg_id) + "' successfully updated!")
         return True
     except IntegrityError as e:
         session.rollback()
-        Logger.exception(
-            e, f"Integrity error in update_user '{str(tg_id)}' - can't commit in db"
+        bot_logger.exception(
+            f"Integrity error in update_user '{str(tg_id)}' - can't commit in db",
+            exc_info=e
         )
         return False
 
