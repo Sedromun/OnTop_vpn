@@ -13,9 +13,11 @@ from database.controllers.user import get_user, register_user, update_user
 from handlers import buy_router, info_router, main_router, profile_router
 from handlers.admin import admin_router
 from keyboards.info import get_instruction_button_keyboard
+from keyboards.profile import get_order_expiring_keyboard
 from schemas.Notification import NotificationSchema
 from schemas.Payment import PaymentSchema
 from servers.outline_keys import get_key
+from text.notifications import auto_extended_success, auto_extended_failure
 from text.profile import get_order_info_text, get_success_extended_key_text, get_money_added_text
 from text.texts import get_referral_bought, get_success_created_key_text
 from utils.payment import get_order_perm_key
@@ -42,8 +44,23 @@ async def check_referral(user_id, amount):
 @app.post("/yoomoney/order_info")
 async def check_payment(notification: NotificationSchema):
     payment = notification.object
-    print(payment)
     data = payment['metadata']
+
+    if 'extending' in data:
+        order = get_order(data['order_id'])
+        if payment['status'] == 'succeeded':
+            bot.send_message(order.user_id, text=auto_extended_success(order.id))
+        else:
+            update_order(order.id, {
+                "expiration_date": order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(days=1),
+                "payment_id": ''
+            })
+
+            await bot.send_message(order.user_id,
+                                   text=auto_extended_failure(order.id),
+                                   reply_markup=get_order_expiring_keyboard(order.id))
+        return
+
     if payment['status'] == "succeeded":
         duration_str = data['duration']
         order_id = int(data['order_id'])

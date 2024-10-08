@@ -2,6 +2,9 @@ import asyncio
 import datetime
 import logging
 
+import schedule
+from yookassa import Payment
+
 from config import INTERVAL, bot, ONE_DAY_SALE
 from database.controllers.key import delete_key
 from database.controllers.order import get_all_orders, delete_order
@@ -10,33 +13,51 @@ from keyboards.profile import get_order_expiring_keyboard
 from schemas import OrderModel
 from text.notifications import new_user_notification_text, sale_one_day_notification_text
 from text.texts import order_expired_text, order_going_to_expired_text
+from utils.buy_options import Prices
 
 
 async def order_expired(order: OrderModel):
-    for key in order.keys:
-        delete_key(key.id)
-    order_id = order.id
-    user_id = order.user_id
-    delete_order(order.id)
-    await bot.send_message(user_id, order_expired_text(order_id))
+    payment_id = order.payment_id
+    if payment_id is not None and payment_id != "":
+        payment = Payment.create({
+            "amount": {
+                "value": Prices['1 месяц'],
+                "currency": "RUB"
+            },
+            "capture": True,
+            "payment_method_id": payment_id,
+            "description": f"Продление Clique VPN, ключ №{order.id} на месяц",
+            "metadata": {
+                "extending": True,
+                "order_id": order.id
+            }
+        })
+    else:
+        for key in order.keys:
+            delete_key(key.id)
+        order_id = order.id
+        user_id = order.user_id
+        delete_order(order.id)
+        await bot.send_message(user_id, order_expired_text(order_id))
 
 
 async def order_going_to_expired(order: OrderModel, time: str):
-    await bot.send_message(
-        order.user_id,
-        order_going_to_expired_text(order.id, time),
-        reply_markup=get_order_expiring_keyboard(order.id)
-    )
+    if order.payment_id is None or order.payment_id == "":
+        await bot.send_message(
+            order.user_id,
+            order_going_to_expired_text(order.id, time),
+            reply_markup=get_order_expiring_keyboard(order.id)
+        )
 
 
-async def new_user_notification(user):
+async def new_user_notification(user, _: str):
     await bot.send_message(
         user.id,
         new_user_notification_text()
     )
 
 
-async def sale_one_day_notification(user):
+async def sale_one_day_notification(user, _: str):
     await bot.send_message(
         user.id,
         sale_one_day_notification_text()
@@ -49,6 +70,24 @@ async def sale_one_day_notification(user):
         })
 
 
+async def check_on_time(func, now, target_time, interval, after: bool, model, interval_name):
+    checks_interval = datetime.timedelta(minutes=INTERVAL, seconds=0)
+    tm = target_time + interval * (1 if after else -1)
+    if now - checks_interval < tm < now:
+        await func(model, interval_name)
+
+ORDERS_NOTIFICATIONS = [
+    (order_going_to_expired, datetime.timedelta(hours=1, minutes=0), False, "1 час"),
+    (order_going_to_expired, datetime.timedelta(days=1, minutes=0), False, "1 день"),
+    (order_expired, datetime.timedelta(minutes=0), False, "сейчас")
+]
+
+USERS_NOTIFICATIONS = [
+    (new_user_notification, datetime.timedelta(hours=0, minutes=20), True),
+    (sale_one_day_notification, datetime.timedelta(days=1), True)
+]
+
+
 async def check_expired():
     now = datetime.datetime.now(datetime.timezone.utc)
     orders = get_all_orders()
@@ -56,36 +95,39 @@ async def check_expired():
         if not order.keys:
             continue
         expire = order.expiration_date.astimezone(datetime.timezone.utc)
-        hour_before = now + datetime.timedelta(hours=1, minutes=0)
-        five_mins_before = now + datetime.timedelta(hours=0, minutes=5)
-        day_before = now + datetime.timedelta(days=1)
-        interval = datetime.timedelta(minutes=INTERVAL, seconds=10)
-        if expire <= now:
-            await order_expired(order)
-        elif five_mins_before - interval < expire <= five_mins_before:
-            await order_going_to_expired(order, "5 минут")
-        elif hour_before - interval < expire <= hour_before:
-            await order_going_to_expired(order, "1 час")
-        elif day_before - interval < expire <= day_before:
-            await order_going_to_expired(order, "1 день")
+        for (func, interval, after, interval_name) in ORDERS_NOTIFICATIONS:
+            await check_on_time(
+                func,
+                now,
+                expire,
+                interval,
+                after,
+                order,
+                interval_name
+            )
 
     users = get_all_users()
     for user in users:
         if not user.orders:
-            twenty_mins_before = now - datetime.timedelta(hours=0, minutes=20)
-            day_before = now - datetime.timedelta(days=1)
-            interval = datetime.timedelta(minutes=INTERVAL, seconds=10)
-            if twenty_mins_before - interval < user.created_time.astimezone(datetime.timezone.utc) <= twenty_mins_before:
-                await new_user_notification(user)
-            elif day_before - interval < user.created_time <= day_before:
-                await sale_one_day_notification(user)
+            for (func, interval, after) in USERS_NOTIFICATIONS:
+                await check_on_time(
+                    func,
+                    now,
+                    user.created_time.astimezone(datetime.timezone.utc),
+                    interval,
+                    after,
+                    user,
+                    ""
+                )
 
+
+schedule.every(5).minutes.do(check_expired)
 
 
 async def main():
     while True:
-        await check_expired()
-        await asyncio.sleep(INTERVAL * 60)
+        schedule.run_pending()
+        await asyncio.sleep(1)
 
 
 if __name__ == "__main__":
