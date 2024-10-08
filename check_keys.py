@@ -2,9 +2,9 @@ import asyncio
 import datetime
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from yookassa import Payment
+from yookassa import Payment, Configuration
 
-from config import INTERVAL, bot, ONE_DAY_SALE
+from config import INTERVAL, bot, ONE_DAY_SALE, SHOP_ID, SECRET_KEY
 from database.controllers.key import delete_key
 from database.controllers.order import get_all_orders, delete_order
 from database.controllers.user import get_all_users, update_user
@@ -128,6 +128,9 @@ async def check_expired():
 
 
 if __name__ == "__main__":
+    Configuration.account_id = SHOP_ID
+    Configuration.secret_key = SECRET_KEY
+
     scheduler = AsyncIOScheduler()
     scheduler.add_job(check_expired, 'interval', seconds=60 * INTERVAL)
     scheduler.start()
