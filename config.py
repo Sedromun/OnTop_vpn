@@ -100,7 +100,7 @@ WELCOME_PRESENT = 50
 BOT_LINK = "https://t.me/cliquevpnbot"
 REFS_PARAM = "?start="
 
-INTERVAL = 1  # mins
+INTERVAL = 5  # mins
 
 SAVVA_ADMIN = str(os.getenv("SAVVA_ADMIN"))
 EVGENIY_ADMIN = str(os.getenv("EVGENIY_ADMIN"))
