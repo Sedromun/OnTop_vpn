@@ -19,7 +19,7 @@ main_router = Router(name="main")
 
 @main_router.message(StateFilter(None), Command("start"))
 async def start_handler(message: Message):
-    bot_logger.info(f"Message: '{message.id}' - main_menu.start_handler")
+    bot_logger.info(f"Message: '{message.message_id}' - main_menu.start_handler")
 
     user_id = message.from_user.id
     user = get_user(user_id)
@@ -46,7 +46,7 @@ async def start_handler(message: Message):
 
 @main_router.message(StateFilter(None), F.text == buy)
 async def buy_handler(message: Message):
-    bot_logger.info(f"Message: '{message.id}' - main_menu.buy_handler")
+    bot_logger.info(f"Message: '{message.message_id}' - main_menu.buy_handler")
 
     user = get_user(message.from_user.id)
     if user is None:
@@ -59,20 +59,20 @@ async def buy_handler(message: Message):
 
 @main_router.message(StateFilter(None), F.text == settings)
 async def info_handler(message: Message):
-    bot_logger.info(f"Message: '{message.id}' - main_menu.info_handler")
+    bot_logger.info(f"Message: '{message.message_id}' - main_menu.info_handler")
 
     await message.answer(text=get_information_text(), reply_markup=get_info_keyboard())
 
 
 @main_router.message(StateFilter(None), F.text == referral_program)
 async def referral_handler(message: Message):
-    bot_logger.info(f"Message: '{message.id}' - main_menu.referral_handler")
+    bot_logger.info(f"Message: '{message.message_id}' - main_menu.referral_handler")
 
     await message.answer(text=get_referral_program_text(message.from_user.id))
 
 
 @main_router.message(StateFilter(None))
 async def incorrect_command_handler(message: Message):
-    bot_logger.info(f"Message: '{message.id}' - main_menu.incorrect_command_handler")
+    bot_logger.info(f"Message: '{message.message_id}' - main_menu.incorrect_command_handler")
 
     await message.answer(get_incorrect_command())
