@@ -57,10 +57,10 @@ def get_payment_choose_country_text():
 
 def get_not_enough_money_text(add: int):
     return (
-        "❌ <b>На балансе недостаточно средств</b>\n\nНе достаточно: "
-        + str(add)
-        + "₽\n\n<i>Выбери сумму для пополнения</i>"
-        + (f"\nминимальная сумма пополнения {MIN_ADD_AMOUNT}₽" if add < MIN_ADD_AMOUNT else "")
+            "❌ <b>На балансе недостаточно средств</b>\n\nНе достаточно: "
+            + str(add)
+            + "₽\n\n<i>Выбери сумму для пополнения</i>"
+            + (f"\nминимальная сумма пополнения {MIN_ADD_AMOUNT}₽" if add < MIN_ADD_AMOUNT else "")
     )
 
 
@@ -70,10 +70,12 @@ def get_pay_text():
 
 def get_key_data(order):
     return (
-        f"Страна: {order.country} {COUNTRIES[order.country]}\n\n"
-        f"Дата истечения ключа" + (" и продления подписки" if (order.payment_id != "" and order.payment_id is not None) else "") + f": {(order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime(datetime_format)}\n"
-        f"(осталось {get_left_time(order.expiration_date.astimezone(datetime.timezone.utc))})\n\n"
-        f"Ключ:\n<code>{get_order_perm_key(order.id)}</code>"
+            f"Страна: {order.country} {COUNTRIES[order.country]}\n\n"
+            f"Дата истечения ключа" + (" и продления подписки" if (
+            order.payment_id != "" and order.payment_id is not None) else "")
+            + f": {(order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime(datetime_format)}\n"
+              f"(осталось {get_left_time(order.expiration_date.astimezone(datetime.timezone.utc))})\n\n"
+              f"Ключ:\n<code>{get_order_perm_key(order.id)}</code>"
     )
 
 
@@ -87,6 +89,5 @@ def get_left_time(expiration_date: datetime.datetime):
         return str((expiration_date - current).seconds // 60) + " минут"
 
 
-
 def get_payment_text():
-    return "Оплатите по ссылке"
+    return "🫰 Оплати по ссылке"
