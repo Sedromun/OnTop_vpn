@@ -1,5 +1,6 @@
 import asyncio
 
+from fastapi import FastAPI
 from yookassa import Configuration
 
 from config import SECRET_KEY, SHOP_ID, bot, dp
@@ -11,6 +12,8 @@ dp.include_router(buy_router)
 dp.include_router(profile_router)
 dp.include_router(info_router)
 dp.include_router(main_router)
+
+app = FastAPI()
 
 
 async def main():

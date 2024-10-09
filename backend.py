@@ -10,6 +10,7 @@ from database.controllers.user import get_user, update_user
 from keyboards.info import get_instruction_button_keyboard
 from keyboards.profile import get_order_expiring_keyboard
 from logs import backend_logger
+from main import app
 from schemas.Notification import NotificationSchema
 from servers.outline_keys import get_key
 from text.notifications import auto_extended_failure, auto_extended_success
@@ -18,8 +19,6 @@ from text.profile import (get_money_added_text, get_order_info_text,
 from text.texts import get_referral_bought, get_success_created_key_text
 from utils.payment import get_order_perm_key
 from utils.payment_handle import PaymentPurpose
-
-app = FastAPI()
 
 
 async def check_referral(user_id, amount):
