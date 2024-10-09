@@ -66,9 +66,6 @@ async def check_payment(notification: NotificationSchema):
         order = get_order(order_id)
         amount = int(float(payment["amount"]["value"]))
 
-        if purpose != PaymentPurpose.ADD_MONEY.value:
-            update_order(order.id, {"payment_id": payment["payment_method"]["id"]})
-
         if (
             purpose == PaymentPurpose.BUY_CARD.value
             or purpose == PaymentPurpose.BUY_ADD_MONEY.value
@@ -82,6 +79,7 @@ async def check_payment(notification: NotificationSchema):
                     "begin_date": begin,
                     "expiration_date": end,
                     "price": int(data["price"]),
+                    "payment_id": payment["payment_method"]["id"]
                 }
             )
 
@@ -113,7 +111,7 @@ async def check_payment(notification: NotificationSchema):
         ):
             begin = order.expiration_date
             end = begin + datetime.timedelta(days=int(duration_str))
-            update_order(order.id, {"expiration_date": end})
+            update_order(order.id, {"expiration_date": end, "payment_id": payment["payment_method"]["id"]})
 
             await bot.send_message(
                 user_id,
@@ -126,8 +124,6 @@ async def check_payment(notification: NotificationSchema):
             pass
 
         await check_referral(user_id, amount)
-        if purpose != PaymentPurpose.ADD_MONEY.value:
-            update_order(order.id, {"payment_id": payment["payment_method"]["id"]})
 
 
 @app.get("/keys/{order_id_enc}")
