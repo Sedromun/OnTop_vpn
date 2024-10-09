@@ -64,8 +64,8 @@ def get_buy_vpn_keyboard(
         builder.button(
             text=back,
             callback_data=BuyCallbackFactory(
-                duration="",
-                price=get_option_price(option),
+                duration=0,
+                price=0,
                 extend=extend,
                 order_id=order_id,
                 back=True,
