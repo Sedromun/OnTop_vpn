@@ -15,10 +15,11 @@ def get_order_choose_country_text(id, country):
     )
 
 
-def get_country_changed_text():
+def get_country_changed_text(order_id: int):
     return (
-        f"🌎 <b>Страна успешно изменена</b>\n\n"
-        f"<i>После смены страны не забудьте перезапустить vpn в приложении outline</i>\n\n"
+        f"✅ <b>Страна успешно изменена</b>\n\n"
+        f"После смены страны <b>не забудь перезапустить VPN</b> в приложении outline<\n\n" +
+        get_order_info_text(order_id)
     )
 
 

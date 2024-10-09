@@ -12,8 +12,7 @@ from keyboards.profile import get_order_expiring_keyboard
 from logs import logging
 from schemas import OrderModel
 from text.notifications import (new_user_notification_text,
-                                sale_one_day_notification_text)
-from text.texts import order_expired_text, order_going_to_expired_text
+                                sale_one_day_notification_text, order_expired_text, order_going_to_expired_text)
 from utils.buy_options import Prices
 
 
@@ -36,8 +35,9 @@ async def order_expired(order: OrderModel, _: str):
             delete_key(key.id)
         order_id = order.id
         user_id = order.user_id
+        country = order.country
         delete_order(order.id)
-        await bot.send_message(user_id, order_expired_text(order_id))
+        await bot.send_message(user_id, order_expired_text(order_id, country))
 
 
 async def order_going_to_expired(order: OrderModel, time: str):
@@ -45,7 +45,7 @@ async def order_going_to_expired(order: OrderModel, time: str):
     if order.payment_id is None or order.payment_id == "":
         await bot.send_message(
             order.user_id,
-            order_going_to_expired_text(order.id, time),
+            order_going_to_expired_text(order.id, order.country, time),
             reply_markup=get_order_expiring_keyboard(order.id),
         )
 

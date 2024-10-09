@@ -20,8 +20,7 @@ from keyboards.profile import (ChooseCountryChangeCallbackFactory,
 from logs import bot_logger
 from servers.outline_keys import get_key
 from text.keyboard_text import back, change_country, extend_key
-from text.profile import (get_country_changed_text,
-                          get_order_choose_country_text, get_order_info_text,
+from text.profile import (get_order_choose_country_text, get_order_info_text,
                           get_profile_add_money_text,
                           get_success_extended_key_text)
 from text.texts import (get_buy_vpn_text, get_not_enough_money_text,

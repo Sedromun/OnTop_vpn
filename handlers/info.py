@@ -20,11 +20,9 @@ from keyboards.profile import (BackKeyInfoCallbackFactory,
 from logs import bot_logger
 from schemas import OrderModel
 from servers.outline_keys import get_key
-from text.info import (auto_off_text, choose_order_to_change_country,
-                       choose_order_to_extend, choose_order_to_off_auto,
-                       expiration_date_text, get_countries_text,
-                       get_my_keys_text, get_no_orders_text,
-                       get_referral_program_text)
+from text.info import (auto_off_text,
+                       expiration_date_text,
+                       get_my_keys_text, get_no_orders_text)
 from text.keyboard_text import (back, change_country, countries, extend_key,
                                 my_keys, off_auto, profile, referral_program)
 from text.profile import (get_country_changed_text,
@@ -168,7 +166,7 @@ async def changing_country_callback(
     update_order(order.id, {"country": callback_data.country})
     get_key(callback_data.country, order.id)
     await callback.message.edit_text(
-        text=get_country_changed_text() + get_order_info_text(callback_data.id),
+        text=get_country_changed_text(order.id) + get_order_info_text(callback_data.id),
         reply_markup=get_order_changes_keyboard(),
     )
     await callback.answer()

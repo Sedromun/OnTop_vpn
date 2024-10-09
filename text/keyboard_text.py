@@ -2,7 +2,7 @@ from config import ONE_DAY_SALE
 from utils.buy_options import get_option_price, get_option_sale_price
 from utils.country import COUNTRIES
 
-buy = "🛒 Купить"
+buy = "🛒 Купить подписку"
 settings = "⚙️ Настройки"
 profile = "👤 Профиль"
 countries = "🌎 Страны"
@@ -13,7 +13,7 @@ balance = "💰 Баланс"
 card = "💳 Карта"
 change_country = "🌎 Изменить страну"
 back = "⬅️ Назад"
-extend_key = "🔑 Продлить ключ"
+extend_key = "🔑 Продлить подписку"
 connect_instr = "⚙️ Инструкция по подключению"
 referral_program = "👫 Реферальная программа"
 buy_instr = "⚙️ Инструкция по покупке VPN"
@@ -25,7 +25,6 @@ my_keys = "🔑 Мои ключи"
 
 
 def get_order_short_text(order_id: int, country: str):
-    print(f"COUNTRY: '{country}'")
     return f"Ключ №{order_id} - {country} {COUNTRIES[country]}"
 
 
