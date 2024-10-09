@@ -1,3 +1,5 @@
+import datetime
+
 from config import ONE_DAY_SALE, OLD_USER_UNTIL_DATE
 from database.controllers.order import get_order
 from database.controllers.user import get_user
@@ -41,7 +43,7 @@ def get_buy_option_text(option, user_id, order_id):
     is_old_prices = False
 
     if user is not None:
-        if user.created_time < OLD_USER_UNTIL_DATE:
+        if user.created_time.astimezone(datetime.timezone.utc) < OLD_USER_UNTIL_DATE.astimezone(datetime.timezone.utc):
             is_old_prices = True
 
     return "⏳ " + option + " | " + str(get_option_price(option, is_old_prices)) + "₽"
