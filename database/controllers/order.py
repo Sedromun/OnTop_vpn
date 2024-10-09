@@ -17,7 +17,9 @@ def get_all_orders() -> list[OrderModel]:
 
 
 def get_all_country_orders(country: str) -> list[OrderModel]:
-    orders = session.scalars(select(OrderModel).where(OrderModel.country == country)).all()
+    orders = session.scalars(
+        select(OrderModel).where(OrderModel.country == country)
+    ).all()
     return orders
 
 
@@ -32,7 +34,9 @@ def create_order(data: dict) -> OrderModel | None:
         return order
     except IntegrityError as e:
         session.rollback()
-        bot_logger.exception("Integrity error in create_order - can't commit in db", exc_info=e)
+        bot_logger.exception(
+            "Integrity error in create_order - can't commit in db", exc_info=e
+        )
         return None
 
 
@@ -44,7 +48,9 @@ def update_order(order_id: int, updates: dict) -> bool:
         return True
     except IntegrityError as e:
         session.rollback()
-        bot_logger.exception("Integrity error in update_order - can't commit in db", exc_info=e)
+        bot_logger.exception(
+            "Integrity error in update_order - can't commit in db", exc_info=e
+        )
         return False
 
 
@@ -56,5 +62,8 @@ def delete_order(order_id: int) -> bool:
         return True
     except IntegrityError as e:
         session.rollback()
-        bot_logger.exception(f"Integrity error in delete_order 'OrderModel' - can't commit in db", exc_info=e)
+        bot_logger.exception(
+            f"Integrity error in delete_order 'OrderModel' - can't commit in db",
+            exc_info=e,
+        )
         return False

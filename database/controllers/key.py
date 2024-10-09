@@ -16,7 +16,6 @@ def get_key(key_id: int) -> KeyModel | None:
         return None
 
 
-
 def get_order_country_key(order: OrderModel, country: str) -> KeyModel | None:
     keys = order.keys
 
@@ -36,7 +35,9 @@ def create_key(data: dict) -> KeyModel | None:
         return key
     except IntegrityError as e:
         session.rollback()
-        bot_logger.exception("Integrity error in create_key - can't commit in db", exc_info=e)
+        bot_logger.exception(
+            "Integrity error in create_key - can't commit in db", exc_info=e
+        )
         return None
 
 
@@ -48,7 +49,9 @@ def update_key(key_id: int, updates: dict) -> bool:
         return True
     except IntegrityError as e:
         session.rollback()
-        bot_logger.exception("Integrity error in update_key - can't commit in db", exc_info=e)
+        bot_logger.exception(
+            "Integrity error in update_key - can't commit in db", exc_info=e
+        )
         return False
 
 

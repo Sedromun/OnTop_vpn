@@ -1,8 +1,8 @@
 from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from config import RECALLS_TGC_LINK, TECH_SUPPORT_LINK, INSTR_URL
-from database.controllers.user import get_user, register_user, get_user_orders
+from config import INSTR_URL, RECALLS_TGC_LINK, TECH_SUPPORT_LINK
+from database.controllers.user import get_user, get_user_orders, register_user
 from schemas import OrderModel
 from text.keyboard_text import *
 
@@ -38,7 +38,9 @@ def get_my_keys_keyboard(off_auto_need: bool, order_id: int):
             text=off_auto,
             callback_data=InfoCallbackFactory(text=off_auto, order_id=order_id),
         )
-    builder.button(text=back, callback_data=InfoCallbackFactory(text=back, order_id=order_id))
+    builder.button(
+        text=back, callback_data=InfoCallbackFactory(text=back, order_id=order_id)
+    )
     builder.adjust(1)
     return builder.as_markup()
 
@@ -60,9 +62,7 @@ def get_choose_order_keyboard(orders: [OrderModel]):
     for order in orders:
         builder.button(
             text=get_order_short_text(order.id, order.country),
-            callback_data=InfoChooseOrderCallbackFactory(
-                order_id=order.id
-            ),
+            callback_data=InfoChooseOrderCallbackFactory(order_id=order.id),
         )
 
     builder.button(text=back, callback_data=InfoBackCallbackFactory(back=True))

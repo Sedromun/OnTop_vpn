@@ -1,13 +1,13 @@
 import datetime
 
-from aiogram import Router, F
+from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from config import ADMINS, bot, outline_client
-from database.controllers.order import get_all_orders, get_all_country_orders
-from database.controllers.user import get_all_users, update_user, get_user
+from database.controllers.order import get_all_country_orders, get_all_orders
+from database.controllers.user import get_all_users, get_user, update_user
 from states import AdminBaseStates, MainBaseState
 from text.texts import get_incorrect_command
 from utils.country import COUNTRIES
@@ -26,8 +26,14 @@ async def choose_country_callback(message: Message):
     for user in users:
         if (datetime.datetime.now(datetime.timezone.utc) - user.created_time).days == 0:
             last_days_users_cnt += 1
-    await message.answer("Всего запусков: " + str(len(users)) + "\n" +
-                         "Запусков за последние сутки: " + str(last_days_users_cnt) + "\n")
+    await message.answer(
+        "Всего запусков: "
+        + str(len(users))
+        + "\n"
+        + "Запусков за последние сутки: "
+        + str(last_days_users_cnt)
+        + "\n"
+    )
 
 
 @admin_router.message(Command("buys_stat"))
@@ -43,11 +49,19 @@ async def choose_country_callback(message: Message):
     for order in orders:
         if order.keys:
             orders_cnt += 1
-            if (datetime.datetime.now(datetime.timezone.utc) - order.created_time).days == 0:
+            if (
+                datetime.datetime.now(datetime.timezone.utc) - order.created_time
+            ).days == 0:
                 last_days_orders_cnt += 1
 
-    await message.answer("Всего покупок: " + str(orders_cnt) + "\n" +
-                         "Покупок за последние сутки: " + str(last_days_orders_cnt) + "\n")
+    await message.answer(
+        "Всего покупок: "
+        + str(orders_cnt)
+        + "\n"
+        + "Покупок за последние сутки: "
+        + str(last_days_orders_cnt)
+        + "\n"
+    )
 
 
 @admin_router.message(Command("give_money"))
@@ -56,7 +70,7 @@ async def choose_country_callback(message: Message):
         await message.answer(get_incorrect_command())
         return
     try:
-        _, user_id_str, money_str = message.text.split(' ')
+        _, user_id_str, money_str = message.text.split(" ")
     except ValueError:
         await message.answer("Неверно введена команда")
         return
@@ -75,7 +89,7 @@ async def choose_country_callback(message: Message):
     if user is None:
         await message.answer("Такого юзера нет")
 
-    update_user(user_id, {'balance': user.balance + money})
+    update_user(user_id, {"balance": user.balance + money})
 
 
 @admin_router.message(Command("send_message_to_all_users"))
@@ -85,8 +99,10 @@ async def choose_country_callback(message: Message, state: FSMContext):
         return
 
     await state.set_state(AdminBaseStates.send_to_all)
-    await message.answer("Введите сообщение которое нужно разослать ВСЕМ пользователям\n"
-                         "/cancel - для отмены")
+    await message.answer(
+        "Введите сообщение которое нужно разослать ВСЕМ пользователям\n"
+        "/cancel - для отмены"
+    )
 
 
 @admin_router.message(AdminBaseStates.send_to_all, Command("cancel"))
@@ -106,8 +122,10 @@ async def choose_country_callback(message: Message, state: FSMContext):
         return
 
     await state.set_state(AdminBaseStates.confirm)
-    await state.set_data({'message_id': message.message_id})
-    await message.answer("Подтвердите, что все верно - для этого необходимо написать 'confirm - подтверждаю'")
+    await state.set_data({"message_id": message.message_id})
+    await message.answer(
+        "Подтвердите, что все верно - для этого необходимо написать 'confirm - подтверждаю'"
+    )
 
 
 @admin_router.message(AdminBaseStates.confirm, F.text == "confirm - подтверждаю")
@@ -116,7 +134,7 @@ async def choose_country_callback(message: Message, state: FSMContext):
         await message.answer(get_incorrect_command())
         return
 
-    message_id = (await state.get_data())['message_id']
+    message_id = (await state.get_data())["message_id"]
 
     users = get_all_users()
     for user in users:
@@ -165,7 +183,7 @@ async def choose_country_callback(message: Message):
     for country, client in outline_client.items():
         data = client.get_transferred_data()
         res = 0
-        for byte in data['bytesTransferredByUserId'].values():
+        for byte in data["bytesTransferredByUserId"].values():
             res += byte
         msg += country + ": " + str(res / 10**9 * 100 // 10 / 10) + " Gb\n"
 

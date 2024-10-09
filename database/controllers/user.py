@@ -40,7 +40,7 @@ def register_user(tg_id: int) -> UserModel | None:
         session.rollback()
         bot_logger.exception(
             f"Integrity error in register_user '{str(tg_id)}' - can't commit in db",
-            exc_info=e
+            exc_info=e,
         )
         return None
 
@@ -55,10 +55,12 @@ def update_user(tg_id: int, updates: dict) -> bool:
         session.rollback()
         bot_logger.exception(
             f"Integrity error in update_user '{str(tg_id)}' - can't commit in db",
-            exc_info=e
+            exc_info=e,
         )
         return False
 
 
 def get_referrals(user_id: int):
-    return session.scalars(select(UserModel).where(UserModel.referrer_id == user_id)).all()
+    return session.scalars(
+        select(UserModel).where(UserModel.referrer_id == user_id)
+    ).all()

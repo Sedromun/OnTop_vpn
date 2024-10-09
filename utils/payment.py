@@ -1,4 +1,4 @@
-from config import KEYS_URL, FERNET
+from config import FERNET, KEYS_URL
 
 
 def get_order_perm_key(order_id: int) -> str:

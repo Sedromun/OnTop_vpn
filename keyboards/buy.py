@@ -6,18 +6,16 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import MIN_ADD_AMOUNT
 from database.controllers.user import get_user, update_user
-from text.keyboard_text import (
-    back,
-    balance,
-    card,
-    get_buy_option_text,
-    get_country_text, get_buy_option_sale_text, pay,
-)
-from utils.buy_options import BuyOptions, get_option_duration, get_option_price, THREE_DAYS, get_option_sale_price
+from text.keyboard_text import (back, balance, card, get_buy_option_sale_text,
+                                get_buy_option_text, get_country_text, pay)
+from utils.buy_options import (THREE_DAYS, BuyOptions, get_option_duration,
+                               get_option_price, get_option_sale_price)
 from utils.country import COUNTRIES
 
 
-def get_buy_vpn_keyboard(extend: bool, order_id: int = -1, need_back: bool = False, user_id: int = -1):
+def get_buy_vpn_keyboard(
+    extend: bool, order_id: int = -1, need_back: bool = False, user_id: int = -1
+):
     builder = InlineKeyboardBuilder()
     if user_id != -1:
         user = get_user(user_id)
@@ -36,9 +34,9 @@ def get_buy_vpn_keyboard(extend: bool, order_id: int = -1, need_back: bool = Fal
             user = get_user(user_id)
             if user.sale is None or user.sale_expiration is None:
                 pass
-            elif (user.sale != 0 and
-                  user.sale_expiration.astimezone(datetime.timezone.utc)
-                  >= datetime.datetime.now(datetime.timezone.utc)):
+            elif user.sale != 0 and user.sale_expiration.astimezone(
+                datetime.timezone.utc
+            ) >= datetime.datetime.now(datetime.timezone.utc):
                 builder.button(
                     text=get_buy_option_sale_text(option),
                     callback_data=BuyCallbackFactory(
@@ -49,9 +47,9 @@ def get_buy_vpn_keyboard(extend: bool, order_id: int = -1, need_back: bool = Fal
                     ).pack(),
                 )
                 continue
-            elif (user.sale != 0 and
-                  user.sale_expiration.astimezone(datetime.timezone.utc)
-                  < datetime.datetime.now(datetime.timezone.utc)):
+            elif user.sale != 0 and user.sale_expiration.astimezone(
+                datetime.timezone.utc
+            ) < datetime.datetime.now(datetime.timezone.utc):
                 update_user(user_id, {"sale": 0})
         builder.button(
             text=get_buy_option_text(option),
@@ -66,7 +64,7 @@ def get_buy_vpn_keyboard(extend: bool, order_id: int = -1, need_back: bool = Fal
         builder.button(
             text=back,
             callback_data=BuyCallbackFactory(
-                duration=get_option_duration(option),
+                duration="",
                 price=get_option_price(option),
                 extend=extend,
                 order_id=order_id,
@@ -120,7 +118,7 @@ class ChooseCountryCallbackFactory(CallbackData, prefix="country"):
 
 
 def get_payment_options_keyboard(
-        duration: int, price: int, country: str, extend: bool, order_id: int = -1
+    duration: int, price: int, country: str, extend: bool, order_id: int = -1
 ):
     builder = InlineKeyboardBuilder()
     builder.button(
@@ -176,7 +174,7 @@ class PaymentCallbackFactory(CallbackData, prefix="pay"):
 
 
 def get_balance_add_money_keyboard(
-        duration: int, price: int, country: str, add: int, order_id: int = -1
+    duration: int, price: int, country: str, add: int, order_id: int = -1
 ):
     builder = InlineKeyboardBuilder()
 
@@ -251,9 +249,8 @@ def get_payment_to_yookassa_keyboard(url: str, payment_id: str, purpose: int):
     builder.button(
         text=back,
         callback_data=BackFromPaymentCallbackFactory(
-            payment_id=payment_id,
-            purpose=purpose
-        )
+            payment_id=payment_id, purpose=purpose
+        ),
     )
     builder.adjust(1)
     return builder.as_markup()
@@ -262,4 +259,3 @@ def get_payment_to_yookassa_keyboard(url: str, payment_id: str, purpose: int):
 class BackFromPaymentCallbackFactory(CallbackData, prefix="back_from_pay"):
     payment_id: str
     purpose: int
-

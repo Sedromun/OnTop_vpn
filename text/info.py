@@ -1,8 +1,8 @@
 import datetime
 
-from config import RECALLS_TGC_TAG, WELCOME_PRESENT, PERCENT_REFERRAL
+from config import PERCENT_REFERRAL, WELCOME_PRESENT
 from text.keyboard_text import buy
-from utils.common import get_referral_link, datetime_format
+from utils.common import datetime_format, get_referral_link
 from utils.country import COUNTRIES
 
 
@@ -13,18 +13,16 @@ def get_countries_text():
     return "Мы поддерживаем сервера в следующих странах:\n\n" + countries_text
 
 
-def get_recalls_text():
-    return "Посмотрите отзывы :\n" + RECALLS_TGC_TAG
-
-
 def get_referral_program_text(user_id: int):
-    return ("<b>💸 Зарабатывай с нами!</b>\n\n"
-            f"Приглашай друзей в «Clique VPN» и получай <i>{PERCENT_REFERRAL}%</i>"
-            f" с каждой их покупки на свой баланс! "
-            f"А новый пользователь получает "
-            f"<i>{WELCOME_PRESENT}₽</i> в подарок при первом подключении!\n\n"
-            f"<b>Твоя реферальная ссылка:</b>\n"
-            f"<code>{get_referral_link(user_id)}</code>")
+    return (
+        "<b>💸 Зарабатывай с нами!</b>\n\n"
+        f"Приглашай друзей в «Clique VPN» и получай <i>{PERCENT_REFERRAL}%</i>"
+        f" с каждой их покупки на свой баланс! "
+        f"А новый пользователь получает "
+        f"<i>{WELCOME_PRESENT}₽</i> в подарок при первом подключении!\n\n"
+        f"<b>Твоя реферальная ссылка:</b>\n"
+        f"<code>{get_referral_link(user_id)}</code>"
+    )
 
 
 def choose_order_to_change_country():

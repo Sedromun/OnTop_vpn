@@ -2,10 +2,9 @@ from enum import Enum
 
 from aiogram.filters.callback_data import CallbackData
 from aiogram.types import CallbackQuery
-
-from config import BOT_URL
 from yookassa import Payment
 
+from config import BOT_URL
 from database.controllers.user import get_user
 from keyboards.buy import get_payment_to_yookassa_keyboard
 from text.texts import get_payment_text
@@ -38,41 +37,40 @@ async def check_not_payed(callback: CallbackQuery, callback_data: CallbackData) 
 
 
 async def buy_handle(
-        callback: CallbackQuery,
-        callback_data: CallbackData,
-        amount: int,
-        title: str,
-        description: str,
-        purpose: PaymentPurpose,
-        order_data: dict = None,
-        order_id: int = -1
+    callback: CallbackQuery,
+    callback_data: CallbackData,
+    amount: int,
+    title: str,
+    description: str,
+    purpose: PaymentPurpose,
+    order_data: dict = None,
+    order_id: int = -1,
 ):
     metadata = {
-            "order_id": order_id,
-            "message_id": callback.message.message_id,
-            "duration": callback_data.duration,
-            "purpose": purpose.value,
-            "user_id": callback.from_user.id,
-        } | (order_data if order_data is not None else {})
+        "order_id": order_id,
+        "message_id": callback.message.message_id,
+        "duration": callback_data.duration,
+        "purpose": purpose.value,
+        "user_id": callback.from_user.id,
+    } | (order_data if order_data is not None else {})
 
-    payment = Payment.create({
-        "amount": {"value": amount, "currency": "RUB"},
-        "confirmation": {
-            "type": "redirect",
-            "return_url": BOT_URL
-        },
-        "capture": True,
-        "description": title + "\n" + description,
-        "save_payment_method": True,
-        "metadata": metadata
-    })
+    payment = Payment.create(
+        {
+            "amount": {"value": amount, "currency": "RUB"},
+            "confirmation": {"type": "redirect", "return_url": BOT_URL},
+            "capture": True,
+            "description": title + "\n" + description,
+            "save_payment_method": True,
+            "metadata": metadata,
+        }
+    )
 
     await callback.message.edit_text(
         get_payment_text(),
         reply_markup=get_payment_to_yookassa_keyboard(
-            url=payment.confirmation['confirmation_url'],
+            url=payment.confirmation["confirmation_url"],
             payment_id=payment.id,
-            purpose=purpose.value
-        )
+            purpose=purpose.value,
+        ),
     )
     await callback.answer()

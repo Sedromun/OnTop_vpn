@@ -1,6 +1,7 @@
 from config import outline_client
-from database.controllers.key import create_key, get_order_country_key, delete_key
-from database.controllers.order import update_order, get_order
+from database.controllers.key import (create_key, delete_key,
+                                      get_order_country_key)
+from database.controllers.order import get_order, update_order
 
 
 def get_key(country: str, order_id: int) -> str:

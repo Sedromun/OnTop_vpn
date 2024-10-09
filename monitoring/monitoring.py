@@ -1,4 +1,4 @@
-from database.controllers.user import get_user, get_referrals
+from database.controllers.user import get_referrals, get_user
 
 
 def collect_user_info(user_id: int):

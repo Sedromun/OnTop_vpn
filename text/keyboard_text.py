@@ -34,7 +34,15 @@ def get_buy_option_text(option):
 
 
 def get_buy_option_sale_text(option):
-    return "🔥 " + option + " | " + str(get_option_sale_price(option)) + "₽ (-" + str(ONE_DAY_SALE) + "%)"
+    return (
+        "🔥 "
+        + option
+        + " | "
+        + str(get_option_sale_price(option))
+        + "₽ (-"
+        + str(ONE_DAY_SALE)
+        + "%)"
+    )
 
 
 def get_country_text(value: str, flag: str):

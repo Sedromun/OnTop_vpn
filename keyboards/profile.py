@@ -2,19 +2,14 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import INSTR_URL
-from database.controllers.user import get_user_orders, register_user, get_user
+from database.controllers.user import get_user, get_user_orders, register_user
 from text.keyboard_text import *
-
-
-
 
 
 def get_order_changes_keyboard():
     builder = InlineKeyboardBuilder()
     builder.button(text=all_instr, url=INSTR_URL)
-    builder.button(
-        text=settings, callback_data=BackKeyInfoCallbackFactory()
-    )
+    builder.button(text=settings, callback_data=BackKeyInfoCallbackFactory())
     builder.adjust(1)
     return builder.as_markup()
 

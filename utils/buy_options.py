@@ -22,7 +22,14 @@ def get_option_sale_price(option: str):
     return Prices[option] - Prices[option] * ONE_DAY_SALE // 100
 
 
-LiteralDuration = {"дня": 1, "неделя": 7, "месяц": 30, "месяца": 30, "месяцев": 30, "год": 365}
+LiteralDuration = {
+    "дня": 1,
+    "неделя": 7,
+    "месяц": 30,
+    "месяца": 30,
+    "месяцев": 30,
+    "год": 365,
+}
 
 
 def get_option_duration(option: str) -> int:
