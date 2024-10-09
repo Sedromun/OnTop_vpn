@@ -66,6 +66,9 @@ async def check_payment(notification: NotificationSchema):
         order = get_order(order_id)
         amount = int(float(payment["amount"]["value"]))
 
+        if purpose != PaymentPurpose.ADD_MONEY.value:
+            update_order(order.id, {"payment_id": payment["payment_method"]["id"]})
+
         if (
             purpose == PaymentPurpose.BUY_CARD.value
             or purpose == PaymentPurpose.BUY_ADD_MONEY.value
