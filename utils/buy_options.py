@@ -1,4 +1,8 @@
-from config import ONE_DAY_SALE
+import datetime
+
+from config import ONE_DAY_SALE, OLD_USER_UNTIL_DATE
+from database.controllers.order import get_order
+from database.controllers.user import get_user
 
 BuyOptions = ["1 неделя", "1 месяц", "3 месяца", "6 месяцев", "1 год"]
 
@@ -23,7 +27,20 @@ NEW_PRICES = {
 }
 
 
-def get_option_price(option: str, is_old_prices: bool) -> int:
+def get_option_price(option: str, user_id: int, order_id: int) -> int:
+    if user_id == -1:
+        order = get_order(order_id)
+        if order is not None:
+            user_id = order.user_id
+
+    user = get_user(user_id)
+
+    is_old_prices = False
+
+    if user is not None:
+        if user.created_time.astimezone(datetime.timezone.utc) < OLD_USER_UNTIL_DATE.astimezone(datetime.timezone.utc):
+            is_old_prices = True
+
     return OLD_PRICES[option] if is_old_prices else NEW_PRICES[option]
 
 

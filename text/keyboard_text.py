@@ -33,20 +33,7 @@ def get_order_short_text(order_id: int, country: str):
 
 
 def get_buy_option_text(option, user_id, order_id):
-    if user_id == -1:
-        order = get_order(order_id)
-        if order is not None:
-            user_id = order.user_id
-
-    user = get_user(user_id)
-
-    is_old_prices = False
-
-    if user is not None:
-        if user.created_time.astimezone(datetime.timezone.utc) < OLD_USER_UNTIL_DATE.astimezone(datetime.timezone.utc):
-            is_old_prices = True
-
-    return "⏳ " + option + " | " + str(get_option_price(option, is_old_prices)) + "₽"
+    return "⏳ " + option + " | " + str(get_option_price(option, user_id, order_id)) + "₽"
 
 
 def get_buy_option_sale_text(option):

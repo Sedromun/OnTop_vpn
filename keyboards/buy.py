@@ -21,10 +21,10 @@ def get_buy_vpn_keyboard(
         user = get_user(user_id)
         if not user.present:
             builder.button(
-                text=get_buy_option_text(THREE_DAYS),
+                text=get_buy_option_text(THREE_DAYS, user_id, order_id),
                 callback_data=BuyCallbackFactory(
                     duration=get_option_duration(THREE_DAYS),
-                    price=get_option_price(THREE_DAYS),
+                    price=get_option_price(THREE_DAYS, user_id, order_id),
                     extend=extend,
                     order_id=order_id,
                 ).pack(),
@@ -55,7 +55,7 @@ def get_buy_vpn_keyboard(
             text=get_buy_option_text(option, user_id, order_id),
             callback_data=BuyCallbackFactory(
                 duration=get_option_duration(option),
-                price=get_option_price(option),
+                price=get_option_price(option, user_id, order_id),
                 extend=extend,
                 order_id=order_id,
             ).pack(),
