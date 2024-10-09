@@ -4,7 +4,7 @@ BuyOptions = ["1 неделя", "1 месяц", "3 месяца", "6 месяц�
 
 THREE_DAYS = "3 дня"
 
-Prices = {
+OLD_PRICES = {
     THREE_DAYS: 0,
     "1 неделя": 90,
     "1 месяц": 169,
@@ -13,13 +13,22 @@ Prices = {
     "1 год": 1499,
 }
 
+NEW_PRICES = {
+    THREE_DAYS: 0,
+    "1 неделя": 99,
+    "1 месяц": 189,
+    "3 месяца": 499,
+    "6 месяцев": 899,
+    "1 год": 1599,
+}
 
-def get_option_price(option: str):
-    return Prices[option]
+
+def get_option_price(option: str, is_old_prices: bool) -> int:
+    return OLD_PRICES[option] if is_old_prices else NEW_PRICES[option]
 
 
 def get_option_sale_price(option: str):
-    return Prices[option] - Prices[option] * ONE_DAY_SALE // 100
+    return NEW_PRICES[option] - NEW_PRICES[option] * ONE_DAY_SALE // 100
 
 
 LiteralDuration = {

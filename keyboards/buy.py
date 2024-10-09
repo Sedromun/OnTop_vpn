@@ -52,7 +52,7 @@ def get_buy_vpn_keyboard(
             ) < datetime.datetime.now(datetime.timezone.utc):
                 update_user(user_id, {"sale": 0})
         builder.button(
-            text=get_buy_option_text(option),
+            text=get_buy_option_text(option, user_id, order_id),
             callback_data=BuyCallbackFactory(
                 duration=get_option_duration(option),
                 price=get_option_price(option),
@@ -201,10 +201,10 @@ def get_balance_add_money_keyboard(
             ),
         )
 
-    adds = [100, 200, 300, 500, 1000, 2000]
+    adds = [50, 100, 200, 300, 500, 1000, 2000]
     col = 0
     for amount in adds:
-        if amount >= add:
+        if amount > add:
             col += 1
             builder.button(
                 text=str(amount) + "₽",

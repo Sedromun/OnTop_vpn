@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from aiogram import Bot, Dispatcher
@@ -55,6 +56,8 @@ PERCENT_REFERRAL = 10
 WELCOME_PRESENT = 50
 ONE_DAY_SALE = 30
 INTERVAL = 5  # mins
+
+OLD_USER_UNTIL_DATE = datetime.datetime.strptime("2024-10-09 00-00-00", "%Y-%m-%d %H:%M:%S")
 
 # -- admins --
 

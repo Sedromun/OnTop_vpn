@@ -13,7 +13,7 @@ from logs import logging
 from schemas import OrderModel
 from text.notifications import (new_user_notification_text,
                                 sale_one_day_notification_text, order_expired_text, order_going_to_expired_text)
-from utils.buy_options import Prices
+from utils.buy_options import OLD_PRICES
 
 
 async def order_expired(order: OrderModel, _: str):
@@ -22,7 +22,7 @@ async def order_expired(order: OrderModel, _: str):
         logging.info(f"created autopayment order {order.id}")
         payment = Payment.create(
             {
-                "amount": {"value": Prices["1 месяц"], "currency": "RUB"},
+                "amount": {"value": OLD_PRICES["1 месяц"], "currency": "RUB"},
                 "capture": True,
                 "payment_method_id": payment_id,
                 "description": f"Продление Clique VPN, ключ №{order.id} на месяц",
