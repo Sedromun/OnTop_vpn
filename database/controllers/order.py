@@ -13,7 +13,7 @@ def get_order(order_id: int) -> OrderModel | None:
     return order
 
 
-def get_all_orders(model: OrderModel | FinishedOrderModel = OrderModel) -> list[OrderModel | FinishedOrderModel]:
+def get_all_orders(model: Type[OrderModel | FinishedOrderModel] = Type[OrderModel]) -> list[OrderModel | FinishedOrderModel]:
     orders = session.scalars(select(model)).all()
     return orders
 

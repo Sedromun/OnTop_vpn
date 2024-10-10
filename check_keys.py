@@ -125,6 +125,7 @@ FINISHED_ORDERS_NOTIFICATIONS = [
 
 
 async def check_expired():
+    print("START")
     now = datetime.datetime.now(datetime.timezone.utc)
     orders = get_all_orders()
     for order in orders:
