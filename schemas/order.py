@@ -54,8 +54,6 @@ class FinishedOrderModel(BaseModel):
 
     price: Mapped[int] = mapped_column(nullable=False, default=0)
 
-    keys: Mapped[List["KeyModel"]] = relationship(back_populates="order")
-
-    user: Mapped["UserModel"] = relationship(back_populates="orders")
+    user: Mapped["UserModel"] = relationship(back_populates="finished_orders")
 
     payment_id: Mapped[str] = mapped_column(nullable=True)
