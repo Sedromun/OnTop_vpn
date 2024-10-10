@@ -157,7 +157,7 @@ async def check_expired():
         user = order.user
         if not user.orders:
             expire = order.expiration_date.astimezone(datetime.timezone.utc)
-            for func, interval, after in ORDERS_NOTIFICATIONS:
+            for func, interval, after in FINISHED_ORDERS_NOTIFICATIONS:
                 await check_on_time(
                     func, now, expire, interval, after, order, ""
                 )
