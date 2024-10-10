@@ -1,15 +1,9 @@
-import datetime
-
-from config import ONE_DAY_SALE, OLD_USER_UNTIL_DATE
-from database.controllers.order import get_order
-from database.controllers.user import get_user
 from utils.buy_options import get_option_price, get_option_sale_price
 from utils.country import COUNTRIES
 
 buy = "🛒 Купить подписку"
 settings = "⚙️ Настройки"
 profile = "👤 Профиль"
-countries = "🌎 Страны"
 tech_support = "👨‍🔧 Поддержка"
 recalls = "📕 Канал"
 top_up_balance = "💸 Пополнить баланс"
@@ -18,10 +12,7 @@ card = "💳 Карта"
 change_country = "🌎 Изменить страну"
 back = "⬅️ Назад"
 extend_key = "🔑 Продлить подписку"
-connect_instr = "⚙️ Инструкция по подключению"
 referral_program = "👫 Реферальная программа"
-buy_instr = "⚙️ Инструкция по покупке VPN"
-change_country_instr = "⚙️ Инструкция по смене страны"
 all_instr = "📖 Инструкция"
 pay = "Оплатить"
 off_auto = "Отключить автопродление"
@@ -31,7 +22,6 @@ bad_quality = "🔑 Не устраивает качество"
 another_service = "📡 Нашел другой сервис"
 dont_vpn = "❌ Не пользуюсь VPN"
 forgot_buy = "📌 Забыл оформить"
-
 
 
 def get_order_short_text(order_id: int, country: str):

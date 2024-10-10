@@ -16,15 +16,15 @@ from keyboards.info import (InfoBackCallbackFactory, InfoCallbackFactory,
 from keyboards.profile import (BackKeyInfoCallbackFactory,
                                ChooseCountryChangeCallbackFactory,
                                get_order_changes_keyboard,
-                               get_order_countries_keyboard)
+                               get_order_countries_keyboard, get_buy_vpn_from_notify_keyboard)
 from logs import bot_logger
 from schemas import OrderModel
 from servers.outline_keys import get_key
 from text.info import (auto_off_text,
                        expiration_date_text,
                        get_my_keys_text, get_no_orders_text)
-from text.keyboard_text import (back, change_country, countries, extend_key,
-                                my_keys, off_auto, profile, referral_program)
+from text.keyboard_text import (back, change_country, extend_key,
+                                my_keys, off_auto, profile)
 from text.profile import (get_country_changed_text,
                           get_order_choose_country_text, get_order_info_text,
                           get_success_extended_key_text)
@@ -62,8 +62,8 @@ async def info_my_keys_callback(
     orders = user.orders
     if len(orders) == 0:
         await callback.message.edit_text(
-            text=get_no_orders_text() + "\n\n" + get_information_text(),
-            reply_markup=get_info_keyboard(),
+            text=get_no_orders_text(),
+            reply_markup=get_buy_vpn_from_notify_keyboard(),
         )
     elif len(orders) == 1:
         await my_key(callback, order=orders[0])

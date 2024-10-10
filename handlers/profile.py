@@ -3,28 +3,23 @@ import datetime
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
-from database.controllers.order import get_order, update_order
+from database.controllers.order import get_order
 from database.controllers.user import get_user, register_user, update_user
 from handlers import get_order_data
 from keyboards.buy import (BackFromPaymentCallbackFactory, BuyCallbackFactory,
-                           Payment, PaymentAddMoneyCallbackFactory,
-                           PaymentCallbackFactory,
+                           PaymentAddMoneyCallbackFactory,
                            get_balance_add_money_keyboard,
                            get_buy_vpn_keyboard, get_payment_options_keyboard)
 from keyboards.info import ProfileCallbackFactory, get_profile_keyboard
-from keyboards.profile import (ChooseCountryChangeCallbackFactory,
-                               OrderExpiringCallbackFactory,
+from keyboards.profile import (OrderExpiringCallbackFactory,
                                ProfileAddMoneyCallbackFactory,
                                get_add_money_keyboard,
-                               get_order_countries_keyboard, InfoVPNNotificationCallbackFactory,
+                               InfoVPNNotificationCallbackFactory,
                                get_buy_vpn_from_notify_keyboard, BuyVPNFromNotificationCallbackFactory)
 from logs import bot_logger
-from servers.outline_keys import get_key
-from text.keyboard_text import back, change_country, extend_key, forgot_buy, bad_price
+from text.keyboard_text import forgot_buy, bad_price
 from text.notifications import thanks_for_review_text, bad_price_text, forgot_buy_text
-from text.profile import (get_order_choose_country_text, get_order_info_text,
-                          get_profile_add_money_text,
-                          get_success_extended_key_text)
+from text.profile import get_profile_add_money_text
 from text.texts import (get_buy_vpn_text, get_not_enough_money_text,
                         get_payment_option_text, get_profile_text)
 from utils.buy_options import duration_to_str
@@ -62,33 +57,6 @@ async def profile_extend_key_callback(
     await callback.answer()
 
 
-# @profile_router.callback_query(
-#     OrderChangesCallbackFactory.filter(F.text == change_country)
-# )
-# async def profile_change_country_callback(
-#         callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
-# ):
-#     order = get_order(callback_data.id)
-#     await callback.message.edit_text(
-#         text=get_order_choose_country_text(order.id, order.country),
-#         reply_markup=get_order_countries_keyboard(id=order.id),
-#     )
-#     await callback.answer()
-
-
-# @profile_router.callback_query(OrderChangesCallbackFactory.filter(F.text == extend_key))
-# async def profile_extend_key_callback(
-#         callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
-# ):
-#     await callback.message.edit_text(
-#         text=get_buy_vpn_text(),
-#         reply_markup=get_buy_vpn_keyboard(
-#             extend=True, order_id=callback_data.id, need_back=True
-#         ),
-#     )
-#     await callback.answer()
-
-
 @profile_router.callback_query(
     PaymentAddMoneyCallbackFactory.filter((F.order_id != -1) & (F.back == True))
 )
@@ -105,28 +73,16 @@ async def add_money_balance_back_callback(
         await callback.answer("Время действия ключа истекло")
         await callback.message.delete()
         return
-    if callback.message.photo is not None:
-        await callback.message.edit_text(
-            text=get_payment_option_text(callback_data.price, user.balance),
-            reply_markup=get_payment_options_keyboard(
-                duration=callback_data.duration,
-                price=callback_data.price,
-                country="",
-                extend=True,
-                order_id=callback_data.order_id,
-            ),
-        )
-    else:
-        await callback.message.edit_text(
-            text=get_payment_option_text(callback_data.price, user.balance),
-            reply_markup=get_payment_options_keyboard(
-                duration=callback_data.duration,
-                price=callback_data.price,
-                country="",
-                extend=True,
-                order_id=callback_data.order_id,
-            ),
-        )
+    await callback.message.edit_text(
+        text=get_payment_option_text(callback_data.price, user.balance),
+        reply_markup=get_payment_options_keyboard(
+            duration=callback_data.duration,
+            price=callback_data.price,
+            country="",
+            extend=True,
+            order_id=callback_data.order_id,
+        ),
+    )
     await callback.answer()
 
 
@@ -165,7 +121,7 @@ async def profile_order_info_callback(
 
 @profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter(F.back == True))
 async def add_money_back_callback(
-        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: ProfileAddMoneyCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.add_money_back_callback")
 
@@ -179,7 +135,7 @@ async def add_money_back_callback(
 
 @profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter(F.back == False))
 async def add_money_callback(
-        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: ProfileAddMoneyCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.add_money_callback")
 

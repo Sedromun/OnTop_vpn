@@ -64,10 +64,6 @@ def get_not_enough_money_text(add: int):
     )
 
 
-def get_pay_text():
-    return "Для оплаты нажми на кнопку"
-
-
 def get_key_data(order):
     return (
             f"Страна: {order.country} {COUNTRIES[order.country]}\n\n"

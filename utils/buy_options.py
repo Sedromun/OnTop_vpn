@@ -1,6 +1,6 @@
 import datetime
 
-from config import ONE_DAY_SALE, OLD_USER_UNTIL_DATE
+from config import OLD_USER_UNTIL_DATE
 from database.controllers.order import get_order
 from database.controllers.user import get_user
 

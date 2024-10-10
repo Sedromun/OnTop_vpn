@@ -1,10 +1,9 @@
 import datetime
 
 from aiogram import F, Router
-from aiogram.types import CallbackQuery, PreCheckoutQuery
-from yookassa import Payment as YookassaPayment
+from aiogram.types import CallbackQuery
 
-from database.controllers.order import create_order, get_order
+from database.controllers.order import create_order
 from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import (BackFromPaymentCallbackFactory, BuyCallbackFactory,
                            ChooseCountryCallbackFactory, Payment,

@@ -2,7 +2,6 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import INSTR_URL
-from database.controllers.user import get_user, get_user_orders, register_user
 from text.keyboard_text import *
 
 

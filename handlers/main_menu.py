@@ -12,10 +12,10 @@ from keyboards.info import get_info_keyboard
 from keyboards.main_keyboard import get_main_keyboard
 from logs import bot_logger
 from text.info import get_referral_program_text
-from text.keyboard_text import buy, profile, referral_program, settings
+from text.keyboard_text import buy, referral_program, settings
 from text.texts import (get_buy_vpn_text, get_greeting_text,
                         get_incorrect_command, get_information_text,
-                        get_profile_text, get_old_user_message_start_text)
+                        get_old_user_message_start_text)
 
 main_router = Router(name="main")
 
