@@ -36,7 +36,7 @@ class OrderModel(BaseModel):
 
 
 class FinishedOrderModel(BaseModel):
-    __tablename__ = "order"
+    __tablename__ = "finished_order"
 
     id: Mapped[int] = mapped_column(
         BigInteger, primary_key=True, unique=True, index=True, autoincrement=True
