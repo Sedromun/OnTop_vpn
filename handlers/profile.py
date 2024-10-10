@@ -17,7 +17,7 @@ from keyboards.profile import (ChooseCountryChangeCallbackFactory,
                                ProfileAddMoneyCallbackFactory,
                                get_add_money_keyboard,
                                get_order_countries_keyboard, InfoVPNNotificationCallbackFactory,
-                               get_buy_vpn_from_notify_keyboard)
+                               get_buy_vpn_from_notify_keyboard, BuyVPNFromNotificationCallbackFactory)
 from logs import bot_logger
 from servers.outline_keys import get_key
 from text.keyboard_text import back, change_country, extend_key, forgot_buy, bad_price
@@ -287,6 +287,8 @@ async def back_from_payment_add_money_callback(
     InfoVPNNotificationCallbackFactory.filter()
 )
 async def get_review_on_vpn_callback(callback: CallbackQuery, callback_data: InfoVPNNotificationCallbackFactory):
+    bot_logger.info(f"Callback: '{callback.id}' - profile.get_review_on_vpn_callback")
+
     text = callback_data.text
     if text == forgot_buy:
         await callback.message.edit_text(
@@ -306,3 +308,15 @@ async def get_review_on_vpn_callback(callback: CallbackQuery, callback_data: Inf
         await callback.message.edit_text(text=thanks_for_review_text())
 
     update_user(callback.from_user.id, {'review': ' '.join(text.split(' ')[1:])})
+
+
+@profile_router.callback_query(
+    BuyVPNFromNotificationCallbackFactory.filter()
+)
+async def buy_vpn_from_notify_callback(callback: CallbackQuery, callback_data: BuyVPNFromNotificationCallbackFactory):
+    bot_logger.info(f"Callback: '{callback.id}' - profile.buy_vpn_from_notify_callback")
+
+    await callback.message.edit_text(
+        text=get_buy_vpn_text(),
+        reply_markup=get_buy_vpn_keyboard(user_id=callback.from_user.id, extend=False),
+    )
