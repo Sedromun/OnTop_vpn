@@ -153,6 +153,7 @@ async def check_expired():
     finished_orders = get_all_orders(FinishedOrderModel)
 
     for order in finished_orders:
+        print(order)
         user = order.user
         if not user.orders:
             expire = order.expiration_date.astimezone(datetime.timezone.utc)
