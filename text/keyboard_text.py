@@ -42,14 +42,14 @@ def get_buy_option_text(option, user_id, order_id):
     return "⏳ " + option + " | " + str(get_option_price(option, user_id, order_id)) + "₽"
 
 
-def get_buy_option_sale_text(option):
+def get_buy_option_sale_text(option, sale):
     return (
         "🔥 "
         + option
         + " | "
-        + str(get_option_sale_price(option))
+        + str(get_option_sale_price(option, sale))
         + "₽ (-"
-        + str(ONE_DAY_SALE)
+        + str(sale)
         + "%)"
     )
 

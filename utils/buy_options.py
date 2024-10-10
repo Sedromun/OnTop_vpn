@@ -44,8 +44,8 @@ def get_option_price(option: str, user_id: int, order_id: int) -> int:
     return OLD_PRICES[option] if is_old_prices else NEW_PRICES[option]
 
 
-def get_option_sale_price(option: str):
-    return NEW_PRICES[option] - NEW_PRICES[option] * ONE_DAY_SALE // 100
+def get_option_sale_price(option: str, sale):
+    return NEW_PRICES[option] - NEW_PRICES[option] * sale // 100
 
 
 LiteralDuration = {

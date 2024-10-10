@@ -38,10 +38,10 @@ def get_buy_vpn_keyboard(
                 datetime.timezone.utc
             ) >= datetime.datetime.now(datetime.timezone.utc):
                 builder.button(
-                    text=get_buy_option_sale_text(option),
+                    text=get_buy_option_sale_text(option, user.sale),
                     callback_data=BuyCallbackFactory(
                         duration=get_option_duration(option),
-                        price=get_option_sale_price(option),
+                        price=get_option_sale_price(option, user.sale),
                         extend=extend,
                         order_id=order_id,
                     ).pack(),

@@ -48,7 +48,7 @@ async def choose_payment_back_callback(
 ):
     bot_logger.info(f"Callback: '{callback.id}' - buy.choose_payment_back_callback")
     await callback.message.edit_text(
-        text=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(extend=False)
+        text=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(extend=False, user_id=callback.from_user.id)
     )
     await callback.answer()
 

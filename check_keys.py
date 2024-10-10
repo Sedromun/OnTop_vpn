@@ -151,9 +151,7 @@ async def check_expired():
                 )
 
     finished_orders = get_all_orders(model=FinishedOrderModel)
-    checker_logger.info(msg=str(finished_orders))
     for order in finished_orders:
-        checker_logger.info(msg=str(order._asdict()))
         user = order.user
         if not user.orders:
             expire = order.expiration_date.astimezone(datetime.timezone.utc)
