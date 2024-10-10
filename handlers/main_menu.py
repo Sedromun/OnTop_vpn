@@ -1,8 +1,11 @@
+import datetime
+
 from aiogram import F, Router
 from aiogram.filters import Command, StateFilter
 from aiogram.types import Message
 
-from config import WELCOME_PRESENT
+from config import WELCOME_PRESENT, SECRET_START_STRING
+from database.controllers.order import update_order
 from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
@@ -12,7 +15,7 @@ from text.info import get_referral_program_text
 from text.keyboard_text import buy, profile, referral_program, settings
 from text.texts import (get_buy_vpn_text, get_greeting_text,
                         get_incorrect_command, get_information_text,
-                        get_profile_text)
+                        get_profile_text, get_old_user_message_start_text)
 
 main_router = Router(name="main")
 
@@ -23,6 +26,22 @@ async def start_handler(message: Message):
 
     user_id = message.from_user.id
     user = get_user(user_id)
+
+    if user is not None:
+        if " " in message.text:
+            referrer_candidate = message.text.split()[1]
+            if referrer_candidate == SECRET_START_STRING:
+                await message.answer(text=get_old_user_message_start_text(), reply_markup=get_main_keyboard())
+                if user.present_for_old is None or user.present_for_old == False:
+                    update_user(user.id, {'present_for_old': True})
+                    orders = user.orders
+                    for order in orders:
+                        update_order(order.id, {
+                            'expiration_date': order.expiration_date.astimezone(datetime.timezone.utc)
+                                               + datetime.timedelta(days=14)
+                        })
+                return
+
     referrer = None
     if user is None:
 

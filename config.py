@@ -48,13 +48,15 @@ RECALLS_TGC_LINK = "https://t.me/" + str(os.getenv("RECALLS_TGC_TAG"))
 INSTR_URL = str(os.getenv("INSTR_URL"))
 BOT_URL = str(os.getenv("BOT_URL"))
 REFS_PARAM = "?start="
+SECRET_START_STRING = str(os.getenv("SECRET_START_STRING"))
 
 # -- Numeric params --
 
 MIN_ADD_AMOUNT = 50
-PERCENT_REFERRAL = 10
+PERCENT_REFERRAL = 20
 WELCOME_PRESENT = 50
 ONE_DAY_SALE = 30
+THIRD_DAY_SALE = 20
 INTERVAL = 5  # mins
 
 OLD_USER_UNTIL_DATE = datetime.datetime.strptime("2024-10-09 00-00-00", "%Y-%m-%d %H-%M-%S")

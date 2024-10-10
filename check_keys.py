@@ -4,15 +4,16 @@ import datetime
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from yookassa import Configuration, Payment
 
-from config import INTERVAL, ONE_DAY_SALE, SECRET_KEY, SHOP_ID, bot
+from config import INTERVAL, ONE_DAY_SALE, SECRET_KEY, SHOP_ID, bot, THIRD_DAY_SALE
 from database.controllers.key import delete_key
-from database.controllers.order import delete_order, get_all_orders
+from database.controllers.order import delete_order, get_all_orders, create_order
 from database.controllers.user import get_all_users, update_user
 from keyboards.profile import get_order_expiring_keyboard
 from logs import logging
-from schemas import OrderModel
+from schemas import OrderModel, FinishedOrderModel
 from text.notifications import (new_user_notification_text,
-                                sale_one_day_notification_text, order_expired_text, order_going_to_expired_text)
+                                sale_one_day_notification_text, order_expired_text, order_going_to_expired_text,
+                                sale_three_day_notification_text, sale_week_notification_text)
 from utils.buy_options import OLD_PRICES
 
 
@@ -36,6 +37,7 @@ async def order_expired(order: OrderModel, _: str):
         order_id = order.id
         user_id = order.user_id
         country = order.country
+        create_order(order._asdict(), FinishedOrderModel)
         delete_order(order.id)
         await bot.send_message(user_id, order_expired_text(order_id, country))
 
@@ -64,13 +66,40 @@ async def sale_one_day_notification(user, _: str):
             {
                 "sale": ONE_DAY_SALE,
                 "sale_expiration": datetime.datetime.now(datetime.timezone.utc)
-                + datetime.timedelta(days=1),
+                                   + datetime.timedelta(days=1),
             },
         )
 
 
+async def first_order_finished_notification(order, _: str):
+    user = order.user
+    logging.info(f"user {user.id} got sale notification 20% at 3 days after expiration")
+
+    await bot.send_message(user.id, sale_three_day_notification_text(order.id))
+    if user.sale is None or user.sale <= THIRD_DAY_SALE:
+        update_user(
+            user.id,
+            {
+                "sale": THIRD_DAY_SALE,
+                "sale_expiration": datetime.datetime.now(datetime.timezone.utc)
+                                   + datetime.timedelta(days=1),
+            },
+        )
+
+
+async def second_order_finished_notification(order, _: str):
+    user = order.user
+    logging.info(f"user {user.id} got week notification why bad vpn")
+
+    await bot.send_message(
+        user.id,
+        sale_week_notification_text(),
+        reply_markup=sale_week_notification_keyboard(order.id)
+    )
+
+
 async def check_on_time(
-    func, now, target_time, interval, after: bool, model, interval_name
+        func, now, target_time, interval, after: bool, model, interval_name
 ):
     checks_interval = datetime.timedelta(minutes=INTERVAL, seconds=0)
     tm = target_time + interval * (1 if after else -1)
@@ -87,6 +116,11 @@ ORDERS_NOTIFICATIONS = [
 USERS_NOTIFICATIONS = [
     (new_user_notification, datetime.timedelta(hours=0, minutes=15), True),
     (sale_one_day_notification, datetime.timedelta(days=1), True),
+]
+
+FINISHED_ORDERS_NOTIFICATIONS = [
+    (first_order_finished_notification, datetime.timedelta(days=3), True),
+    (second_order_finished_notification, datetime.timedelta(days=7), True),
 ]
 
 
@@ -114,6 +148,17 @@ async def check_expired():
                     after,
                     user,
                     "",
+                )
+
+    finished_orders = get_all_orders(FinishedOrderModel)
+
+    for order in finished_orders:
+        user = order.user
+        if not user.orders:
+            expire = order.expiration_date.astimezone(datetime.timezone.utc)
+            for func, interval, after in ORDERS_NOTIFICATIONS:
+                await check_on_time(
+                    func, now, expire, interval, after, order, ""
                 )
 
 

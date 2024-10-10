@@ -80,3 +80,52 @@ def get_order_expiring_keyboard(order_id: int):
 
 class OrderExpiringCallbackFactory(CallbackData, prefix="profile_order_expiring"):
     id: int
+
+
+def sale_week_notification_keyboard(order_id: int):
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text=bad_price,
+        callback_data=OrderExpiringCallbackFactory(text=bad_price, order_id=order_id),
+    )
+    builder.button(
+        text=bad_quality,
+        callback_data=OrderExpiringCallbackFactory(text=bad_quality, order_id=order_id),
+    )
+    builder.button(
+        text=another_service,
+        callback_data=OrderExpiringCallbackFactory(text=another_service, order_id=order_id),
+    )
+    builder.button(
+        text=dont_vpn,
+        callback_data=OrderExpiringCallbackFactory(text=dont_vpn, order_id=order_id),
+    )
+    builder.button(
+        text=forgot_buy,
+        callback_data=OrderExpiringCallbackFactory(text=forgot_buy, order_id=order_id),
+    )
+
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+class InfoVPNNotificationCallbackFactory(CallbackData, prefix="info_vpn"):
+    text: str
+    order_id: int
+
+
+def get_buy_vpn_from_notify_keyboard():
+    builder = InlineKeyboardBuilder()
+
+    builder.button(
+        text=buy,
+        callback_data=BuyVPNFromNotificationCallbackFactory(),
+    )
+
+    builder.adjust(1)
+    return builder.as_markup()
+
+
+class BuyVPNFromNotificationCallbackFactory(CallbackData, prefix="buy_vpn_notify"):
+    pass

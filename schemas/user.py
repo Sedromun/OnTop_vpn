@@ -22,3 +22,6 @@ class UserModel(BaseModel):
     sale_expiration: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True), nullable=True, default=func.now()
     )
+    review: Mapped[str] = mapped_column(nullable=True, default="")
+    present_for_old: Mapped[bool] = mapped_column(nullable=True, default=False)
+

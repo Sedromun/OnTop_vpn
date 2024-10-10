@@ -16,10 +16,12 @@ from keyboards.profile import (ChooseCountryChangeCallbackFactory,
                                OrderExpiringCallbackFactory,
                                ProfileAddMoneyCallbackFactory,
                                get_add_money_keyboard,
-                               get_order_countries_keyboard)
+                               get_order_countries_keyboard, InfoVPNNotificationCallbackFactory,
+                               get_buy_vpn_from_notify_keyboard)
 from logs import bot_logger
 from servers.outline_keys import get_key
-from text.keyboard_text import back, change_country, extend_key
+from text.keyboard_text import back, change_country, extend_key, forgot_buy, bad_price
+from text.notifications import thanks_for_review_text, bad_price_text, forgot_buy_text
 from text.profile import (get_order_choose_country_text, get_order_info_text,
                           get_profile_add_money_text,
                           get_success_extended_key_text)
@@ -36,7 +38,7 @@ profile_router = Router(name="profile")
     BuyCallbackFactory.filter((F.extend == True) & (F.back == False))
 )
 async def profile_extend_key_callback(
-    callback: CallbackQuery, callback_data: BuyCallbackFactory
+        callback: CallbackQuery, callback_data: BuyCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.profile_extend_key_callback")
     user = get_user(callback.from_user.id)
@@ -91,7 +93,7 @@ async def profile_extend_key_callback(
     PaymentAddMoneyCallbackFactory.filter((F.order_id != -1) & (F.back == True))
 )
 async def add_money_balance_back_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.add_money_balance_back_callback")
 
@@ -130,10 +132,9 @@ async def add_money_balance_back_callback(
 
 @profile_router.callback_query(PaymentAddMoneyCallbackFactory.filter(F.order_id != -1))
 async def add_money_balance_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.add_money_balance_callback")
-
 
     order_data = get_order_data(callback, callback_data)
 
@@ -151,7 +152,7 @@ async def add_money_balance_callback(
 
 @profile_router.callback_query(ProfileCallbackFactory.filter())
 async def profile_order_info_callback(
-    callback: CallbackQuery, callback_data: ProfileCallbackFactory
+        callback: CallbackQuery, callback_data: ProfileCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.profile_order_info_callback")
 
@@ -164,7 +165,7 @@ async def profile_order_info_callback(
 
 @profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter(F.back == True))
 async def add_money_back_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.add_money_back_callback")
 
@@ -178,7 +179,7 @@ async def add_money_back_callback(
 
 @profile_router.callback_query(ProfileAddMoneyCallbackFactory.filter(F.back == False))
 async def add_money_callback(
-    callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
+        callback: CallbackQuery, callback_data: PaymentAddMoneyCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.add_money_callback")
 
@@ -194,7 +195,7 @@ async def add_money_callback(
 
 @profile_router.callback_query(OrderExpiringCallbackFactory.filter())
 async def profile_extend_expiring_key_callback(
-    callback: CallbackQuery, callback_data: OrderExpiringCallbackFactory
+        callback: CallbackQuery, callback_data: OrderExpiringCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.profile_extend_expiring_key_callback")
 
@@ -217,7 +218,7 @@ async def profile_extend_expiring_key_callback(
     BackFromPaymentCallbackFactory.filter(F.purpose == PaymentPurpose.EXTEND_CARD.value)
 )
 async def back_from_payment_extend_card_callback(
-    callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory
+        callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.back_from_payment_extend_card_callback")
 
@@ -244,7 +245,7 @@ async def back_from_payment_extend_card_callback(
     )
 )
 async def back_from_payment_extend_add_money_callback(
-    callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory
+        callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.back_from_payment_extend_add_money_callback")
 
@@ -269,7 +270,7 @@ async def back_from_payment_extend_add_money_callback(
     BackFromPaymentCallbackFactory.filter(F.purpose == PaymentPurpose.ADD_MONEY.value)
 )
 async def back_from_payment_add_money_callback(
-    callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory
+        callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory
 ):
     bot_logger.info(f"Callback: '{callback.id}' - profile.back_from_payment_add_money_callback")
 
@@ -280,3 +281,28 @@ async def back_from_payment_add_money_callback(
         reply_markup=get_add_money_keyboard(),
     )
     await callback.answer()
+
+
+@profile_router.callback_query(
+    InfoVPNNotificationCallbackFactory.filter()
+)
+async def get_review_on_vpn_callback(callback: CallbackQuery, callback_data: InfoVPNNotificationCallbackFactory):
+    text = callback_data.text
+    if text == forgot_buy:
+        await callback.message.edit_text(
+            text=forgot_buy_text(),
+            reply_markup=get_buy_vpn_from_notify_keyboard()
+        )
+    elif text == bad_price:
+        update_user(callback.from_user.id, {
+            'sale': 30,
+            'sale_expiration': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=30)
+        })
+        await callback.message.edit_text(
+            text=bad_price_text(),
+            reply_markup=get_buy_vpn_from_notify_keyboard()
+        )
+    else:
+        await callback.message.edit_text(text=thanks_for_review_text())
+
+    update_user(callback.from_user.id, {'review': ' '.join(text.split(' ')[1:])})

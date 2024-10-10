@@ -1,4 +1,4 @@
-from config import INSTR_URL, ONE_DAY_SALE
+from config import INSTR_URL, ONE_DAY_SALE, THIRD_DAY_SALE
 from database.controllers.order import get_order
 from text.keyboard_text import get_order_short_text
 from text.profile import get_order_info_text
@@ -26,9 +26,9 @@ def sale_one_day_notification_text():
 def auto_extended_success(order_id):
     order = get_order(order_id)
     return (
-        f"✅ {get_order_short_text(order_id, order.country)} - <b>успешно продлен!</b>\n\n" +
-        get_order_info_text(order_id) +
-        "❤️ Спасибо, что остаешься с нами!"
+            f"✅ {get_order_short_text(order_id, order.country)} - <b>успешно продлен!</b>\n\n" +
+            get_order_info_text(order_id) +
+            "❤️ Спасибо, что остаешься с нами!"
     )
 
 
@@ -60,3 +60,26 @@ def order_going_to_expired_text(order_id: int, country: str, time: str):
         f"⏰ Время действия вашего VPN ключа {order_id} - {country} {COUNTRIES[country]} <b>истекает через {time}</b>.\n\nНе забудьте продлить время его"
         f" действия"
     )
+
+
+def sale_three_day_notification_text(order_id):
+    return (f"⏰ Время действия твоего VPN ключа № {order_id} - страна <b>истекло</b>.\n\n"
+            f"Оформи новый в течение 24 часов со скидкой <b>{THIRD_DAY_SALE}%</b>!")
+
+
+def sale_week_notification_text():
+    return "Кажется, ты не пользуешься нашим сервисом.\n Расскажи, почему 👇"
+
+
+def thanks_for_review_text():
+    return "❤️ Спасибо, за твой отзыв!\n\nМы уже работаем над тем, чтобы стать лучше!"
+
+
+def forgot_buy_text():
+    return "Если ты хочешь продолжить пользоваться нашим сервисом, можешь нажать на кнопку ниже и оформить подписку."
+
+
+def bad_price_text():
+    return ("❤️ Спасибо, за твой отзыв!\n\n"
+            "Специально для тебя мы делаем скидку <b>30%</b> на месячную подписку.\n\n"
+            "Мы будем рады, если ты ей воспользуешься!")
