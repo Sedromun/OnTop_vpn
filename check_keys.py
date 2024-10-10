@@ -8,7 +8,7 @@ from config import INTERVAL, ONE_DAY_SALE, SECRET_KEY, SHOP_ID, bot, THIRD_DAY_S
 from database.controllers.key import delete_key
 from database.controllers.order import delete_order, get_all_orders, create_order
 from database.controllers.user import get_all_users, update_user
-from keyboards.profile import get_order_expiring_keyboard
+from keyboards.profile import get_order_expiring_keyboard, sale_week_notification_keyboard
 from logs import logging
 from schemas import OrderModel, FinishedOrderModel
 from text.notifications import (new_user_notification_text,
