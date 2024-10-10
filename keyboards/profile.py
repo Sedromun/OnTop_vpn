@@ -87,23 +87,23 @@ def sale_week_notification_keyboard(order_id: int):
 
     builder.button(
         text=bad_price,
-        callback_data=OrderExpiringCallbackFactory(text=bad_price, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(text=bad_price, order_id=order_id),
     )
     builder.button(
         text=bad_quality,
-        callback_data=OrderExpiringCallbackFactory(text=bad_quality, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(text=bad_quality, order_id=order_id),
     )
     builder.button(
         text=another_service,
-        callback_data=OrderExpiringCallbackFactory(text=another_service, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(text=another_service, order_id=order_id),
     )
     builder.button(
         text=dont_vpn,
-        callback_data=OrderExpiringCallbackFactory(text=dont_vpn, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(text=dont_vpn, order_id=order_id),
     )
     builder.button(
         text=forgot_buy,
-        callback_data=OrderExpiringCallbackFactory(text=forgot_buy, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(text=forgot_buy, order_id=order_id),
     )
 
     builder.adjust(1)
