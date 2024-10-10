@@ -24,7 +24,7 @@ async def check_referral(user_id, amount):
     user = get_user(user_id)
     if user is not None and user.referrer_id is not None:
         referrer = get_user(user.referrer_id)
-        add_amount = amount * PERCENT_REFERRAL // 100
+        add_amount = amount * PERCENT_REFERRAL // 100 + 1
         update_user(user.referrer_id, {"balance": referrer.balance + add_amount})
         await bot.send_message(referrer.id, text=get_referral_bought(add_amount))
 
