@@ -150,8 +150,8 @@ async def check_expired():
                     "",
                 )
 
-    finished_orders = get_all_orders(FinishedOrderModel)
-
+    finished_orders = get_all_orders(model=FinishedOrderModel)
+    print(finished_orders)
     for order in finished_orders:
         print(order)
         user = order.user
