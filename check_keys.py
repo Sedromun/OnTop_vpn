@@ -125,7 +125,6 @@ FINISHED_ORDERS_NOTIFICATIONS = [
 
 
 async def check_expired():
-    print("START")
     now = datetime.datetime.now(datetime.timezone.utc)
     orders = get_all_orders()
     for order in orders:
@@ -153,9 +152,8 @@ async def check_expired():
 
     finished_orders = get_all_orders(model=FinishedOrderModel)
     checker_logger.info(msg=str(finished_orders))
-    print(finished_orders)
     for order in finished_orders:
-        print(order)
+        checker_logger.info(msg=str(order._asdict()))
         user = order.user
         if not user.orders:
             expire = order.expiration_date.astimezone(datetime.timezone.utc)
