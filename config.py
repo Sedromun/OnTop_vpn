@@ -57,7 +57,7 @@ PERCENT_REFERRAL = 20
 WELCOME_PRESENT = 50
 ONE_DAY_SALE = 30
 THIRD_DAY_SALE = 20
-INTERVAL = 1  # mins
+INTERVAL = 5  # mins
 
 OLD_USER_UNTIL_DATE = datetime.datetime.strptime("2024-10-09 00-00-00", "%Y-%m-%d %H-%M-%S")
 
