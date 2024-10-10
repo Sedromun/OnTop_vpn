@@ -12,7 +12,8 @@ from logs import backend_logger
 from main import app
 from schemas.Notification import NotificationSchema
 from servers.outline_keys import get_key
-from text.notifications import auto_extended_failure, auto_extended_success, get_referral_bought
+from text.notifications import (auto_extended_failure, auto_extended_success,
+                                get_referral_bought)
 from text.profile import (get_money_added_text, get_order_info_text,
                           get_success_extended_key_text)
 from text.texts import get_success_created_key_text
@@ -79,7 +80,7 @@ async def check_payment(notification: NotificationSchema):
                     "begin_date": begin,
                     "expiration_date": end,
                     "price": int(data["price"]),
-                    "payment_id": payment["payment_method"]["id"]
+                    "payment_id": payment["payment_method"]["id"],
                 }
             )
 
@@ -111,7 +112,10 @@ async def check_payment(notification: NotificationSchema):
         ):
             begin = order.expiration_date
             end = begin + datetime.timedelta(days=int(duration_str))
-            update_order(order.id, {"expiration_date": end, "payment_id": payment["payment_method"]["id"]})
+            update_order(
+                order.id,
+                {"expiration_date": end, "payment_id": payment["payment_method"]["id"]},
+            )
 
             await bot.send_message(
                 user_id,

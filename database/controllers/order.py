@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from database import session
 from logs import bot_logger
-from schemas import OrderModel, FinishedOrderModel
+from schemas import FinishedOrderModel, OrderModel
 
 
 def get_order(order_id: int) -> OrderModel | None:
@@ -13,7 +13,9 @@ def get_order(order_id: int) -> OrderModel | None:
     return order
 
 
-def get_all_orders(model: Type[OrderModel | FinishedOrderModel] = OrderModel) -> list[OrderModel | FinishedOrderModel]:
+def get_all_orders(
+    model: Type[OrderModel | FinishedOrderModel] = OrderModel,
+) -> list[OrderModel | FinishedOrderModel]:
     orders = session.scalars(select(model)).all()
     return orders
 
@@ -25,14 +27,18 @@ def get_all_country_orders(country: str) -> list[OrderModel]:
     return orders
 
 
-def create_order(data: dict, model: Type[OrderModel | FinishedOrderModel] = OrderModel) -> OrderModel | None:
+def create_order(
+    data: dict, model: Type[OrderModel | FinishedOrderModel] = OrderModel
+) -> OrderModel | None:
     order = model(**data)
 
     session.add(order)
 
     try:
         session.commit()
-        bot_logger.info("order '" + str(order.id) + "' successfully created!, model: " + str(model))
+        bot_logger.info(
+            "order '" + str(order.id) + "' successfully created!, model: " + str(model)
+        )
         return order
     except IntegrityError as e:
         session.rollback()

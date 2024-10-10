@@ -4,16 +4,21 @@ import datetime
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from yookassa import Configuration, Payment
 
-from config import INTERVAL, ONE_DAY_SALE, SECRET_KEY, SHOP_ID, bot, THIRD_DAY_SALE
+from config import (INTERVAL, ONE_DAY_SALE, SECRET_KEY, SHOP_ID,
+                    THIRD_DAY_SALE, bot)
 from database.controllers.key import delete_key
-from database.controllers.order import delete_order, get_all_orders, create_order
+from database.controllers.order import (create_order, delete_order,
+                                        get_all_orders)
 from database.controllers.user import get_all_users, update_user
-from keyboards.profile import get_order_expiring_keyboard, sale_week_notification_keyboard
-from logs import logging, checker_logger
-from schemas import OrderModel, FinishedOrderModel
-from text.notifications import (new_user_notification_text,
-                                sale_one_day_notification_text, order_expired_text, order_going_to_expired_text,
-                                sale_three_day_notification_text, sale_week_notification_text)
+from keyboards.profile import (get_order_expiring_keyboard,
+                               sale_week_notification_keyboard)
+from logs import logging
+from schemas import FinishedOrderModel, OrderModel
+from text.notifications import (new_user_notification_text, order_expired_text,
+                                order_going_to_expired_text,
+                                sale_one_day_notification_text,
+                                sale_three_day_notification_text,
+                                sale_week_notification_text)
 from utils.buy_options import OLD_PRICES
 
 
@@ -66,7 +71,7 @@ async def sale_one_day_notification(user, _: str):
             {
                 "sale": ONE_DAY_SALE,
                 "sale_expiration": datetime.datetime.now(datetime.timezone.utc)
-                                   + datetime.timedelta(days=1),
+                + datetime.timedelta(days=1),
             },
         )
 
@@ -82,7 +87,7 @@ async def first_order_finished_notification(order, _: str):
             {
                 "sale": THIRD_DAY_SALE,
                 "sale_expiration": datetime.datetime.now(datetime.timezone.utc)
-                                   + datetime.timedelta(days=1),
+                + datetime.timedelta(days=1),
             },
         )
 
@@ -94,12 +99,12 @@ async def second_order_finished_notification(order, _: str):
     await bot.send_message(
         user.id,
         sale_week_notification_text(),
-        reply_markup=sale_week_notification_keyboard(order.id)
+        reply_markup=sale_week_notification_keyboard(order.id),
     )
 
 
 async def check_on_time(
-        func, now, target_time, interval, after: bool, model, interval_name
+    func, now, target_time, interval, after: bool, model, interval_name
 ):
     checks_interval = datetime.timedelta(minutes=INTERVAL, seconds=0)
     tm = target_time + interval * (1 if after else -1)
@@ -156,9 +161,7 @@ async def check_expired():
         if not user.orders:
             expire = order.expiration_date.astimezone(datetime.timezone.utc)
             for func, interval, after in FINISHED_ORDERS_NOTIFICATIONS:
-                await check_on_time(
-                    func, now, expire, interval, after, order, ""
-                )
+                await check_on_time(func, now, expire, interval, after, order, "")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from aiogram import F, Router
 from aiogram.filters import Command, StateFilter
 from aiogram.types import Message
 
-from config import WELCOME_PRESENT, SECRET_START_STRING
+from config import SECRET_START_STRING, WELCOME_PRESENT
 from database.controllers.order import update_order
 from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
@@ -31,15 +31,23 @@ async def start_handler(message: Message):
         if " " in message.text:
             referrer_candidate = message.text.split()[1]
             if referrer_candidate == SECRET_START_STRING:
-                await message.answer(text=get_old_user_message_start_text(), reply_markup=get_main_keyboard())
+                await message.answer(
+                    text=get_old_user_message_start_text(),
+                    reply_markup=get_main_keyboard(),
+                )
                 if user.present_for_old is None or user.present_for_old == False:
-                    update_user(user.id, {'present_for_old': True})
+                    update_user(user.id, {"present_for_old": True})
                     orders = user.orders
                     for order in orders:
-                        update_order(order.id, {
-                            'expiration_date': order.expiration_date.astimezone(datetime.timezone.utc)
-                                               + datetime.timedelta(days=14)
-                        })
+                        update_order(
+                            order.id,
+                            {
+                                "expiration_date": order.expiration_date.astimezone(
+                                    datetime.timezone.utc
+                                )
+                                + datetime.timedelta(days=14)
+                            },
+                        )
                 return
 
     referrer = None
@@ -92,6 +100,8 @@ async def referral_handler(message: Message):
 
 @main_router.message(StateFilter(None))
 async def incorrect_command_handler(message: Message):
-    bot_logger.info(f"Message: '{message.message_id}' - main_menu.incorrect_command_handler")
+    bot_logger.info(
+        f"Message: '{message.message_id}' - main_menu.incorrect_command_handler"
+    )
 
     await message.answer(get_incorrect_command())

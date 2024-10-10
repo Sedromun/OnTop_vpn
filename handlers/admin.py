@@ -8,6 +8,7 @@ from aiogram.types import Message
 from config import ADMINS, bot, outline_client
 from database.controllers.order import get_all_country_orders, get_all_orders
 from database.controllers.user import get_all_users, get_user, update_user
+from logs import bot_logger
 from states import AdminBaseStates
 from text.texts import get_incorrect_command
 from utils.country import COUNTRIES
@@ -16,7 +17,8 @@ admin_router = Router(name="admin")
 
 
 @admin_router.message(Command("starts_stat"))
-async def choose_country_callback(message: Message):
+async def admin_starts_stat_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_starts_stat_handler")
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -37,7 +39,9 @@ async def choose_country_callback(message: Message):
 
 
 @admin_router.message(Command("buys_stat"))
-async def choose_country_callback(message: Message):
+async def admin_buys_stat_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_starts_stat_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -65,7 +69,9 @@ async def choose_country_callback(message: Message):
 
 
 @admin_router.message(Command("give_money"))
-async def choose_country_callback(message: Message):
+async def admin_give_money_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_starts_stat_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -93,7 +99,9 @@ async def choose_country_callback(message: Message):
 
 
 @admin_router.message(Command("send_message_to_all_users"))
-async def choose_country_callback(message: Message, state: FSMContext):
+async def admin_send_message_handler(message: Message, state: FSMContext):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_starts_stat_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -106,7 +114,9 @@ async def choose_country_callback(message: Message, state: FSMContext):
 
 
 @admin_router.message(AdminBaseStates.send_to_all, Command("cancel"))
-async def choose_country_callback(message: Message, state: FSMContext):
+async def admin_send_message_cancel_handler(message: Message, state: FSMContext):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_send_message_cancel_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -116,7 +126,9 @@ async def choose_country_callback(message: Message, state: FSMContext):
 
 
 @admin_router.message(AdminBaseStates.send_to_all)
-async def choose_country_callback(message: Message, state: FSMContext):
+async def admin_send_message_ask_confirm_handler(message: Message, state: FSMContext):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_send_message_ask_confirm_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -129,7 +141,9 @@ async def choose_country_callback(message: Message, state: FSMContext):
 
 
 @admin_router.message(AdminBaseStates.confirm, F.text == "confirm - подтверждаю")
-async def choose_country_callback(message: Message, state: FSMContext):
+async def admin_send_message_confirmed_handler(message: Message, state: FSMContext):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_send_message_confirmed_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -148,7 +162,9 @@ async def choose_country_callback(message: Message, state: FSMContext):
 
 
 @admin_router.message(AdminBaseStates.confirm)
-async def choose_country_callback(message: Message, state: FSMContext):
+async def admin_send_message_not_confirm_handler(message: Message, state: FSMContext):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_send_message_not_confirm_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -158,7 +174,9 @@ async def choose_country_callback(message: Message, state: FSMContext):
 
 
 @admin_router.message(Command("countries_stat"))
-async def choose_country_callback(message: Message):
+async def admin_countries_stat_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_countries_stat_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return
@@ -173,7 +191,9 @@ async def choose_country_callback(message: Message):
 
 
 @admin_router.message(Command("countries_server_stat"))
-async def choose_country_callback(message: Message):
+async def admin_countries_server_stat_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_countries_server_stat_handler")
+
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
         return

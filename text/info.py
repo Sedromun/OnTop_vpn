@@ -25,9 +25,15 @@ def get_no_orders_text():
 
 
 def expiration_date_text(order):
-    return (f"Ключ №{order.id} - {order.country} {COUNTRIES[order.country]}\n\nДата истечения" +
-            (" и продления подписки" if (order.payment_id != "" and order.payment_id is not None) else "") +
-            f": {(order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime(datetime_format)}\n\n")
+    return (
+        f"Ключ №{order.id} - {order.country} {COUNTRIES[order.country]}\n\nДата истечения"
+        + (
+            " и продления подписки"
+            if (order.payment_id != "" and order.payment_id is not None)
+            else ""
+        )
+        + f": {(order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime(datetime_format)}\n\n"
+    )
 
 
 def auto_off_text(order_id):

@@ -59,7 +59,9 @@ ONE_DAY_SALE = 30
 THIRD_DAY_SALE = 20
 INTERVAL = 5  # mins
 
-OLD_USER_UNTIL_DATE = datetime.datetime.strptime("2024-10-09 00-00-00", "%Y-%m-%d %H-%M-%S")
+OLD_USER_UNTIL_DATE = datetime.datetime.strptime(
+    "2024-10-09 00-00-00", "%Y-%m-%d %H-%M-%S"
+)
 
 # -- admins --
 

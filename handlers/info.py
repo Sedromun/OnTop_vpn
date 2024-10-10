@@ -15,16 +15,16 @@ from keyboards.info import (InfoBackCallbackFactory, InfoCallbackFactory,
                             get_my_keys_keyboard, get_profile_keyboard)
 from keyboards.profile import (BackKeyInfoCallbackFactory,
                                ChooseCountryChangeCallbackFactory,
+                               get_buy_vpn_from_notify_keyboard,
                                get_order_changes_keyboard,
-                               get_order_countries_keyboard, get_buy_vpn_from_notify_keyboard)
+                               get_order_countries_keyboard)
 from logs import bot_logger
 from schemas import OrderModel
 from servers.outline_keys import get_key
-from text.info import (auto_off_text,
-                       expiration_date_text,
-                       get_my_keys_text, get_no_orders_text)
-from text.keyboard_text import (back, change_country, extend_key,
-                                my_keys, off_auto, profile)
+from text.info import (auto_off_text, expiration_date_text, get_my_keys_text,
+                       get_no_orders_text)
+from text.keyboard_text import (back, change_country, extend_key, my_keys,
+                                off_auto, profile)
 from text.profile import (get_country_changed_text,
                           get_order_choose_country_text, get_order_info_text,
                           get_success_extended_key_text)
@@ -203,6 +203,18 @@ async def buy_callback(callback: CallbackQuery, callback_data: PaymentCallbackFa
     await callback.answer()
 
 
+@info_router.callback_query(BuyCallbackFactory.filter(F.back == True))
+async def keys_back_from_extend_key_callback(
+    callback: CallbackQuery, callback_data: BuyCallbackFactory
+):
+    bot_logger.info(
+        f"Callback: '{callback.id}' - info.keys_back_from_extend_key_callback"
+    )
+
+    await my_key(callback, order=get_order(callback_data.order_id))
+    await callback.answer()
+
+
 # --- extend key --- payment ---
 @info_router.callback_query(
     PaymentCallbackFactory.filter((F.option == Payment.Card.value) & (F.extend == True))
@@ -268,31 +280,7 @@ async def extend_balance_callback(
     await callback.answer()
 
 
-#  -----------------
-
-
-@info_router.callback_query(BuyCallbackFactory.filter(F.back == True))
-async def profile_extend_key_callback(
-    callback: CallbackQuery, callback_data: BuyCallbackFactory
-):
-    bot_logger.info(f"Callback: '{callback.id}' - info.profile_extend_key_callback")
-
-    await my_key(callback, order=get_order(callback_data.order_id))
-    await callback.answer()
-
-
-# @info_router.callback_query(InfoChooseOrderCallbackFactory.filter(F.extend_key))
-# async def extend_key_prices_callback(
-#         callback: CallbackQuery, callback_data: InfoChooseOrderCallbackFactory
-# ):
-#     order = get_order(callback_data.order_id)
-#     await callback.message.edit_text(
-#         text=expiration_date_text(order) + get_buy_vpn_text(),
-#         reply_markup=get_buy_vpn_keyboard(
-#             extend=True, order_id=order.id, need_back=True
-#         ),
-#     )
-#     await callback.answer()
+#  --- back callbacks ---
 
 
 @info_router.callback_query(InfoBackCallbackFactory.filter())
@@ -317,13 +305,3 @@ async def back_to_profile_callback(
         text=get_information_text(), reply_markup=get_info_keyboard()
     )
     await callback.answer()
-
-
-# @info_router.callback_query(OrderChangesCallbackFactory.filter(F.text == back))
-# async def profile_back_order_info_country_callback(
-#         callback: CallbackQuery, callback_data: OrderChangesCallbackFactory
-# ):
-#     await callback.message.edit_text(
-#         text=get_information_text(), reply_markup=get_info_keyboard()
-#     )
-#     await callback.answer()

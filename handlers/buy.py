@@ -47,7 +47,8 @@ async def choose_payment_back_callback(
 ):
     bot_logger.info(f"Callback: '{callback.id}' - buy.choose_payment_back_callback")
     await callback.message.edit_text(
-        text=get_buy_vpn_text(), reply_markup=get_buy_vpn_keyboard(extend=False, user_id=callback.from_user.id)
+        text=get_buy_vpn_text(),
+        reply_markup=get_buy_vpn_keyboard(extend=False, user_id=callback.from_user.id),
     )
     await callback.answer()
 
@@ -210,7 +211,9 @@ async def add_money_callback(
         (F.option == Payment.Card.value) & (F.extend == False)
     )
 )
-async def buy_card_callback(callback: CallbackQuery, callback_data: PaymentCallbackFactory):
+async def buy_card_callback(
+    callback: CallbackQuery, callback_data: PaymentCallbackFactory
+):
     bot_logger.info(f"Callback: '{callback.id}' - buy.buy_card_callback")
     order_data = get_order_data(callback, callback_data)
     await buy_handle(
@@ -239,7 +242,9 @@ def get_order_data(callback, callback_data) -> dict:
 async def back_from_payment_buy_card_callback(
     callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory
 ):
-    bot_logger.info(f"Callback: '{callback.id}' - buy.back_from_payment_buy_card_callback")
+    bot_logger.info(
+        f"Callback: '{callback.id}' - buy.back_from_payment_buy_card_callback"
+    )
     data = await check_not_payed(callback, callback_data)
     user = get_user(callback.from_user.id)
 
@@ -264,7 +269,9 @@ async def back_from_payment_buy_card_callback(
 async def back_from_payment_add_money_callback(
     callback: CallbackQuery, callback_data: BackFromPaymentCallbackFactory
 ):
-    bot_logger.info(f"Callback: '{callback.id}' - buy.back_from_payment_add_money_callback")
+    bot_logger.info(
+        f"Callback: '{callback.id}' - buy.back_from_payment_add_money_callback"
+    )
     data = await check_not_payed(callback, callback_data)
     user = get_user(callback.from_user.id)
 

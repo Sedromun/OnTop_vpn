@@ -29,7 +29,9 @@ def get_order_short_text(order_id: int, country: str):
 
 
 def get_buy_option_text(option, user_id, order_id):
-    return "⏳ " + option + " | " + str(get_option_price(option, user_id, order_id)) + "₽"
+    return (
+        "⏳ " + option + " | " + str(get_option_price(option, user_id, order_id)) + "₽"
+    )
 
 
 def get_buy_option_sale_text(option, sale):

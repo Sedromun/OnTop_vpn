@@ -2,7 +2,10 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import INSTR_URL
-from text.keyboard_text import *
+from text.keyboard_text import (all_instr, another_service, back, bad_price,
+                                bad_quality, buy, dont_vpn, extend_key,
+                                forgot_buy, get_country_text, settings)
+from utils.country import COUNTRIES
 
 
 def get_order_changes_keyboard():
@@ -86,23 +89,33 @@ def sale_week_notification_keyboard(order_id: int):
 
     builder.button(
         text=bad_price,
-        callback_data=InfoVPNNotificationCallbackFactory(text=bad_price, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(
+            text=bad_price, order_id=order_id
+        ),
     )
     builder.button(
         text=bad_quality,
-        callback_data=InfoVPNNotificationCallbackFactory(text=bad_quality, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(
+            text=bad_quality, order_id=order_id
+        ),
     )
     builder.button(
         text=another_service,
-        callback_data=InfoVPNNotificationCallbackFactory(text=another_service, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(
+            text=another_service, order_id=order_id
+        ),
     )
     builder.button(
         text=dont_vpn,
-        callback_data=InfoVPNNotificationCallbackFactory(text=dont_vpn, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(
+            text=dont_vpn, order_id=order_id
+        ),
     )
     builder.button(
         text=forgot_buy,
-        callback_data=InfoVPNNotificationCallbackFactory(text=forgot_buy, order_id=order_id),
+        callback_data=InfoVPNNotificationCallbackFactory(
+            text=forgot_buy, order_id=order_id
+        ),
     )
 
     builder.adjust(1)

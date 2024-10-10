@@ -38,7 +38,9 @@ def get_option_price(option: str, user_id: int, order_id: int) -> int:
     is_old_prices = False
 
     if user is not None:
-        if user.created_time.astimezone(datetime.timezone.utc) < OLD_USER_UNTIL_DATE.astimezone(datetime.timezone.utc):
+        if user.created_time.astimezone(
+            datetime.timezone.utc
+        ) < OLD_USER_UNTIL_DATE.astimezone(datetime.timezone.utc):
             is_old_prices = True
 
     return OLD_PRICES[option] if is_old_prices else NEW_PRICES[option]

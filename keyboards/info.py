@@ -3,7 +3,9 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from config import INSTR_URL, RECALLS_TGC_LINK, TECH_SUPPORT_LINK
 from schemas import OrderModel
-from text.keyboard_text import *
+from text.keyboard_text import (all_instr, back, change_country, extend_key,
+                                get_order_short_text, my_keys, off_auto,
+                                profile, recalls, tech_support, top_up_balance)
 
 
 def get_info_keyboard():
