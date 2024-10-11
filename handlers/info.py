@@ -4,7 +4,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
 from database.controllers.order import get_order, update_order
-from database.controllers.user import get_user, register_user, update_user
+from database.controllers.user import get_user, register_user, update_user, get_user_orders
 from handlers import get_order_data
 from keyboards.buy import (BuyCallbackFactory, Payment, PaymentCallbackFactory,
                            get_balance_add_money_keyboard,
@@ -59,7 +59,7 @@ async def info_my_keys_callback(
 ):
     bot_logger.info(f"Callback: '{callback.id}' - info.info_my_keys_callback")
     user = get_user(callback.from_user.id)
-    orders = user.orders
+    orders = get_user_orders(user.id)
     if len(orders) == 0:
         await callback.message.edit_text(
             text=get_no_orders_text(),
@@ -144,7 +144,7 @@ async def back_from_my_keys_callback(
 ):
     bot_logger.info(f"Callback: '{callback.id}' - info.back_from_my_keys_callback")
     user = get_user(callback.from_user.id)
-    orders = user.orders
+    orders = get_user_orders(user.id)
     if len(orders) <= 1:
         await callback.message.edit_text(
             text=get_information_text(), reply_markup=get_info_keyboard()

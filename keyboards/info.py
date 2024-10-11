@@ -59,7 +59,7 @@ class InfoBackCallbackFactory(CallbackData, prefix="info_back"):
 
 def get_choose_order_keyboard(orders: [OrderModel]):
     builder = InlineKeyboardBuilder()
-    print(orders)
+
     for order in orders:
         builder.button(
             text=get_order_short_text(order.id, order.country),

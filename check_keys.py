@@ -9,7 +9,7 @@ from config import (INTERVAL, ONE_DAY_SALE, SECRET_KEY, SHOP_ID,
 from database.controllers.key import delete_key
 from database.controllers.order import (create_order, delete_order,
                                         get_all_orders)
-from database.controllers.user import get_all_users, update_user
+from database.controllers.user import get_all_users, update_user, get_user_orders
 from keyboards.profile import (get_order_expiring_keyboard,
                                sale_week_notification_keyboard)
 from logs import logging
@@ -143,7 +143,8 @@ async def check_expired():
 
     users = get_all_users()
     for user in users:
-        if not user.orders:
+        user_orders = get_user_orders(user.id)
+        if not user_orders:
             for func, interval, after in USERS_NOTIFICATIONS:
                 await check_on_time(
                     func,
@@ -157,8 +158,8 @@ async def check_expired():
 
     finished_orders = get_all_orders(model=FinishedOrderModel)
     for order in finished_orders:
-        user = order.user
-        if not user.orders:
+        user_orders = get_user_orders(order.user_id)
+        if not user_orders:
             expire = order.expiration_date.astimezone(datetime.timezone.utc)
             for func, interval, after in FINISHED_ORDERS_NOTIFICATIONS:
                 await check_on_time(func, now, expire, interval, after, order, "")
