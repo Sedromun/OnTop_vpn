@@ -1,6 +1,6 @@
 import datetime
 
-from config import MIN_ADD_AMOUNT
+from config import MIN_ADD_AMOUNT, INSTR_URL
 from database.controllers.user import get_user, register_user
 from utils.common import datetime_format
 from utils.country import COUNTRIES
@@ -15,7 +15,7 @@ def get_greeting_text():
         "🛒 <b>Купить подписку</b> - доступные тарифы и скидки\n\n"
         "👫 <b>Реферальная программа</b> - приглашай и зарабатывай\n\n"
         "⚙️ <b>Настройки</b> - информация о ключах и смене страны\n\n"
-        "А инструкцию по подключению ты найдешь <a href='{INSTR_URL}'>здесь</a>"
+        f"А инструкцию по подключению ты найдешь <a href='{INSTR_URL}'>здесь</a>"
     )
 
 
