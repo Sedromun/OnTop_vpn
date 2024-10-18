@@ -39,6 +39,15 @@ async def check_payment(notification: NotificationSchema):
     if "extending" in data:
         order = get_order(data["order_id"])
         if payment["status"] == "succeeded":
+            update_order(
+                order.id,
+                {
+                    "expiration_date": order.expiration_date.astimezone(
+                        datetime.timezone.utc
+                    )
+                    + datetime.timedelta(days=31),
+                },
+            )
             await bot.send_message(order.user_id, text=auto_extended_success(order.id))
         else:
             update_order(
@@ -47,7 +56,7 @@ async def check_payment(notification: NotificationSchema):
                     "expiration_date": order.expiration_date.astimezone(
                         datetime.timezone.utc
                     )
-                    + datetime.timedelta(days=31),
+                    + datetime.timedelta(days=1),
                     "payment_id": "",
                 },
             )
@@ -68,8 +77,8 @@ async def check_payment(notification: NotificationSchema):
         amount = int(float(payment["amount"]["value"]))
 
         if (
-            purpose == PaymentPurpose.BUY_CARD.value
-            or purpose == PaymentPurpose.BUY_ADD_MONEY.value
+                purpose == PaymentPurpose.BUY_CARD.value
+                or purpose == PaymentPurpose.BUY_ADD_MONEY.value
         ):
             begin = datetime.datetime.now(datetime.timezone.utc)
             end = begin + datetime.timedelta(days=int(data["duration"]))
@@ -88,7 +97,7 @@ async def check_payment(notification: NotificationSchema):
             await bot.send_message(
                 user_id,
                 text=get_success_created_key_text(get_order_perm_key(order.id))
-                + get_order_info_text(order.id),
+                     + get_order_info_text(order.id),
                 reply_markup=get_instruction_button_keyboard(),
             )
 
@@ -98,8 +107,8 @@ async def check_payment(notification: NotificationSchema):
             update_user(user_id, {"balance": new_balance})
             await bot.send_message(user_id, text=get_money_added_text())
         elif (
-            purpose == PaymentPurpose.EXTEND_ADD_MONEY.value
-            or purpose == PaymentPurpose.BUY_ADD_MONEY.value
+                purpose == PaymentPurpose.EXTEND_ADD_MONEY.value
+                or purpose == PaymentPurpose.BUY_ADD_MONEY.value
         ):
             price = int(data["price"])
             update_order(order.id, {"price": price})
@@ -107,8 +116,8 @@ async def check_payment(notification: NotificationSchema):
             update_user(user.id, {"balance": new_balance})
 
         if (
-            purpose == PaymentPurpose.EXTEND_ADD_MONEY.value
-            or purpose == PaymentPurpose.EXTEND_CARD.value
+                purpose == PaymentPurpose.EXTEND_ADD_MONEY.value
+                or purpose == PaymentPurpose.EXTEND_CARD.value
         ):
             begin = order.expiration_date
             end = begin + datetime.timedelta(days=int(duration_str))
