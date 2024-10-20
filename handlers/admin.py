@@ -40,7 +40,7 @@ async def admin_starts_stat_handler(message: Message):
 
 @admin_router.message(Command("buys_stat"))
 async def admin_buys_stat_handler(message: Message):
-    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_starts_stat_handler")
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_buys_stat_handler")
 
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
@@ -70,7 +70,7 @@ async def admin_buys_stat_handler(message: Message):
 
 @admin_router.message(Command("give_money"))
 async def admin_give_money_handler(message: Message):
-    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_starts_stat_handler")
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_give_money_handler")
 
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
@@ -100,7 +100,7 @@ async def admin_give_money_handler(message: Message):
 
 @admin_router.message(Command("send_message_to_all_users"))
 async def admin_send_message_handler(message: Message, state: FSMContext):
-    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_starts_stat_handler")
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_send_message_handler")
 
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
@@ -160,7 +160,7 @@ async def admin_send_message_confirmed_handler(message: Message, state: FSMConte
             pass
 
     await state.clear()
-    await message.answer("сообщение разослано, Всего: ", str(res))
+    await message.answer("сообщение разослано, Всего: " + str(res))
 
 
 @admin_router.message(AdminBaseStates.confirm)
