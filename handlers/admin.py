@@ -151,14 +151,16 @@ async def admin_send_message_confirmed_handler(message: Message, state: FSMConte
     message_id = (await state.get_data())["message_id"]
 
     users = get_all_users()
+    res = 0
     for user in users:
         try:
             await bot.copy_message(user.id, message.chat.id, message_id)
+            res += 1
         except Exception:
             pass
 
     await state.clear()
-    await message.answer("сообщение разослано")
+    await message.answer("сообщение разослано, Всего: ", str(res))
 
 
 @admin_router.message(AdminBaseStates.confirm)
