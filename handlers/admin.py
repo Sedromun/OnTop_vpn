@@ -235,7 +235,7 @@ async def admin_one_user_statistics_handler(message: Message):
 
     user_stat = collect_user_info(user_id)
 
-    await message.answer_document(BufferedInputFile(user_stat.encode('utf-8'), filename=f"user_{user_id}.json"))
+    await message.answer_document(BufferedInputFile(str(user_stat).encode('utf-8'), filename=f"user_{user_id}.json"))
 
 
 @admin_router.message(Command("all_users_statistics"))
@@ -251,6 +251,6 @@ async def admin_all_users_statistics_handler(message: Message):
     users = get_all_users()
     user_stat = ""
     for user in users:
-        user_stat += collect_user_info(user.id)
+        user_stat += str(collect_user_info(user.id))
 
-    await message.answer_document(BufferedInputFile(user_stat.encode('utf-8'), filename=f"users_stat.json"))
+    await message.answer_document(BufferedInputFile(str(user_stat).encode('utf-8'), filename=f"users_stat.json"))
