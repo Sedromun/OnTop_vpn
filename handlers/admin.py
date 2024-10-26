@@ -3,12 +3,13 @@ import datetime
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import Message, BufferedInputFile
 
 from config import ADMINS, bot, outline_client
 from database.controllers.order import get_all_country_orders, get_all_orders
 from database.controllers.user import get_all_users, get_user, update_user
 from logs import bot_logger
+from monitoring.monitoring import collect_user_info
 from states import AdminBaseStates
 from text.texts import get_incorrect_command
 from utils.country import COUNTRIES
@@ -210,3 +211,46 @@ async def admin_countries_server_stat_handler(message: Message):
         msg += country + ": " + str(res / 10**9 * 100 // 10 / 10) + " Gb\n"
 
     await message.answer("Статистика по странам:\n\n" + msg)
+
+
+@admin_router.message(Command("one_user_statistics"))
+async def admin_one_user_statistics_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_one_user_statistics_handler")
+
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    try:
+        _, user_id_str = message.text.split(" ")
+        user_id = int(user_id_str)
+    except ValueError:
+        await message.answer("Неверно введена команда")
+        return
+
+    user = get_user(user_id)
+
+    if not user:
+        await message.answer("Такого юзера нет")
+
+    user_stat = collect_user_info(user_id)
+
+    await message.answer_document(BufferedInputFile(user_stat.encode('utf-8'), filename=f"user_{user_id}.json"))
+
+
+@admin_router.message(Command("all_users_statistics"))
+async def admin_one_user_statistics_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_one_user_statistics_handler")
+
+    if str(message.from_user.id) not in ADMINS:
+        await message.answer(get_incorrect_command())
+        return
+
+    await message.answer("это будет долго...")
+
+    users = get_all_users()
+    user_stat = ""
+    for user in users:
+        user_stat += collect_user_info(user.id)
+
+    await message.answer_document(BufferedInputFile(user_stat.encode('utf-8'), filename=f"users_stat.json"))

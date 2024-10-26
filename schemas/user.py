@@ -27,3 +27,5 @@ class UserModel(BaseModel):
     )
     review: Mapped[str] = mapped_column(nullable=True, default="")
     present_for_old: Mapped[bool] = mapped_column(nullable=True, default=False)
+    actions: Mapped[List["ActionModel"]] = relationship(back_populates="user")
+

@@ -3,6 +3,7 @@ import datetime
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
+from database.controllers.action import create_action
 from database.controllers.order import get_order, update_order
 from database.controllers.user import get_user, register_user, update_user, get_user_orders
 from handlers import get_order_data
@@ -163,8 +164,14 @@ async def changing_country_callback(
 ):
     bot_logger.info(f"Callback: '{callback.id}' - info.changing_country_callback")
     order = get_order(callback_data.id)
+    create_action(
+        user_id=callback.from_user.id,
+        title="Change country",
+        description=f"{order.country} -> {callback_data.country}"
+    )
     update_order(order.id, {"country": callback_data.country})
     get_key(callback_data.country, order.id)
+
     await callback.message.edit_text(
         text=get_country_changed_text(order.id),
         reply_markup=get_order_changes_keyboard(),

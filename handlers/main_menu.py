@@ -5,6 +5,7 @@ from aiogram.filters import Command, StateFilter
 from aiogram.types import Message
 
 from config import SECRET_START_STRING, WELCOME_PRESENT
+from database.controllers.action import create_action
 from database.controllers.order import update_order
 from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
@@ -35,6 +36,11 @@ async def start_handler(message: Message):
                     text=get_old_user_message_start_text(),
                     reply_markup=get_main_keyboard(),
                 )
+                create_action(
+                    user_id=user.id,
+                    title="start",
+                    description="old user"
+                )
                 if user.present_for_old is None or user.present_for_old == False:
                     update_user(user.id, {"present_for_old": True})
                     orders = user.orders
@@ -63,10 +69,22 @@ async def start_handler(message: Message):
                     referrer = ref_can
             except ValueError:
                 pass
-        _ = register_user(message.from_user.id)
+        user = register_user(message.from_user.id)
+
 
     if referrer is not None:
         update_user(user_id, {"balance": WELCOME_PRESENT, "referrer_id": referrer.id})
+        create_action(
+            user_id=user.id,
+            title="start by referral",
+            description=f"referrer: {referrer.id}"
+        )
+    else:
+        create_action(
+            user_id=user.id,
+            title="start",
+            description="new user"
+        )
 
     await message.answer(text=get_greeting_text(), reply_markup=get_main_keyboard())
 

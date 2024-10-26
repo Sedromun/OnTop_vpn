@@ -4,6 +4,7 @@ import uvicorn
 from starlette.responses import HTMLResponse
 
 from config import FERNET, HOST, PERCENT_REFERRAL, PORT, bot
+from database.controllers.action import create_action
 from database.controllers.order import create_order, get_order, update_order
 from database.controllers.user import get_user, update_user
 from keyboards.info import get_instruction_button_keyboard
@@ -48,6 +49,11 @@ async def check_payment(notification: NotificationSchema):
                     + datetime.timedelta(days=31),
                 },
             )
+            create_action(
+                user_id=order.user_id,
+                title="extend key",
+                description="auto - success"
+            )
             await bot.send_message(order.user_id, text=auto_extended_success(order.id))
         else:
             update_order(
@@ -59,6 +65,11 @@ async def check_payment(notification: NotificationSchema):
                     + datetime.timedelta(days=1),
                     "payment_id": "",
                 },
+            )
+            create_action(
+                user_id=order.user_id,
+                title="extend key",
+                description="auto - FAILED"
             )
 
             await bot.send_message(
@@ -75,11 +86,14 @@ async def check_payment(notification: NotificationSchema):
         user_id = int(data["user_id"])
         order = get_order(order_id)
         amount = int(float(payment["amount"]["value"]))
+        title = ""
+        description = f"card, amount: {amount}"
 
         if (
                 purpose == PaymentPurpose.BUY_CARD.value
                 or purpose == PaymentPurpose.BUY_ADD_MONEY.value
         ):
+            title = "buy key"
             begin = datetime.datetime.now(datetime.timezone.utc)
             end = begin + datetime.timedelta(days=int(data["duration"]))
             order = create_order(
@@ -93,7 +107,10 @@ async def check_payment(notification: NotificationSchema):
                 }
             )
 
+            description += f"county: {order.country}"
+
             get_key(order.country, order.id)
+
             await bot.send_message(
                 user_id,
                 text=get_success_created_key_text(get_order_perm_key(order.id))
@@ -105,6 +122,8 @@ async def check_payment(notification: NotificationSchema):
         if purpose == PaymentPurpose.ADD_MONEY.value:
             new_balance = user.balance + amount
             update_user(user_id, {"balance": new_balance})
+            title = "add money to balance"
+            description = str(amount)
             await bot.send_message(user_id, text=get_money_added_text())
         elif (
                 purpose == PaymentPurpose.EXTEND_ADD_MONEY.value
@@ -113,18 +132,22 @@ async def check_payment(notification: NotificationSchema):
             price = int(data["price"])
             update_order(order.id, {"price": price})
             new_balance = user.balance + amount - price
+            description = f"add money, price: {price}, amount: {amount}"
             update_user(user.id, {"balance": new_balance})
 
         if (
                 purpose == PaymentPurpose.EXTEND_ADD_MONEY.value
                 or purpose == PaymentPurpose.EXTEND_CARD.value
         ):
+            title = "extend key"
             begin = order.expiration_date
             end = begin + datetime.timedelta(days=int(duration_str))
             update_order(
                 order.id,
                 {"expiration_date": end, "payment_id": payment["payment_method"]["id"]},
             )
+
+            description += f"county: {order.country}"
 
             await bot.send_message(
                 user_id,
@@ -135,6 +158,12 @@ async def check_payment(notification: NotificationSchema):
             await bot.delete_message(user_id, data["message_id"])
         except Exception:
             pass
+
+        create_action(
+            user_id=user_id,
+            title=title,
+            description=description
+        )
 
         await check_referral(user_id, amount)
 
