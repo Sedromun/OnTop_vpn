@@ -239,8 +239,8 @@ async def admin_one_user_statistics_handler(message: Message):
 
 
 @admin_router.message(Command("all_users_statistics"))
-async def admin_one_user_statistics_handler(message: Message):
-    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_one_user_statistics_handler")
+async def admin_all_users_statistics_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_all_users_statistics_handler")
 
     if str(message.from_user.id) not in ADMINS:
         await message.answer(get_incorrect_command())
