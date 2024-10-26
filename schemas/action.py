@@ -22,7 +22,7 @@ class ActionModel(BaseModel):
         DateTime(), nullable=False, default=func.now()
     )
 
-    user: Mapped["UserModel"] = relationship(back_populates="orders")
+    user: Mapped["UserModel"] = relationship(back_populates="actions")
 
     title: Mapped[str] = mapped_column(nullable=False, default='')
     description: Mapped[str] = mapped_column(nullable=False, default='')
