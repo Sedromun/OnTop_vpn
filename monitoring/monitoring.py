@@ -35,6 +35,7 @@ def collect_user_info(user_id: int):
     return {
         "user_id": user_id,
         "balance": user.balance,
+        "created_time": str(user.created_time),
         "referrals": len(referrals),
         "orders": active_orders_info,
         "finished_orders": finished_orders_info,
