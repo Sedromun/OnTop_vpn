@@ -7,14 +7,14 @@ def collect_orders_info(orders: [OrderModel]):
         'price': order.price,
         'country': order.country,
         'is_auto_on': order.payment_id is not None and order.payment_id != '',
-        'begin_date': order.begin_date,
-        'expiration_date': order.expiration_date
+        'begin_date': str(order.begin_date),
+        'expiration_date': str(order.expiration_date)
     } for order in orders]
 
 
 def collect_user_actions(actions):
     return [{
-        'time': action.date_time,
+        'time': str(action.date_time),
         'title': action.title,
         'description': action.description,
     } for action in actions]
