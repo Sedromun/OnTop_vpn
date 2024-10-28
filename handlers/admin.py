@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from aiogram import F, Router
 from aiogram.filters import Command
@@ -251,12 +252,8 @@ async def admin_all_users_statistics_handler(message: Message):
     users = get_all_users()
     user_stat = []
     for user in users:
-        user_stat.append(str(collect_user_info(user.id)))
+        user_stat.append(collect_user_info(user.id))
 
-    user_stat_str = "["
+    res = json.dumps(user_stat)
 
-    for i in range(len(user_stat)):
-        user_stat_str += user_stat[i] + (", " if i != len(user_stat) - 1 else "")
-    user_stat_str += "]"
-
-    await message.answer_document(BufferedInputFile(str(user_stat).encode('utf-8'), filename=f"users_stat.json"))
+    await message.answer_document(BufferedInputFile(res.encode('utf-8'), filename=f"users_stat.json"))
