@@ -9,7 +9,7 @@ from config import (INTERVAL, ONE_DAY_SALE, SECRET_KEY, SHOP_ID,
 from database.controllers.key import delete_key
 from database.controllers.order import (create_order, delete_order,
                                         get_all_orders)
-from database.controllers.user import get_all_users, update_user, get_user_orders
+from database.controllers.user import get_all_users, update_user, get_user_orders, get_user
 from keyboards.profile import (get_order_expiring_keyboard,
                                sale_week_notification_keyboard)
 from logs import logging
@@ -19,7 +19,7 @@ from text.notifications import (new_user_notification_text, order_expired_text,
                                 sale_one_day_notification_text,
                                 sale_three_day_notification_text,
                                 sale_week_notification_text)
-from utils.buy_options import OLD_PRICES
+from utils.buy_options import OLD_PRICES, NEW_PRICES, get_option_price
 
 
 async def order_expired(order: OrderModel, _: str):
@@ -28,7 +28,7 @@ async def order_expired(order: OrderModel, _: str):
         logging.info(f"created autopayment order {order.id}")
         payment = Payment.create(
             {
-                "amount": {"value": OLD_PRICES["1 месяц"], "currency": "RUB"},
+                "amount": {"value": get_option_price("1 месяц", -1, order.id), "currency": "RUB"},
                 "capture": True,
                 "payment_method_id": payment_id,
                 "description": f"Продление Clique VPN, ключ №{order.id} на месяц",
