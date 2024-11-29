@@ -73,53 +73,62 @@ ADMINS = [SAVVA_ADMIN, EVGENIY_ADMIN, TECH_SUPPORT_ADMIN]
 
 # -- outline --
 
-SWEDEN_API_URL = str(os.getenv("SWEDEN_API_URL"))
-SWEDEN_CERT_SHA256 = str(os.getenv("SWEDEN_CERT_SHA256"))
-
-RUSSIAN_API_URL = str(os.getenv("RUSSIAN_API_URL"))
-RUSSIAN_CERT_SHA256 = str(os.getenv("RUSSIAN_CERT_SHA256"))
-
-GERMAN_API_URL = str(os.getenv("GERMAN_API_URL"))
-GERMAN_CERT_SHA256 = str(os.getenv("GERMAN_CERT_SHA256"))
-
-FRANCE_API_URL = str(os.getenv("FRANCE_API_URL"))
-FRANCE_CERT_SHA256 = str(os.getenv("FRANCE_CERT_SHA256"))
-
-GB_API_URL = str(os.getenv("GB_API_URL"))
-GB_CERT_SHA256 = str(os.getenv("GB_CERT_SHA256"))
-
-USA_API_URL = str(os.getenv("USA_API_URL"))
-USA_CERT_SHA256 = str(os.getenv("USA_CERT_SHA256"))
-
-LATVIA_API_URL = str(os.getenv("LATVIA_API_URL"))
-LATVIA_CERT_SHA256 = str(os.getenv("LATVIA_CERT_SHA256"))
-
-ESTONIA_API_URL = str(os.getenv("ESTONIA_API_URL"))
-ESTONIA_CERT_SHA256 = str(os.getenv("ESTONIA_CERT_SHA256"))
-
-NETHERLAND_API_URL = str(os.getenv("NETHERLAND_API_URL"))
-NETHERLAND_CERT_SHA256 = str(os.getenv("NETHERLAND_CERT_SHA256"))
-
-FINLAND_API_URL = str(os.getenv("FINLAND_API_URL"))
-FINLAND_CERT_SHA256 = str(os.getenv("FINLAND_CERT_SHA256"))
-
-AUSTRIA_API_URL = str(os.getenv("AUSTRIA_API_URL"))
-AUSTRIA_CERT_SHA256 = str(os.getenv("AUSTRIA_CERT_SHA256"))
+SWEDEN_API_URL_1 = str(os.getenv("SWEDEN_API_URL_1"))
+SWEDEN_CERT_SHA256_1 = str(os.getenv("SWEDEN_CERT_SHA256_1"))
+RUSSIAN_API_URL_1 = str(os.getenv("RUSSIAN_API_URL_1"))
+RUSSIAN_CERT_SHA256_1 = str(os.getenv("RUSSIAN_CERT_SHA256_1"))
+RUSSIAN_API_URL_2 = str(os.getenv("RUSSIAN_API_URL_2"))
+RUSSIAN_CERT_SHA256_2 = str(os.getenv("RUSSIAN_CERT_SHA256_2"))
+GERMAN_API_URL_1 = str(os.getenv("GERMAN_API_URL_1"))
+GERMAN_CERT_SHA256_1 = str(os.getenv("GERMAN_CERT_SHA256_1"))
+GERMAN_API_URL_2 = str(os.getenv("GERMAN_API_URL_2"))
+GERMAN_CERT_SHA256_2 = str(os.getenv("GERMAN_CERT_SHA256_2"))
+FRANCE_API_URL_1 = str(os.getenv("FRANCE_API_URL_1"))
+FRANCE_CERT_SHA256_1 = str(os.getenv("FRANCE_CERT_SHA256_1"))
+GB_API_URL_1 = str(os.getenv("GB_API_URL_1"))
+GB_CERT_SHA256_1 = str(os.getenv("GB_CERT_SHA256_1"))
+USA_API_URL_1 = str(os.getenv("USA_API_URL_1"))
+USA_CERT_SHA256_1 = str(os.getenv("USA_CERT_SHA256_1"))
+LATVIA_API_URL_1 = str(os.getenv("LATVIA_API_URL_1"))
+LATVIA_CERT_SHA256_1 = str(os.getenv("LATVIA_CERT_SHA256_1"))
+ESTONIA_API_URL_1 = str(os.getenv("ESTONIA_API_URL_1"))
+ESTONIA_CERT_SHA256_1 = str(os.getenv("ESTONIA_CERT_SHA256_1"))
+NETHERLAND_API_URL_1 = str(os.getenv("NETHERLAND_API_URL_1"))
+NETHERLAND_CERT_SHA256_1 = str(os.getenv("NETHERLAND_CERT_SHA256_1"))
+FINLAND_API_URL_1 = str(os.getenv("FINLAND_API_URL_1"))
+FINLAND_CERT_SHA256_1 = str(os.getenv("FINLAND_CERT_SHA256_1"))
+AUSTRIA_API_URL_1 = str(os.getenv("AUSTRIA_API_URL_1"))
+AUSTRIA_CERT_SHA256_1 = str(os.getenv("AUSTRIA_CERT_SHA256_1"))
 
 outline_client = {
-    "Россия": OutlineVPN(api_url=RUSSIAN_API_URL, cert_sha256=RUSSIAN_CERT_SHA256),
-    "Швеция": OutlineVPN(api_url=SWEDEN_API_URL, cert_sha256=SWEDEN_CERT_SHA256),
-    "Германия": OutlineVPN(api_url=GERMAN_API_URL, cert_sha256=GERMAN_CERT_SHA256),
-    "Франция": OutlineVPN(api_url=FRANCE_API_URL, cert_sha256=FRANCE_CERT_SHA256),
-    "Великобритания": OutlineVPN(api_url=GB_API_URL, cert_sha256=GB_CERT_SHA256),
-    "США": OutlineVPN(api_url=USA_API_URL, cert_sha256=USA_CERT_SHA256),
-    "Латвия": OutlineVPN(api_url=LATVIA_API_URL, cert_sha256=LATVIA_CERT_SHA256),
-    "Нидерланды": OutlineVPN(
-        api_url=NETHERLAND_API_URL, cert_sha256=NETHERLAND_CERT_SHA256
-    ),
-    "Финляндия": OutlineVPN(api_url=FINLAND_API_URL, cert_sha256=FINLAND_CERT_SHA256),
-    "Эстония": OutlineVPN(api_url=ESTONIA_API_URL, cert_sha256=ESTONIA_CERT_SHA256),
-    "Австрия": OutlineVPN(api_url=AUSTRIA_API_URL, cert_sha256=AUSTRIA_CERT_SHA256),
+    10: OutlineVPN(api_url=RUSSIAN_API_URL_1, cert_sha256=RUSSIAN_CERT_SHA256_1),
+    11: OutlineVPN(api_url=RUSSIAN_API_URL_2, cert_sha256=RUSSIAN_CERT_SHA256_2),
+    20: OutlineVPN(api_url=SWEDEN_API_URL_1, cert_sha256=SWEDEN_CERT_SHA256_1),
+    30: OutlineVPN(api_url=GERMAN_API_URL_1, cert_sha256=GERMAN_CERT_SHA256_1),
+    31: OutlineVPN(api_url=GERMAN_API_URL_2, cert_sha256=GERMAN_CERT_SHA256_2),
+    40: OutlineVPN(api_url=FRANCE_API_URL_1, cert_sha256=FRANCE_CERT_SHA256_1),
+    50: OutlineVPN(api_url=GB_API_URL_1, cert_sha256=GB_CERT_SHA256_1),
+    60: OutlineVPN(api_url=USA_API_URL_1, cert_sha256=USA_CERT_SHA256_1),
+    70: OutlineVPN(api_url=LATVIA_API_URL_1, cert_sha256=LATVIA_CERT_SHA256_1),
+    80: OutlineVPN(api_url=NETHERLAND_API_URL_1, cert_sha256=NETHERLAND_CERT_SHA256_1),
+    90: OutlineVPN(api_url=FINLAND_API_URL_1, cert_sha256=FINLAND_CERT_SHA256_1),
+    100: OutlineVPN(api_url=ESTONIA_API_URL_1, cert_sha256=ESTONIA_CERT_SHA256_1),
+    110: OutlineVPN(api_url=AUSTRIA_API_URL_1, cert_sha256=AUSTRIA_CERT_SHA256_1),
+}
+
+
+country_to_server_ids = {
+    "Россия": [10],
+    "Швеция": [20],
+    "Германия": [30, 31],
+    "Франция": [40],
+    "Великобритания": [50],
+    "США": [60],
+    "Латвия": [70],
+    "Нидерланды": [80],
+    "Финляндия": [90],
+    "Эстония": [100],
+    "Австрия": [110],
 }
 
 SSCONF = "ssconf"
