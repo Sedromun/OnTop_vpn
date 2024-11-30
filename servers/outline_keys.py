@@ -29,4 +29,4 @@ def get_client(country: str):
             mn = num_usages / effiency[cur_id]
             mn_id = cur_id
 
-    return mn_id, outline_client[server_ids[mn_id]]
+    return mn_id, outline_client[mn_id]
