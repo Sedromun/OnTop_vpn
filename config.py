@@ -132,7 +132,7 @@ servers_countries = {
     110: "Австрия",
 }
 
-effiency = {
+efficiency = {
     10: 1,
     11: 1,
     20: 1,
@@ -147,7 +147,6 @@ effiency = {
     100: 1,
     110: 1,
 }
-
 
 country_to_server_ids = {
     "Россия": [10, 11],
