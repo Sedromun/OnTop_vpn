@@ -15,7 +15,7 @@ class KeyModel(BaseModel):
     order_id: Mapped[int] = mapped_column(ForeignKey(OrderModel.id))
 
     country: Mapped[str] = mapped_column(nullable=False, default="Россия")
-    server_id: Mapped[int] = mapped_column(nullable=False, default=0)
+    server_id: Mapped[int] = mapped_column(nullable=True, default=0)
     key: Mapped[str] = mapped_column(nullable=True)
 
     order: Mapped["OrderModel"] = relationship(back_populates="keys")

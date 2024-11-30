@@ -83,7 +83,7 @@ def get_zero_id_usage(server_id: int, country: str) -> int:
         keys = session.scalars(select(KeyModel).where(KeyModel.country == country)).all()
         cnt = 0
         for key in keys:
-            if key.server_id == server_id or key.server_id == 0:
+            if key.server_id is None or key.server_id == server_id or key.server_id == 0:
                 cnt += 1
         return cnt
     except IntegrityError:
