@@ -23,6 +23,8 @@ def get_client(country: str):
         mn_id = -1
         mn = 10000000
         for cntr in country_to_server_ids.keys():
+            if cntr == "Россия":
+                continue
             cur_id, cur, _ = get_country_client(cntr)
             if cur < mn:
                 mn = cur
