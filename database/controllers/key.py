@@ -67,3 +67,25 @@ def delete_key(key_id: int) -> bool:
             "Integrity error in delete_key 'KeyModel' - can't commit in db", exc_info=e
         )
         return False
+
+
+def get_server_id_usages(server_id: int) -> int:
+    try:
+        keys = session.scalars(select(KeyModel).where(KeyModel.server_id == server_id)).all()
+        return len(keys)
+    except IntegrityError:
+        session.rollback()
+        return None
+
+
+def get_zero_id_usage(server_id: int, country: str) -> int:
+    try:
+        keys = session.scalars(select(KeyModel).where(KeyModel.country == country)).all()
+        cnt = 0
+        for key in keys:
+            if key.server_id == server_id or key.server_id == 0:
+                cnt += 1
+        return cnt
+    except IntegrityError:
+        session.rollback()
+        return None
