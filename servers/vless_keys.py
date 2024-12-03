@@ -34,7 +34,7 @@ def create_key_string_from_data(server_id: str, client: Client) -> str:
     res = f"vless://{client.id}@{vless_server_ip[server_id]}:443?"
     for name, val in parameters[server_id].items():
         res += f"{name}={val}"
-        if name != "spx":
+        if name != "flow":
             res += "&"
         else:
             res += "#"
