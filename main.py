@@ -3,7 +3,7 @@ import asyncio
 from fastapi import FastAPI
 from yookassa import Configuration
 
-from config import SECRET_KEY, SHOP_ID, bot, dp
+from config import SECRET_KEY, SHOP_ID, bot, dp, vless_client
 from handlers import buy_router, info_router, main_router, profile_router
 from handlers.admin import admin_router
 
@@ -17,6 +17,8 @@ app = FastAPI()
 
 
 async def main():
+    for api in vless_client.values():
+        await api.login()
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 

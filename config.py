@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from pydantic import SecretStr
 
 from outline.outline_vpn.outline_vpn import OutlineVPN
+from py3xui.py3xui.api.api import Api
+from py3xui.py3xui.async_api.async_api import AsyncApi
 
 load_dotenv()
 
@@ -116,6 +118,21 @@ outline_client = {
     110: OutlineVPN(api_url=AUSTRIA_API_URL_1, cert_sha256=AUSTRIA_CERT_SHA256_1),
 }
 
+VLESS_URI = str(os.getenv("VLESS_URI"))
+VLESS_PORT = str(os.getenv("VLESS_PORT"))
+VLESS_USERNAME = str(os.getenv("VLESS_USERNAME"))
+VLESS_PASSWORD = str(os.getenv("VLESS_PASSWORD"))
+
+vless_server_ip = {
+    81: str(os.getenv("NETHERLANDS_2_IP")),
+    91: str(os.getenv("FINLAND_2_IP")),
+}
+
+vless_client = {
+    81: AsyncApi(f"http://{vless_server_ip[81]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+    91: AsyncApi(f"http://{vless_server_ip[91]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+}
+
 servers_countries = {
     10: "Россия",
     11: "Россия",
@@ -127,9 +144,182 @@ servers_countries = {
     60: "США",
     70: "Латвия",
     80: "Нидерланды",
+    81: "Нидерланды",
     90: "Финляндия",
+    91: "Финляндия",
     100: "Эстония",
     110: "Австрия",
+}
+
+servers_countries_in_email = {
+    10: "Russia-1",
+    11: "Russia-2",
+    20: "Sweden-1",
+    30: "Germany-1",
+    31: "Germany-2",
+    40: "France-1",
+    50: "Great-Britain-1",
+    60: "USA-1",
+    70: "Lithuania-1",
+    80: "Netherlands-1",
+    81: "Netherlands-2",
+    90: "Finland-1",
+    91: "Finland-2",
+    100: "Estonia-1",
+    110: "Austria-1",
+}
+
+parameters = {
+    10: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    11: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    20: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    30: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    31: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    40: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    50: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    60: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    70: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    80: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    81: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "ERx8b7RTpk6DQ8IfQxgbsOOXK-rkac0V5dZhGv_99mI",
+        "fp": "chrome",
+        "sni": "yahoo.com",
+        "sid": "1c",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    90: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    91: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "ZQ6vH7Xr22l-Xf0Dp3C1mcHXhWAa8ZhY6r4rAkiIBAA",
+        "fp": "chrome",
+        "sni": "yahoo.com",
+        "sid": "46",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    100: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    110: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "",
+        "fp": "chrome",
+        "sni": "",
+        "sid": "",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
 }
 
 efficiency = {
@@ -164,3 +354,5 @@ country_to_server_ids = {
 
 SSCONF = "ssconf"
 KEYS_URL = SSCONF + "://" + DOMEN + "/keys" + "/"
+VLESS_URL = "https://" + DOMEN + "/vless/"
+VLESS_INBOUND_ID = 1

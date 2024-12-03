@@ -4,7 +4,7 @@ from config import MIN_ADD_AMOUNT, INSTR_URL
 from database.controllers.user import get_user, register_user
 from utils.common import datetime_format
 from utils.country import COUNTRIES
-from utils.payment import get_order_perm_key
+from utils.payment import get_order_perm_key, get_order_vless_key
 
 
 def get_greeting_text():
@@ -80,7 +80,8 @@ def get_key_data(order):
             )
             + f": {(order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime(datetime_format)}\n"
               f"(осталось {get_left_time(order.expiration_date.astimezone(datetime.timezone.utc))})\n\n"
-              f"Ключ (нажми, чтобы скопировать):\n<code>{get_order_perm_key(order.id)}</code>"
+              f"Ключи (нажми, чтобы скопировать):\n\nOutline:\n<code>{get_order_perm_key(order.id)}</code>"
+              f"VLESS:\n<code>{get_order_vless_key(order.id)}</code>"
     )
 
 
