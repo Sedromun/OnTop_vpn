@@ -176,7 +176,7 @@ async def get_key_id(order_id_enc: str):
     key = get_key(order.country, order_id)
     return HTMLResponse(key)
 
-@app.get("/keys/vless/{order_id_enc}")
+@app.get("/vless/{order_id_enc}")
 async def get_vless_perm_keys(order_id_enc: str):
     order_id = FERNET.decrypt(order_id_enc.encode()).decode()
     key = get_vless_keys(order_id)
