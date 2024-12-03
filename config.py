@@ -357,5 +357,8 @@ KEYS_URL = SSCONF + "://" + DOMEN + "/keys" + "/"
 VLESS_URL = "https://" + DOMEN + "/vless/"
 VLESS_INBOUND_ID = 1
 
+"""
+vless://a11c8748-3882-49d1-a2f6-e183419c4f52@185.156.108.92:443?type=tcp&security=reality&pbk=ZQ6vH7Xr22l-Xf0Dp3C1mcHXhWAa8ZhY6r4rAkiIBAA&fp=chrome&sni=yahoo.com&sid=46&spx=%2F&flow=xtls-rprx-vision#clique-vpn-Finland-2-1
 
+"""
 
