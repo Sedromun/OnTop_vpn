@@ -80,8 +80,8 @@ def get_key_data(order):
             )
             + f": {(order.expiration_date.astimezone(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime(datetime_format)}\n"
               f"(осталось {get_left_time(order.expiration_date.astimezone(datetime.timezone.utc))})\n\n"
-              f"Ключи (нажми, чтобы скопировать):\n\nOutline:\n<code>{get_order_perm_key(order.id)}</code>"
-              f"VLESS:\n<code>{get_order_vless_key(order.id)}</code>"
+              f"Ключи (нажми, чтобы скопировать):\n\n<i>Outline:</i>\n<code>{get_order_perm_key(order.id)}</code>"
+              f"\n\n<i>VLESS:</i>\n<code>{get_order_vless_key(order.id)}</code>"
     )
 
 
