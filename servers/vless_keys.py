@@ -10,11 +10,11 @@ from py3xui.client.client import Client
 from utils.country import fastest
 
 
-def get_vless_keys(order_id: int) -> str:
+async def get_vless_keys(order_id: int) -> str:
     res = ""
     for id, api in vless_client.items():
         email = servers_countries_in_email[id] + "-" + str(order_id)
-        client = api.client.get_by_email(email)
+        client = await api.client.get_by_email(email)
         order = get_order(order_id)
 
         if client is None:
@@ -24,7 +24,7 @@ def get_vless_keys(order_id: int) -> str:
                 enable=True,
                 flow="xtls-rprx-vision",
             )
-            api.client.add(VLESS_INBOUND_ID, [client])
+            await api.client.add(VLESS_INBOUND_ID, [client])
         res += create_key_string_from_data(id, client) + '\n'
     return res
 
