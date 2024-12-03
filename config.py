@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 from pydantic import SecretStr
 
 from outline.outline_vpn.outline_vpn import OutlineVPN
-from py3xui.py3xui.api.api import Api
-from py3xui.py3xui.async_api.async_api import AsyncApi
+from py3xui.api.api import Api
+from py3xui.async_api.async_api import AsyncApi
 
 load_dotenv()
 
