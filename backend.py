@@ -178,7 +178,8 @@ async def get_key_id(order_id_enc: str):
 @app.get("/vless/52savva")
 async def get_vless_keys():
     return HTMLResponse("vless://d1e51c00-306b-4888-934a-a13d2075fa8a@185.156.108.92:443?type=tcp&security=reality&pbk=ZQ6vH7Xr22l-Xf0Dp3C1mcHXhWAa8ZhY6r4rAkiIBAA&fp=chrome&sni=yahoo.com&sid=46&spx=%2F&flow=xtls-rprx-vision#clique-vpn-cliqueuser1\n"
-                        "vless://9141152e-7938-4c32-8b91-16988506ebd9@94.131.106.243:443?type=tcp&security=reality&pbk=ERx8b7RTpk6DQ8IfQxgbsOOXK-rkac0V5dZhGv_99mI&fp=chrome&sni=yahoo.com&sid=1c&spx=%2F&flow=xtls-rprx-vision#clique-vpn-NLuser1")
+                        "vless://9141152e-7938-4c32-8b91-16988506ebd9@94.131.106.243:443?type=tcp&security=reality&pbk=ERx8b7RTpk6DQ8IfQxgbsOOXK-rkac0V5dZhGv_99mI&fp=chrome&sni=yahoo.com&sid=1c&spx=%2F&flow=xtls-rprx-vision#clique-vpn-NLuser1\n"
+                        "vless://770d9843-cf0e-4b5d-be0d-dfab9d0087cf@45.82.253.144:443?type=tcp&security=reality&pbk=bJDvx__lwMC-ZTzOJMLBxM0Kf2qrsRsetJ70qyE78i0&fp=chrome&sni=cdnjs.cloudflare.com&sid=f41f88ceb8cdeb58&spx=%2F&flow=xtls-rprx-vision#clique-vpn-estonia%2052savva")
 
 
 @app.get("/")
