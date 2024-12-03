@@ -175,6 +175,11 @@ async def get_key_id(order_id_enc: str):
     key = get_key(order.country, order_id)
     return HTMLResponse(key)
 
+@app.get("/vless/52savva")
+async def get_vless_keys():
+    return HTMLResponse("vless://d1e51c00-306b-4888-934a-a13d2075fa8a@185.156.108.92:443?type=tcp&security=reality&pbk=ZQ6vH7Xr22l-Xf0Dp3C1mcHXhWAa8ZhY6r4rAkiIBAA&fp=chrome&sni=yahoo.com&sid=46&spx=%2F&flow=xtls-rprx-vision#clique-vpn-cliqueuser1\n"
+                        "vless://9141152e-7938-4c32-8b91-16988506ebd9@94.131.106.243:443?type=tcp&security=reality&pbk=ERx8b7RTpk6DQ8IfQxgbsOOXK-rkac0V5dZhGv_99mI&fp=chrome&sni=yahoo.com&sid=1c&spx=%2F&flow=xtls-rprx-vision#clique-vpn-NLuser1")
+
 
 @app.get("/")
 async def root():
