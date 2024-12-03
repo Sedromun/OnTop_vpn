@@ -14,6 +14,7 @@ async def get_vless_keys(order_id: int) -> str:
     res = ""
     for id, api in vless_client.items():
         email = servers_countries_in_email[id] + "-" + str(order_id)
+        await api.login()
         client = await api.client.get_by_email(email)
         order = get_order(order_id)
 
