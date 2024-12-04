@@ -28,6 +28,17 @@ services:
     env_file:
       - ./.env
 
+  ontop:
+    build:
+      context: ./
+      dockerfile: Dockerfile.ontop_bot
+    container_name: ontop
+    restart: always
+    volumes:
+      - ./:/app
+    env_file:
+      - ./.env
+
   backend:
     build:
       context: ./

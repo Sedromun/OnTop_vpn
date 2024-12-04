@@ -20,6 +20,12 @@ bot = Bot(
 )
 dp = Dispatcher()
 
+ONTOP_BOT_TOKEN: SecretStr = SecretStr(os.getenv("ONTOP_BOT_TOKEN"))
+ontop_bot = Bot(
+    ONTOP_BOT_TOKEN.get_secret_value(), parse_mode="HTML", disable_web_page_preview=True
+)
+ontop_dp = Dispatcher()
+
 # -- database --
 
 DB_USER = str(os.getenv("DB_USER"))
