@@ -179,8 +179,8 @@ async def get_key_id(order_id_enc: str):
 @app.get("/vless/{order_id_enc}")
 async def get_vless_perm_keys(order_id_enc: str):
     order_id = FERNET.decrypt(order_id_enc.encode()).decode()
-    key = await get_vless_keys(order_id)
-    return HTMLResponse(key)
+    expiry_time, key = await get_vless_keys(order_id)
+    return HTMLResponse(key, headers={"Profile-Title": "Clique VPN", "Subscription-Userinfo": str(expiry_time)})
 
 @app.get("/")
 async def root():

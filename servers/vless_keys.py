@@ -13,8 +13,9 @@ from py3xui.client.client import Client
 from utils.country import fastest
 
 
-async def get_vless_keys(order_id: int) -> str:
+async def get_vless_keys(order_id: int) -> (int, str):
     res = ""
+    expiry_time = 0
     for id, api in vless_client.items():
         email = servers_countries_in_email[id] + "-" + str(order_id)
         order = get_order(order_id)
@@ -44,7 +45,8 @@ async def get_vless_keys(order_id: int) -> str:
 
         order = get_order(order_id)
         res += create_key_string_from_data(id, order.uuid, client) + '\n'
-    return res
+        expiry_time = client.expiry_time
+    return expiry_time, res
 
 
 def create_key_string_from_data(server_id: str, uid: str, client: Client) -> str:
