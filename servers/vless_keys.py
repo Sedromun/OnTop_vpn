@@ -19,8 +19,12 @@ async def get_vless_keys(order_id: int) -> str:
         client = await api.client.get_by_email(email)
 
         if client is None:
-            uid = str(uuid.uuid4())
-            update_order(order_id, {"uuid": uid})
+            if order.uuid is None:
+                uid = str(uuid.uuid4())
+                update_order(order_id, {"uuid": uid})
+            else:
+                uid = order.uuid
+
             client = Client(
                 id=uid,
                 email=email,
