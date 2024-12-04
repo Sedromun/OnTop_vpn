@@ -61,11 +61,7 @@ def create_key_string_from_data(server_id: str, uid: str, client: Client) -> str
     return res
 
 
-"""
 
-vless://281006a6-2b49-4dae-be2b-72692fdf5838@138.124.31.215:443?type=tcp&security=reality&pbk=MdxMQkTaHNSk3weD3RRregSzHwoHSPtMVafxMumJiRY&fp=chrome&sni=telegram.org&sid=5b46&spx=%2F#clique-vpn-France-1-655
-vless://281006a6-2b49-4dae-be2b-72692fdf5838@138.124.31.215:443?type=tcp&security=reality&pbk=MdxMQkTaHNSk3weD3RRregSzHwoHSPtMVafxMumJiRY&fp=chrome&sni=telegram.org&sid=5b46&spx=%2F&flow=xtls-rprx-vision#clique-vpn-France-1-655
-"""
 
 
 

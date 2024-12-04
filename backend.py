@@ -180,7 +180,7 @@ async def get_key_id(order_id_enc: str):
 async def get_vless_perm_keys(order_id_enc: str):
     order_id = FERNET.decrypt(order_id_enc.encode()).decode()
     expiry_time, key = await get_vless_keys(order_id)
-    return HTMLResponse(key, headers={"Profile-Title": "Clique VPN", "Subscription-Userinfo": f'upload=17477; download=113814; total=0; expire={str(expiry_time)}'})
+    return HTMLResponse(key, headers={"Profile-Title": "Clique VPN", "Subscription-Userinfo": f'upload=17477; download=113814; total=0; expire={str(expiry_time / 1000)}'})
 
 @app.get("/")
 async def root():
