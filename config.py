@@ -261,7 +261,7 @@ parameters = {
         "security": "reality",
         "pbk": "pdK8vv1iXEQadMVqClvdUfDZSw-6xm9Yu7DQv5Z4DhY",
         "fp": "chrome",
-        "sni": "oneroute.microsoft.com",
+        "sni": "yahoo.com",
         "sid": "658ba53a",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
