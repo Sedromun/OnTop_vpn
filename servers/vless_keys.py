@@ -37,7 +37,7 @@ async def get_vless_keys(order_id: int) -> str:
             )
             await api.client.add(vless_inbound_id[id], [client])
         elif client.expiry_time != str(int(order.expiration_date.timestamp()) * 1000):
-            client.expiry_time = str(int(order.expiration_date.timestamp()) * 1000)
+            client.expiry_time = int(order.expiration_date.timestamp()) * 1000
             client.id = order.uuid
             await api.client.update(str(order.uuid), client)
 
