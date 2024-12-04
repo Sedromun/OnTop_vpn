@@ -61,7 +61,7 @@ SECRET_START_STRING = str(os.getenv("SECRET_START_STRING"))
 # -- Numeric params --
 
 MIN_ADD_AMOUNT = 50
-PERCENT_REFERRAL = 40
+PERCENT_REFERRAL = 20
 WELCOME_PRESENT = 50
 ONE_DAY_SALE = 30
 THIRD_DAY_SALE = 20
@@ -405,9 +405,3 @@ country_to_server_ids = {
 SSCONF = "ssconf"
 KEYS_URL = SSCONF + "://" + DOMEN + "/keys" + "/"
 VLESS_URL = "https://" + DOMEN + "/vless/"
-
-"""
-vless://a11c8748-3882-49d1-a2f6-e183419c4f52@185.156.108.92:443?type=tcp&security=reality&pbk=ZQ6vH7Xr22l-Xf0Dp3C1mcHXhWAa8ZhY6r4rAkiIBAA&fp=chrome&sni=yahoo.com&sid=46&spx=%2F&flow=xtls-rprx-vision#clique-vpn-Finland-2-1
-
-"""
-

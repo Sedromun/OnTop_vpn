@@ -60,9 +60,3 @@ def create_key_string_from_data(server_id: str, uid: str, client: Client) -> str
     res += "clique-vpn-" + client.email
     return res
 
-
-
-
-
-
-
