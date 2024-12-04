@@ -211,7 +211,7 @@ parameters = {
         "security": "reality",
         "pbk": "ylmv9z-jJTsoELWHiavAEKTq7t1oRkIAilDVC37CYAI",
         "fp": "chrome",
-        "sni": "rutube.ru",
+        "sni": "ya.ru",
         "sid": "4b1070630806a0",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -229,7 +229,7 @@ parameters = {
     30: {
         "type": "tcp",
         "security": "reality",
-        "pbk": "4I69qQ_zAVjIF-pdjr1kKkoXCL2WSb-e7vFEdRqfAU",
+        "pbk": "e4I69qQ_zAVjIF-pdjr1kKkoXCL2WSb-e7vFEdRqfAU",
         "fp": "chrome",
         "sni": "yahoo.com",
         "sid": "3fa55822",
