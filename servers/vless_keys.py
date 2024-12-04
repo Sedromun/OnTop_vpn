@@ -1,3 +1,4 @@
+import datetime
 import uuid
 
 from config import outline_client, country_to_server_ids, efficiency, vless_client, servers_countries_in_email, \
@@ -29,8 +30,7 @@ async def get_vless_keys(order_id: int) -> str:
                 id=uid,
                 email=email,
                 enable=True,
-                flow="xtls-rprx-vision",
-                expiry_time="2024-12-10 14:44"
+                flow="xtls-rprx-vision"
             )
             await api.client.add(vless_inbound_id[id], [client])
 
