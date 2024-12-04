@@ -33,7 +33,7 @@ async def get_vless_keys(order_id: int) -> str:
                 email=email,
                 enable=True,
                 flow="xtls-rprx-vision",
-                expiry_time=str(order.expiration_date.timestamp() * 1000)
+                expiry_time=str(int(order.expiration_date.timestamp()) * 1000)
             )
             await api.client.add(vless_inbound_id[id], [client])
 
