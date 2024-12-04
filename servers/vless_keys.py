@@ -1,4 +1,6 @@
+import calendar
 import datetime
+import time
 import uuid
 
 from config import outline_client, country_to_server_ids, efficiency, vless_client, servers_countries_in_email, \
@@ -30,7 +32,8 @@ async def get_vless_keys(order_id: int) -> str:
                 id=uid,
                 email=email,
                 enable=True,
-                flow="xtls-rprx-vision"
+                flow="xtls-rprx-vision",
+                expiry_time=str(calendar.timegm(time.strptime('2024-12-10 20:02:58', '%Y-%m-%d %H:%M:%S')))
             )
             await api.client.add(vless_inbound_id[id], [client])
 
