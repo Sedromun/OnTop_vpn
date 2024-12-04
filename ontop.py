@@ -6,7 +6,7 @@ from aiogram.types import Message, FSInputFile
 from config import ontop_dp, ontop_bot
 
 
-@ontop_bot.message(StateFilter(None))
+@ontop_dp.message(StateFilter(None))
 async def incorrect_command_handler(message: Message):
     logo = FSInputFile("photos/logo.jpg")
     await message.answer_document(
