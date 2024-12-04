@@ -8,7 +8,7 @@ from config import ontop_dp, ontop_bot
 
 @ontop_dp.message(StateFilter(None))
 async def incorrect_command_handler(message: Message):
-    logo = FSInputFile("photos/logo.png")
+    logo = FSInputFile("photos/logo.pdf")
     await message.answer_document(
         logo,
         caption="Мы провели ребрендинг и переехали в нового бота⚡️\n\n"
