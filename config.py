@@ -219,10 +219,10 @@ parameters = {
     20: {
         "type": "tcp",
         "security": "reality",
-        "pbk": "eoK7VFKWimQoQj8YjLvpTSAIDouj_EEyaWTQQh9l8R8",
+        "pbk": "d8aAVAuT4XNsa7g_DcBkc0NPd8BLccUIT1MB0yof_U4",
         "fp": "chrome",
-        "sni": "ign.com",
-        "sid": "53b43ede5ce81116",
+        "sni": "yahoo.com",
+        "sid": "8697ee3d1a57",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
