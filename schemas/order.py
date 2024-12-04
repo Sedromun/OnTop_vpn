@@ -34,6 +34,8 @@ class OrderModel(BaseModel):
 
     payment_id: Mapped[str] = mapped_column(nullable=True)
 
+    uuid: Mapped[str] = mapped_column(nullable=True)
+
 
 class FinishedOrderModel(BaseModel):
     __tablename__ = "finished_order"
@@ -57,3 +59,5 @@ class FinishedOrderModel(BaseModel):
     user: Mapped["UserModel"] = relationship(back_populates="finished_orders")
 
     payment_id: Mapped[str] = mapped_column(nullable=True)
+
+    uuid: Mapped[str] = mapped_column(nullable=True)
