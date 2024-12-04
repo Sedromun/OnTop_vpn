@@ -13,7 +13,6 @@ from utils.country import fastest
 async def get_vless_keys(order_id: int) -> str:
     res = ""
     for id, api in vless_client.items():
-        print("IDDDDDDDDDDDDDD:" + str(id))
         email = servers_countries_in_email[id] + "-" + str(order_id)
         order = get_order(order_id)
         await api.login()
@@ -31,6 +30,7 @@ async def get_vless_keys(order_id: int) -> str:
                 email=email,
                 enable=True,
                 flow="xtls-rprx-vision",
+                expiry_time="300"
             )
             await api.client.add(vless_inbound_id[id], [client])
 
