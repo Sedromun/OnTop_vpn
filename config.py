@@ -225,10 +225,10 @@ parameters = {
     20: {
         "type": "tcp",
         "security": "reality",
-        "pbk": "d8aAVAuT4XNsa7g_DcBkc0NPd8BLccUIT1MB0yof_U4",
+        "pbk": "Ky-_GRABOAtNoczRD6JOl4RzMCRTh6tNxbFSPikHFy4",
         "fp": "chrome",
         "sni": "yahoo.com",
-        "sid": "8697ee3d1a57",
+        "sid": "259ac83ce22f20c5",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
