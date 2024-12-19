@@ -17,35 +17,39 @@ async def get_vless_keys(order_id: int) -> (int, str):
     res = ""
     expiry_time = 0
     for id, api in vless_client.items():
-        email = servers_countries_in_email[id] + "-" + str(order_id)
-        order = get_order(order_id)
-        await api.login()
-        client = await api.client.get_by_email(email)
+        try:
+            email = servers_countries_in_email[id] + "-" + str(order_id)
+            order = get_order(order_id)
 
-        if client is None:
-            if order.uuid is None:
-                uid = str(uuid.uuid4())
-                update_order(order_id, {"uuid": uid})
-            else:
-                uid = order.uuid
+            await api.login()
+            client = await api.client.get_by_email(email)
 
-            client = Client(
-                id=uid,
-                email=email,
-                enable=True,
-                flow="xtls-rprx-vision",
-                expiry_time=str(int(order.expiration_date.timestamp()) * 1000)
-            )
-            await api.client.add(vless_inbound_id[id], [client])
-        elif client.expiry_time != str(int(order.expiration_date.timestamp()) * 1000):
-            client.expiry_time = int(order.expiration_date.timestamp()) * 1000
-            client.id = order.uuid
-            client.flow = "xtls-rprx-vision"
-            await api.client.update(str(order.uuid), client)
+            if client is None:
+                if order.uuid is None:
+                    uid = str(uuid.uuid4())
+                    update_order(order_id, {"uuid": uid})
+                else:
+                    uid = order.uuid
 
-        order = get_order(order_id)
-        res += create_key_string_from_data(id, order.uuid, client) + '\n'
-        expiry_time = client.expiry_time
+                client = Client(
+                    id=uid,
+                    email=email,
+                    enable=True,
+                    flow="xtls-rprx-vision",
+                    expiry_time=str(int(order.expiration_date.timestamp()) * 1000)
+                )
+                await api.client.add(vless_inbound_id[id], [client])
+            elif client.expiry_time != str(int(order.expiration_date.timestamp()) * 1000):
+                client.expiry_time = int(order.expiration_date.timestamp()) * 1000
+                client.id = order.uuid
+                client.flow = "xtls-rprx-vision"
+                await api.client.update(str(order.uuid), client)
+
+            order = get_order(order_id)
+            res += create_key_string_from_data(id, order.uuid, client) + '\n'
+            expiry_time = client.expiry_time
+        except Exception as e:
+            pass
     return expiry_time, res
 
 
