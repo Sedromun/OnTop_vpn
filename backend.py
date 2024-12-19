@@ -21,7 +21,6 @@ from text.profile import (get_money_added_text, get_order_info_text,
 from text.texts import get_success_created_key_text
 from utils.payment import get_order_perm_key
 from utils.payment_handle import PaymentPurpose
-from web3_connection.connection_router import connection_router
 
 
 async def check_referral(user_id, amount):
