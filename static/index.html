@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <img src="text_logo.jpg" alt="Clique VPN" class="logo">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Clique VPN</title>
+    <script src="https://c0f4f41c-2f55-4863-921b-sdk-docs.github.io/cdn/metamask-sdk.js"></script>
+    <script>
+        const sdk = new MetaMaskSDK.MetaMaskSDK({
+            logging: {
+                developerMode: true,
+            },
+            dappMetadata: {
+                name: 'Pure JS example',
+            },
+        });
+    </script>
+</head>
+<body>
+<div class="cloud cloud1"></div>
+<div class="cloud cloud2"></div>
+<div class="cloud cloud3"></div>
+<div class="cloud cloud4"></div>
+<div class="cloud cloud5"></div>
+<div class="cloud cloud7"></div>
+<div class="cloud cloud8"></div>
+<div class="cloud cloud10"></div>
+<link rel="stylesheet" href="styles.css">
+<p>Воспользуйтесь оплатой в криптовалюте для покупки VLESS ключа</p>
+<script>
+    let provider;
+
+    function connect() {
+        sdk.connect()
+            .then((res) => {
+                provider = sdk.getProvider();
+            })
+            .catch((e) => console.log('request accounts ERR', e));
+
+    }
+
+    async function connect_contract() {
+        const accounts = await provider
+            .request({method: "eth_requestAccounts"});
+
+        provider
+            .request({
+                method: "eth_sendTransaction",
+                params: [
+                    {
+                        from: accounts[0],
+                        to: '0x2590712b9a4fD877D0d0be24f8C418049a011221',
+                        value: 0,
+                        gasLimit: '0x0',
+                        maxPriorityFeePerGas: '0x3b9aca00',
+                        maxFeePerGas: '0x0',
+                    },
+                ],
+            })
+            .then((txHash) => console.log(txHash))
+            .catch((error) => console.error(error));
+    }
+
+    form = document.getElementById("amount")
+
+    form.addEventListener("submit", async () => {
+        amount = document.getElementById("amount")
+
+        console.log(amount)
+
+        key_json = await fetch("/web3/pay_money", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({wallet_address: walletAddress, amount: amount}),
+            });
+        key = key_json['key'];
+        document.write(key)
+    });
+
+</script>
+<button onclick="connect()">Подключить MetaMask</button>
+<!--<button onclick="connect_contract()">Подключить контракт</button>-->
+<form action="" id="send_tr">
+  <h1>Купить ключ</h1>
+  <input type="text" id="amount" class="form-control" placeholder="Введите количество USDT">
+  <button type="submit">Отправить</button>
+</form>
+
+</body>
+</html>

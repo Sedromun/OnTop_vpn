@@ -1,0 +1,3 @@
+[submodule "outline"]
+	path = outline
+	url = https://github.com/jadolg/outline-vpn-api.git
