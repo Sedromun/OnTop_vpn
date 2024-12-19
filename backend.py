@@ -1,9 +1,7 @@
 import datetime
 
 import uvicorn
-# from fastui import prebuilt_html
 from starlette.responses import HTMLResponse
-from starlette.staticfiles import StaticFiles
 
 from config import FERNET, HOST, PERCENT_REFERRAL, PORT, bot
 from database.controllers.action import create_action
