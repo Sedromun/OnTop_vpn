@@ -9,6 +9,7 @@ from database.controllers.key import (create_key, delete_key,
                                       get_order_country_key, get_server_id_usages, get_zero_id_usage)
 from database.controllers.key import get_key as get_key_from_db
 from database.controllers.order import get_order, update_order
+from logs import backend_logger
 from py3xui.client.client import Client
 from utils.country import fastest
 
@@ -49,6 +50,7 @@ async def get_vless_keys(order_id: int) -> (int, str):
             res += create_key_string_from_data(id, order.uuid, client) + '\n'
             expiry_time = client.expiry_time
         except Exception as e:
+            backend_logger.exception(e)
             pass
     return expiry_time, res
 
