@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from pydantic import SecretStr
+from aiogram.client.bot import DefaultBotProperties
 
 from outline.outline_vpn.outline_vpn import OutlineVPN
 from py3xui.api.api import Api
@@ -16,13 +17,13 @@ load_dotenv()
 
 BOT_TOKEN: SecretStr = SecretStr(os.getenv("BOT_TOKEN"))
 bot = Bot(
-    BOT_TOKEN.get_secret_value(), parse_mode="HTML", disable_web_page_preview=True
+    BOT_TOKEN.get_secret_value(), default=DefaultBotProperties(parse_mode='HTML', link_preview_is_disabled=True)
 )
 dp = Dispatcher()
 
 ONTOP_BOT_TOKEN: SecretStr = SecretStr(os.getenv("ONTOP_BOT_TOKEN"))
 ontop_bot = Bot(
-    ONTOP_BOT_TOKEN.get_secret_value(), parse_mode="HTML", disable_web_page_preview=True
+    ONTOP_BOT_TOKEN.get_secret_value(), default=DefaultBotProperties(parse_mode='HTML', link_preview_is_disabled=True)
 )
 ontop_dp = Dispatcher()
 
@@ -103,8 +104,12 @@ ESTONIA_API_URL_1 = str(os.getenv("ESTONIA_API_URL_1"))
 ESTONIA_CERT_SHA256_1 = str(os.getenv("ESTONIA_CERT_SHA256_1"))
 NETHERLAND_API_URL_1 = str(os.getenv("NETHERLAND_API_URL_1"))
 NETHERLAND_CERT_SHA256_1 = str(os.getenv("NETHERLAND_CERT_SHA256_1"))
+NETHERLAND_API_URL_2 = str(os.getenv("NETHERLAND_API_URL_2"))
+NETHERLAND_CERT_SHA256_2 = str(os.getenv("NETHERLAND_CERT_SHA256_2"))
 FINLAND_API_URL_1 = str(os.getenv("FINLAND_API_URL_1"))
 FINLAND_CERT_SHA256_1 = str(os.getenv("FINLAND_CERT_SHA256_1"))
+FINLAND_API_URL_2 = str(os.getenv("FINLAND_API_URL_2"))
+FINLAND_CERT_SHA256_2 = str(os.getenv("FINLAND_CERT_SHA256_2"))
 AUSTRIA_API_URL_1 = str(os.getenv("AUSTRIA_API_URL_1"))
 AUSTRIA_CERT_SHA256_1 = str(os.getenv("AUSTRIA_CERT_SHA256_1"))
 
@@ -119,7 +124,9 @@ outline_client = {
     60: OutlineVPN(api_url=USA_API_URL_1, cert_sha256=USA_CERT_SHA256_1),
     70: OutlineVPN(api_url=LATVIA_API_URL_1, cert_sha256=LATVIA_CERT_SHA256_1),
     80: OutlineVPN(api_url=NETHERLAND_API_URL_1, cert_sha256=NETHERLAND_CERT_SHA256_1),
+    81: OutlineVPN(api_url=NETHERLAND_API_URL_2, cert_sha256=NETHERLAND_CERT_SHA256_2),
     90: OutlineVPN(api_url=FINLAND_API_URL_1, cert_sha256=FINLAND_CERT_SHA256_1),
+    91: OutlineVPN(api_url=FINLAND_API_URL_2, cert_sha256=FINLAND_CERT_SHA256_2),
     100: OutlineVPN(api_url=ESTONIA_API_URL_1, cert_sha256=ESTONIA_CERT_SHA256_1),
     110: OutlineVPN(api_url=AUSTRIA_API_URL_1, cert_sha256=AUSTRIA_CERT_SHA256_1),
 }
@@ -140,7 +147,7 @@ vless_server_ip = {
     60: str(os.getenv("USA_1_IP")),
     70: str(os.getenv("LATVIA_1_IP")),
     80: str(os.getenv("NETHERLANDS_1_IP")),
-    # 81: str(os.getenv("NETHERLANDS_2_IP")),
+    81: str(os.getenv("NETHERLANDS_2_IP")),
     90: str(os.getenv("FINLAND_1_IP")),
     91: str(os.getenv("FINLAND_2_IP")),
     100: str(os.getenv("ESTONIA_1_IP")),
@@ -158,7 +165,7 @@ vless_client = {
     60: AsyncApi(f"http://{vless_server_ip[60]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     70: AsyncApi(f"http://{vless_server_ip[70]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     80: AsyncApi(f"http://{vless_server_ip[80]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    # 81: AsyncApi(f"http://{vless_server_ip[81]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+    81: AsyncApi(f"http://{vless_server_ip[81]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     90: AsyncApi(f"http://{vless_server_ip[90]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     91: AsyncApi(f"http://{vless_server_ip[91]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     100: AsyncApi(f"http://{vless_server_ip[100]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
@@ -176,7 +183,7 @@ servers_countries = {
     60: "США",
     70: "Латвия",
     80: "Нидерланды",
-    # 81: "Нидерланды",
+    81: "Нидерланды",
     90: "Финляндия",
     91: "Финляндия",
     100: "Эстония",
@@ -194,7 +201,7 @@ servers_countries_in_email = {
     60: "USA-1",
     70: "Lithuania-1",
     80: "Netherlands-1",
-    # 81: "Netherlands-2",
+    81: "Netherlands-2",
     90: "Finland-1",
     91: "Finland-2",
     100: "Estonia-1",
@@ -302,16 +309,16 @@ parameters = {
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
-    # 81: {
-    #     "type": "tcp",
-    #     "security": "reality",
-    #     "pbk": "ERx8b7RTpk6DQ8IfQxgbsOOXK-rkac0V5dZhGv_99mI",
-    #     "fp": "chrome",
-    #     "sni": "yahoo.com",
-    #     "sid": "1c",
-    #     "spx": "%2F",
-    #     "flow": "xtls-rprx-vision"
-    # },
+    81: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "ERx8b7RTpk6DQ8IfQxgbsOOXK-rkac0V5dZhGv_99mI",
+        "fp": "chrome",
+        "sni": "yahoo.com",
+        "sid": "1c",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
     90: {
         "type": "tcp",
         "security": "reality",
@@ -365,7 +372,7 @@ vless_inbound_id = {
     60: 1,
     70: 2,
     80: 1,
-    # 81: 1,
+    81: 1,
     90: 1,
     91: 1,
     100: 1,
@@ -383,7 +390,9 @@ efficiency = {
     60: 1,
     70: 1,
     80: 1,
+    81: 1,
     90: 1,
+    91: 1,
     100: 1,
     110: 1,
 }
@@ -396,8 +405,8 @@ country_to_server_ids = {
     "Великобритания": [50],
     "США": [60],
     "Латвия": [70],
-    "Нидерланды": [80],
-    "Финляндия": [90],
+    "Нидерланды": [80,81],
+    "Финляндия": [90,91],
     "Эстония": [100],
     "Австрия": [110],
 }
