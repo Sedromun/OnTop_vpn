@@ -22,6 +22,6 @@ class PresentsModel(BaseModel):
 
     price: Mapped[int] = mapped_column(nullable=False, default=0)
     duration: Mapped[int] = mapped_column(nullable=False, default=0)
-    user: Mapped["UserModel"] = relationship(back_populates="orders")
+    user: Mapped["UserModel"] = relationship(back_populates="presents")
 
     activated: Mapped[int] = mapped_column(nullable=False, default=False)
