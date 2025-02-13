@@ -83,30 +83,30 @@ class BuyCallbackFactory(CallbackData, prefix="buy_cho_opt"):
     back: bool = False
 
 
-# def get_payment_countries_keyboard(duration: int, price: int):
-#     builder = InlineKeyboardBuilder()
-#     for name, flag in COUNTRIES.items():
-#         builder.button(
-#             text=get_country_text(name, flag),
-#             callback_data=ChoosePersonCallbackFactory(
-#                 option=Payment.Balance.value,
-#                 duration=duration,
-#                 price=price,
-#                 country=name,
-#             ),
-#         )
-#     builder.button(
-#         text=back,
-#         callback_data=ChoosePersonCallbackFactory(
-#             option=Payment.Balance.value,
-#             duration=duration,
-#             price=price,
-#             country="",
-#             back=True,
-#         ),
-#     )
-#     builder.adjust(1)
-#     return builder.as_markup()
+def get_payment_countries_keyboard(duration: int, price: int):
+    builder = InlineKeyboardBuilder()
+    for name, flag in COUNTRIES.items():
+        builder.button(
+            text=get_country_text(name, flag),
+            callback_data=ChoosePersonCallbackFactory(
+                option=Payment.Balance.value,
+                duration=duration,
+                price=price,
+                country=name,
+            ),
+        )
+    builder.button(
+        text=back,
+        callback_data=ChoosePersonCallbackFactory(
+            option=Payment.Balance.value,
+            duration=duration,
+            price=price,
+            country="",
+            back=True,
+        ),
+    )
+    builder.adjust(1)
+    return builder.as_markup()
 
 
 def get_payment_persons_choose_keyboard(duration: int, price: int):
@@ -150,7 +150,7 @@ class ChoosePersonCallbackFactory(CallbackData, prefix="country"):
     duration: int
     price: int
     country: str
-    person: bool # 0 - myself, 1 - present
+    person: bool = False # 0 - myself, 1 - present
     back: bool = False
 
 
