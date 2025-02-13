@@ -1,5 +1,6 @@
 import datetime
 
+from utils.presents import create_present
 import uvicorn
 from starlette.responses import HTMLResponse
 
@@ -18,7 +19,7 @@ from text.notifications import (auto_extended_failure, auto_extended_success,
                                 get_referral_bought)
 from text.profile import (get_money_added_text, get_order_info_text,
                           get_success_extended_key_text)
-from text.texts import get_success_created_key_text
+from text.texts import get_success_created_key_text, get_success_created_present_text
 from utils.payment import get_order_perm_key
 from utils.payment_handle import PaymentPurpose
 
@@ -85,6 +86,7 @@ async def check_payment(notification: NotificationSchema):
         order_id = int(data["order_id"])
         purpose = int(data["purpose"])
         user_id = int(data["user_id"])
+        person = bool(data['person'])
         order = get_order(order_id)
         amount = int(float(payment["amount"]["value"]))
         title = ""
@@ -94,30 +96,45 @@ async def check_payment(notification: NotificationSchema):
                 purpose == PaymentPurpose.BUY_CARD.value
                 or purpose == PaymentPurpose.BUY_ADD_MONEY.value
         ):
-            title = "buy key"
-            begin = datetime.datetime.now(datetime.timezone.utc)
-            end = begin + datetime.timedelta(days=int(data["duration"]))
-            order = create_order(
-                {
-                    "user_id": user_id,
-                    "country": data["country"],
-                    "begin_date": begin,
-                    "expiration_date": end,
-                    "price": int(data["price"]),
-                    "payment_id": payment["payment_method"]["id"],
-                }
-            )
+            if person == False:
+                title = "buy key"
+                begin = datetime.datetime.now(datetime.timezone.utc)
+                end = begin + datetime.timedelta(days=int(data["duration"]))
+                order = create_order(
+                    {
+                        "user_id": user_id,
+                        "country": data["country"],
+                        "begin_date": begin,
+                        "expiration_date": end,
+                        "price": int(data["price"]),
+                        "payment_id": payment["payment_method"]["id"],
+                    }
+                )
 
-            description += f"county: {order.country}"
+                description += f"county: {order.country}"
 
-            get_key(order.country, order.id)
+                get_key(order.country, order.id)
 
-            await bot.send_message(
-                user_id,
-                text=get_success_created_key_text(get_order_perm_key(order.id))
-                     + get_order_info_text(order.id),
-                reply_markup=get_instruction_button_keyboard(),
-            )
+                await bot.send_message(
+                    user_id,
+                    text=get_success_created_key_text(get_order_perm_key(order.id))
+                        + get_order_info_text(order.id),
+                    reply_markup=get_instruction_button_keyboard(),
+                )
+            else:
+                title = "present key"
+                link = await create_present(
+                    user_id=user_id,
+                    duration=int(data["duration"]),
+                    country=data["country"],
+                    price=int(data["price"])
+                )
+
+                await bot.send_message(
+                    user_id,
+                    text=get_success_created_present_text(link),
+                    reply_markup=get_instruction_button_keyboard(),
+                )
 
         user = get_user(user_id)
         if purpose == PaymentPurpose.ADD_MONEY.value:

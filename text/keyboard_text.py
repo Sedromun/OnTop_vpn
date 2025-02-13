@@ -22,6 +22,8 @@ bad_quality = "🔑 Не устраивает качество"
 another_service = "📡 Нашел другой сервис"
 dont_vpn = "❌ Не пользуюсь VPN"
 forgot_buy = "📌 Забыл оформить"
+for_me = "👤 Для себя"
+for_present = "🎁 В подарок"
 
 
 def get_order_short_text(order_id: int, country: str):

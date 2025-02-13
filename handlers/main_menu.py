@@ -3,10 +3,13 @@ import datetime
 from aiogram import F, Router
 from aiogram.filters import Command, StateFilter
 from aiogram.types import Message
+from aiogram.utils.deep_linking import decode_payload
+from aiogram.filters import CommandStart, CommandObject
 
 from config import SECRET_START_STRING, WELCOME_PRESENT
 from database.controllers.action import create_action
-from database.controllers.order import update_order
+from database.controllers.order import create_order, update_order
+from database.controllers.present import get_present
 from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
@@ -16,17 +19,43 @@ from text.info import get_referral_program_text
 from text.keyboard_text import buy, referral_program, settings
 from text.texts import (get_buy_vpn_text, get_greeting_text,
                         get_incorrect_command, get_information_text,
-                        get_old_user_message_start_text)
+                        get_old_user_message_start_text, get_present_greeting_text)
+
 
 main_router = Router(name="main")
 
 
-@main_router.message(StateFilter(None), Command("start"))
-async def start_handler(message: Message):
+@main_router.message(StateFilter(None), CommandStart(deep_link=True))
+async def start_handler(message: Message, command: CommandObject):
     bot_logger.info(f"Message: '{message.message_id}' - main_menu.start_handler")
 
     user_id = message.from_user.id
     user = get_user(user_id)
+
+    args = command.args
+
+    if " " in message.text:
+        try:
+            payload = decode_payload(args)
+            res = get_present(int(payload))
+            if res is not None:
+                if user is None:
+                    user = register_user(message.from_user.id)
+                begin = datetime.datetime.now(datetime.timezone.utc)
+                end = begin + datetime.timedelta(days=res.duration)
+                create_order(
+                    {
+                        "user_id": user.id,
+                        "country": res.country,
+                        "begin_date": begin,
+                        "expiration_date": end,
+                        "price": res.price,
+                    }
+                )
+                await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
+        except Exception:
+            pass
+        user = register_user(message.from_user.id)
 
     if user is not None:
         if " " in message.text:

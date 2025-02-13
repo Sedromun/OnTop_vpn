@@ -7,10 +7,10 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from config import MIN_ADD_AMOUNT
 from database.controllers.user import get_user, update_user
 from text.keyboard_text import (back, balance, card, get_buy_option_sale_text,
-                                get_buy_option_text, get_country_text, pay)
+                                get_buy_option_text, get_country_text, pay, for_me, for_present)
 from utils.buy_options import (THREE_DAYS, BuyOptions, get_option_duration,
                                get_option_price, get_option_sale_price)
-from utils.country import COUNTRIES
+from utils.country import COUNTRIES, fastest
 
 
 def get_buy_vpn_keyboard(
@@ -83,21 +83,57 @@ class BuyCallbackFactory(CallbackData, prefix="buy_cho_opt"):
     back: bool = False
 
 
-def get_payment_countries_keyboard(duration: int, price: int):
+# def get_payment_countries_keyboard(duration: int, price: int):
+#     builder = InlineKeyboardBuilder()
+#     for name, flag in COUNTRIES.items():
+#         builder.button(
+#             text=get_country_text(name, flag),
+#             callback_data=ChoosePersonCallbackFactory(
+#                 option=Payment.Balance.value,
+#                 duration=duration,
+#                 price=price,
+#                 country=name,
+#             ),
+#         )
+#     builder.button(
+#         text=back,
+#         callback_data=ChoosePersonCallbackFactory(
+#             option=Payment.Balance.value,
+#             duration=duration,
+#             price=price,
+#             country="",
+#             back=True,
+#         ),
+#     )
+#     builder.adjust(1)
+#     return builder.as_markup()
+
+
+def get_payment_persons_choose_keyboard(duration: int, price: int):
     builder = InlineKeyboardBuilder()
-    for name, flag in COUNTRIES.items():
-        builder.button(
-            text=get_country_text(name, flag),
-            callback_data=ChooseCountryCallbackFactory(
-                option=Payment.Balance.value,
-                duration=duration,
-                price=price,
-                country=name,
-            ),
-        )
+    builder.button(
+        text=for_me,
+        callback_data=ChoosePersonCallbackFactory(
+            option=Payment.Balance.value,
+            duration=duration,
+            price=price,
+            country=fastest,
+            person=False
+        ),
+    )
+    builder.button(
+        text=for_present,
+        callback_data=ChoosePersonCallbackFactory(
+            option=Payment.Balance.value,
+            duration=duration,
+            price=price,
+            country=fastest,
+            person=True
+        ),
+    )
     builder.button(
         text=back,
-        callback_data=ChooseCountryCallbackFactory(
+        callback_data=ChoosePersonCallbackFactory(
             option=Payment.Balance.value,
             duration=duration,
             price=price,
@@ -109,16 +145,17 @@ def get_payment_countries_keyboard(duration: int, price: int):
     return builder.as_markup()
 
 
-class ChooseCountryCallbackFactory(CallbackData, prefix="country"):
+class ChoosePersonCallbackFactory(CallbackData, prefix="country"):
     option: int
     duration: int
     price: int
     country: str
+    person: bool # 0 - myself, 1 - present
     back: bool = False
 
 
 def get_payment_options_keyboard(
-    duration: int, price: int, country: str, extend: bool, order_id: int = -1
+    duration: int, price: int, country: str, extend: bool, order_id: int = -1, person = False
 ):
     builder = InlineKeyboardBuilder()
     builder.button(
@@ -130,6 +167,7 @@ def get_payment_options_keyboard(
             country=country,
             extend=extend,
             order_id=order_id,
+            person=person
         ),
     )
     builder.button(
@@ -141,6 +179,7 @@ def get_payment_options_keyboard(
             country=country,
             extend=extend,
             order_id=order_id,
+            person=person
         ),
     )
     builder.button(
@@ -152,6 +191,7 @@ def get_payment_options_keyboard(
             country=country,
             extend=extend,
             order_id=order_id,
+            person=person
         ),
     )
     builder.adjust(1)
@@ -171,10 +211,11 @@ class PaymentCallbackFactory(CallbackData, prefix="pay"):
     country: str
     extend: bool
     order_id: int
+    person: bool
 
 
 def get_balance_add_money_keyboard(
-    duration: int, price: int, country: str, add: int, order_id: int = -1
+    duration: int, price: int, country: str, add: int, order_id: int = -1, person = False
 ):
     builder = InlineKeyboardBuilder()
 
@@ -187,6 +228,7 @@ def get_balance_add_money_keyboard(
                 country=country,
                 amount=add,
                 order_id=order_id,
+                person=person
             ),
         )
     else:
@@ -198,6 +240,7 @@ def get_balance_add_money_keyboard(
                 country=country,
                 amount=MIN_ADD_AMOUNT,
                 order_id=order_id,
+                person=person
             ),
         )
 
@@ -214,6 +257,7 @@ def get_balance_add_money_keyboard(
                     country=country,
                     amount=amount,
                     order_id=order_id,
+                    person=person
                 ),
             )
     builder.button(
@@ -224,6 +268,7 @@ def get_balance_add_money_keyboard(
             country=country,
             amount=0,
             order_id=order_id,
+            person=person,
             back=True,
         ),
     )
@@ -237,6 +282,7 @@ class PaymentAddMoneyCallbackFactory(CallbackData, prefix="pay_add_money"):
     amount: int
     country: str
     order_id: int
+    person: bool
     back: bool = False
 
 
