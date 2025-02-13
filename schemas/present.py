@@ -4,7 +4,7 @@ from typing import List
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import BigInteger
-from text.keyboard_text import fastest
+from utils.country import fastest
 
 from .base import BaseModel
 from .user import UserModel
