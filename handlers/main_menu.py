@@ -37,6 +37,7 @@ async def start_handler(message: Message, command: CommandObject):
     if " " in message.text:
         try:
             payload = decode_payload(args)
+            bot_logger.info(payload)
             res = get_present(int(payload))
             if res is not None:
                 if user is None:
