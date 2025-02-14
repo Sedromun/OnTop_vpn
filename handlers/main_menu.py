@@ -39,7 +39,7 @@ async def start_handler(message: Message, command: CommandObject):
             payload = decode_payload(args)
             bot_logger.info(payload)
             res = get_present(int(payload))
-            if res is not None:
+            if res is not None and res.activated == 0:
                 if user is None:
                     user = register_user(message.from_user.id)
                 begin = datetime.datetime.now(datetime.timezone.utc)
@@ -53,7 +53,7 @@ async def start_handler(message: Message, command: CommandObject):
                         "price": res.price,
                     }
                 )
-                update_present(res.id, {"activated", True})
+                update_present(res.id, {"activated", 1})
                 await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
                 return
         except Exception:
