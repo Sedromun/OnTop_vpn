@@ -9,7 +9,7 @@ from aiogram.filters import CommandStart, CommandObject
 from config import SECRET_START_STRING, WELCOME_PRESENT
 from database.controllers.action import create_action
 from database.controllers.order import create_order, update_order
-from database.controllers.present import get_present
+from database.controllers.present import get_present, update_present
 from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
@@ -52,6 +52,7 @@ async def start_handler(message: Message, command: CommandObject):
                         "price": res.price,
                     }
                 )
+                update_present(res.id, {"activated", True})
                 await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
         except Exception:
             pass
