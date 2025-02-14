@@ -24,4 +24,4 @@ class PresentsModel(BaseModel):
     duration: Mapped[int] = mapped_column(nullable=False, default=0)
     user: Mapped["UserModel"] = relationship(back_populates="presents")
 
-    activated: Mapped[int] = mapped_column(nullable=False, default=False)
+    activated: Mapped[int] = mapped_column(nullable=False, default=0)
