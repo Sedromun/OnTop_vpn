@@ -35,31 +35,27 @@ async def start_handler(message: Message, command: CommandObject):
     args = command.args
 
     if " " in message.text:
-        try:
-            payload = decode_payload(args)
-            
-            res = get_present(int(payload))
-            if res is not None and res.activated == 0:
-                if user is None:
-                    user = register_user(message.from_user.id)
-                begin = datetime.datetime.now(datetime.timezone.utc)
-                end = begin + datetime.timedelta(days=res.duration)
-                create_order(
-                    {
-                        "user_id": user.id,
-                        "country": res.country,
-                        "begin_date": begin,
-                        "expiration_date": end,
-                        "price": res.price,
-                    }
-                )
-                bot_logger.info("payload")
-                update_present(res.id, {"activated", 1})
-                bot_logger.info("123")
-                await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
-                return
-        except Exception:
-            pass
+        payload = decode_payload(args)
+        res = get_present(int(payload))
+        if res is not None and res.activated == 0:
+            if user is None:
+                user = register_user(message.from_user.id)
+            begin = datetime.datetime.now(datetime.timezone.utc)
+            end = begin + datetime.timedelta(days=res.duration)
+            create_order(
+                {
+                    "user_id": user.id,
+                    "country": res.country,
+                    "begin_date": begin,
+                    "expiration_date": end,
+                    "price": res.price,
+                }
+            )
+            bot_logger.info("payload")
+            update_present(res.id, {"activated", 1})
+            bot_logger.info("123")
+            await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
+            return
 
     if user is not None:
         if " " in message.text:
