@@ -13,6 +13,6 @@ async def create_present(user_id, duration, country, price):
             }
         )
 
-    link = await create_start_link(bot, present.id, encode=True)
+    return await create_start_link(bot, present.id, encode=True)
     
 
