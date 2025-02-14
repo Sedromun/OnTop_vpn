@@ -16,6 +16,8 @@ from keyboards.info import get_info_keyboard
 from keyboards.main_keyboard import get_main_keyboard
 from logs import bot_logger
 from text.info import get_referral_program_text
+from servers.outline_keys import get_key
+
 from text.keyboard_text import buy, referral_program, settings
 from text.texts import (get_buy_vpn_text, get_greeting_text,
                         get_incorrect_command, get_information_text,
@@ -51,6 +53,7 @@ async def start_handler(message: Message, command: CommandObject):
                     "price": res.price,
                 }
             )
+            get_key(order.country, order.id)
             update_present(res.id, {"activated": 1})
             await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
             return
