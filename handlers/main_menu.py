@@ -122,6 +122,25 @@ async def start_handler(message: Message, command: CommandObject):
     await message.answer(text=get_greeting_text(), reply_markup=get_main_keyboard())
 
 
+@main_router.message(StateFilter(None), Command("start"))
+async def start_handler(message: Message):
+    bot_logger.info(f"Message: '{message.message_id}' - main_menu.start_handler")
+
+    user_id = message.from_user.id
+    user = get_user(user_id)
+
+    if user is None:
+        user = register_user(message.from_user.id)
+
+    create_action(
+        user_id=user.id,
+        title="start",
+        description="new user"
+    )
+
+    await message.answer(text=get_greeting_text(), reply_markup=get_main_keyboard())
+
+
 @main_router.message(StateFilter(None), F.text == buy)
 async def buy_handler(message: Message):
     bot_logger.info(f"Message: '{message.message_id}' - main_menu.buy_handler")
