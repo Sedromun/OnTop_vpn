@@ -44,7 +44,7 @@ async def start_handler(message: Message, command: CommandObject):
                 user = register_user(message.from_user.id)
             begin = datetime.datetime.now(datetime.timezone.utc)
             end = begin + datetime.timedelta(days=res.duration)
-            create_order(
+            order = create_order(
                 {
                     "user_id": user.id,
                     "country": res.country,
