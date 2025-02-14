@@ -51,9 +51,7 @@ async def start_handler(message: Message, command: CommandObject):
                     "price": res.price,
                 }
             )
-            bot_logger.info("payload")
-            update_present(res.id, {"activated", 1})
-            bot_logger.info("123")
+            update_present(res.id, {"activated": 1})
             await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
             return
 
