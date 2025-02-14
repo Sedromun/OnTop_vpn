@@ -54,9 +54,9 @@ async def start_handler(message: Message, command: CommandObject):
                 )
                 update_present(res.id, {"activated", True})
                 await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
+                return
         except Exception:
             pass
-        user = register_user(message.from_user.id)
 
     if user is not None:
         if " " in message.text:
