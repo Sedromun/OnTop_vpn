@@ -88,8 +88,7 @@ async def check_payment(notification: NotificationSchema):
         order_id = int(data["order_id"])
         purpose = int(data["purpose"])
         user_id = int(data["user_id"])
-        person = bool(data['person'])
-        backend_logger.info("Person: " + str(person))
+        person = data['person']
         order = get_order(order_id)
         amount = int(float(payment["amount"]["value"]))
         title = ""
@@ -99,7 +98,7 @@ async def check_payment(notification: NotificationSchema):
                 purpose == PaymentPurpose.BUY_CARD.value
                 or purpose == PaymentPurpose.BUY_ADD_MONEY.value
         ):
-            if person == False:
+            if person == 'false':
                 title = "buy key"
                 begin = datetime.datetime.now(datetime.timezone.utc)
                 end = begin + datetime.timedelta(days=int(data["duration"]))
