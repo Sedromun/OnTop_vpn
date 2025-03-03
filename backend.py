@@ -89,6 +89,7 @@ async def check_payment(notification: NotificationSchema):
         purpose = int(data["purpose"])
         user_id = int(data["user_id"])
         person = bool(data['person'])
+        backend_logger.info("Person: " + str(person))
         order = get_order(order_id)
         amount = int(float(payment["amount"]["value"]))
         title = ""
