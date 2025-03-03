@@ -82,6 +82,8 @@ async def check_payment(notification: NotificationSchema):
         return
 
     if payment["status"] == "succeeded":
+        backend_logger.info(data)
+
         duration_str = data["duration"]
         order_id = int(data["order_id"])
         purpose = int(data["purpose"])
