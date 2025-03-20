@@ -6,7 +6,7 @@ from aiogram.types import Message
 from aiogram.utils.deep_linking import decode_payload
 from aiogram.filters import CommandStart, CommandObject
 
-from config import SECRET_START_STRING, WELCOME_PRESENT
+from config import LENDING_URL, SECRET_START_STRING, WELCOME_PRESENT
 from database.controllers.action import create_action
 from database.controllers.order import create_order, update_order
 from database.controllers.present import get_present, update_present
@@ -37,26 +37,30 @@ async def start_handler(message: Message, command: CommandObject):
     args = command.args
 
     if " " in message.text:
-        payload = decode_payload(args)
-        res = get_present(int(payload))
-        if res is not None and res.activated == 0:
-            if user is None:
-                user = register_user(message.from_user.id)
-            begin = datetime.datetime.now(datetime.timezone.utc)
-            end = begin + datetime.timedelta(days=res.duration)
-            order = create_order(
-                {
-                    "user_id": user.id,
-                    "country": res.country,
-                    "begin_date": begin,
-                    "expiration_date": end,
-                    "price": res.price,
-                }
-            )
-            get_key(order.country, order.id)
-            update_present(res.id, {"activated": 1})
-            await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
-            return
+        try:
+            payload = decode_payload(args)
+            res = get_present(int(payload))
+            if res is not None and res.activated == 0:
+                if user is None:
+                    user = register_user(message.from_user.id)
+                begin = datetime.datetime.now(datetime.timezone.utc)
+                end = begin + datetime.timedelta(days=res.duration)
+                order = create_order(
+                    {
+                        "user_id": user.id,
+                        "country": res.country,
+                        "begin_date": begin,
+                        "expiration_date": end,
+                        "price": res.price,
+                    }
+                )
+                get_key(order.country, order.id)
+                update_present(res.id, {"activated": 1})
+                await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
+                return
+        except:
+            pass
+
 
     if user is not None:
         if " " in message.text:
@@ -91,7 +95,15 @@ async def start_handler(message: Message, command: CommandObject):
 
         if " " in message.text:
             referrer_candidate = message.text.split()[1]
-
+            if referrer_candidate == LENDING_URL:
+                user = register_user(message.from_user.id)
+                update_user(user_id, {"balance": WELCOME_PRESENT})
+                create_action(
+                    user_id=user.id,
+                    title="start",
+                    description=f"from lending"
+                )
+                return
             try:
                 referrer_candidate = int(referrer_candidate)
                 ref_can = get_user(referrer_candidate)

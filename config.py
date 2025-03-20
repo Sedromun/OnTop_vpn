@@ -58,6 +58,7 @@ INSTR_URL = str(os.getenv("INSTR_URL"))
 BOT_URL = str(os.getenv("BOT_URL"))
 REFS_PARAM = "?start="
 SECRET_START_STRING = str(os.getenv("SECRET_START_STRING"))
+LENDING_URL = "website"
 
 # -- Numeric params --
 
