@@ -39,5 +39,6 @@ def collect_user_info(user_id: int):
         "referrals": len(referrals),
         "orders": active_orders_info,
         "finished_orders": finished_orders_info,
-        "actions": actions_info
+        "actions": actions_info,
+        "review": user.review
     }
