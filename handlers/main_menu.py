@@ -6,7 +6,7 @@ from aiogram.types import Message
 from aiogram.utils.deep_linking import decode_payload
 from aiogram.filters import CommandStart, CommandObject
 
-from config import LENDING_URL, SECRET_START_STRING, WELCOME_PRESENT
+from config import SECRET_START_STRING, SPECIAL_URLS, WELCOME_PRESENT
 from database.controllers.action import create_action
 from database.controllers.order import create_order, update_order
 from database.controllers.present import get_present, update_present
@@ -95,15 +95,16 @@ async def start_handler(message: Message, command: CommandObject):
 
         if " " in message.text:
             referrer_candidate = message.text.split()[1]
-            if referrer_candidate == LENDING_URL:
-                user = register_user(message.from_user.id)
-                update_user(user_id, {"balance": WELCOME_PRESENT})
-                create_action(
-                    user_id=user.id,
-                    title="start",
-                    description=f"from lending"
-                )
-                return
+            for spec_url in SPECIAL_URLS.keys():
+                if referrer_candidate == spec_url:
+                    user = register_user(message.from_user.id)
+                    update_user(user_id, {"balance": WELCOME_PRESENT})
+                    create_action(
+                        user_id=user.id,
+                        title="start",
+                        description=SPECIAL_URLS[spec_url]
+                    )
+                    return
             try:
                 referrer_candidate = int(referrer_candidate)
                 ref_can = get_user(referrer_candidate)

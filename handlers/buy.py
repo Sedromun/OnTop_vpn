@@ -139,6 +139,10 @@ async def buy_balance_callback(
                 price=callback_data.price
             )
 
+            update_user(
+                callback.from_user.id, {"balance": user.balance - callback_data.price}
+            )
+
             await callback.message.edit_text(
                 text=get_success_created_present_text(link),
                 reply_markup=get_instruction_button_keyboard(),

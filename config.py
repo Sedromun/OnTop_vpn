@@ -60,6 +60,11 @@ REFS_PARAM = "?start="
 SECRET_START_STRING = str(os.getenv("SECRET_START_STRING"))
 LENDING_URL = "website"
 
+SPECIAL_URLS = {
+    'website': 'from lending',
+    'instagram': 'from instagram'
+}
+
 # -- Numeric params --
 
 MIN_ADD_AMOUNT = 50
