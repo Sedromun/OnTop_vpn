@@ -13,12 +13,13 @@ from database.controllers.present import get_present, update_present
 from database.controllers.user import get_user, register_user, update_user
 from keyboards.buy import get_buy_vpn_keyboard
 from keyboards.info import get_info_keyboard
-from keyboards.main_keyboard import get_main_keyboard
+from keyboards.main_keyboard import get_instr_keyboard, get_main_keyboard
 from logs import bot_logger
 from text.info import get_referral_program_text
 from servers.outline_keys import get_key
 
 from text.keyboard_text import buy, referral_program, settings
+from text.profile import get_order_info_text
 from text.texts import (get_buy_vpn_text, get_greeting_text,
                         get_incorrect_command, get_information_text,
                         get_old_user_message_start_text, get_present_greeting_text)
@@ -57,6 +58,7 @@ async def start_handler(message: Message, command: CommandObject):
                 get_key(order.country, order.id)
                 update_present(res.id, {"activated": 1})
                 await message.answer(text=get_present_greeting_text(), reply_markup=get_main_keyboard())
+                await message.answer(text=get_order_info_text(order.id), reply_markup=get_instr_keyboard())
                 return
         except:
             pass
