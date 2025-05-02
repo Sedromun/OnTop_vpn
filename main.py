@@ -21,7 +21,7 @@ async def main():
         try:
             await api.login()
         except:
-            print(api)
+            print(api.host)
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
