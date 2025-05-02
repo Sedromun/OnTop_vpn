@@ -18,7 +18,10 @@ app = FastAPI()
 
 async def main():
     for api in vless_client.values():
-        await api.login()
+        try:
+            await api.login()
+        except:
+            print(api)
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
