@@ -220,7 +220,7 @@ parameters = {
         "security": "reality",
         "pbk": "wgjOVa4JhxKvMi7hYcTti9O4TVgliYgnHOD_mZi_UWM",
         "fp": "random",
-        "sni": "rutube.ru",
+        "sni": "russia1.clique-vpn.ru",
         "sid": "9ccd7c57e0",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -230,7 +230,7 @@ parameters = {
         "security": "reality",
         "pbk": "ylmv9z-jJTsoELWHiavAEKTq7t1oRkIAilDVC37CYAI",
         "fp": "random",
-        "sni": "ya.ru",
+        "sni": "russia2.clique-vpn.ru",
         "sid": "4b1070630806a0",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -240,7 +240,7 @@ parameters = {
         "security": "reality",
         "pbk": "Ky-_GRABOAtNoczRD6JOl4RzMCRTh6tNxbFSPikHFy4",
         "fp": "random",
-        "sni": "yahoo.com",
+        "sni": "sweden.clique-vpn.ru",
         "sid": "259ac83ce22f20c5",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -250,7 +250,7 @@ parameters = {
         "security": "reality",
         "pbk": "e4I69qQ_zAVjIF-pdjr1kKkoXCL2WSb-e7vFEdRqfAU",
         "fp": "random",
-        "sni": "yahoo.com",
+        "sni": "germany1.clique-vpn.ru",
         "sid": "3fa55822",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -260,7 +260,7 @@ parameters = {
         "security": "reality",
         "pbk": "fZ8gm_Tr8VPUg4hNHFpIqYkqv0yUcWJXaf0XttO2kSo",
         "fp": "radnom",
-        "sni": "yahoo.com",
+        "sni": "germany2.clique-vpn.ru",
         "sid": "83c7614c9a8cda",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -270,7 +270,7 @@ parameters = {
         "security": "reality",
         "pbk": "MdxMQkTaHNSk3weD3RRregSzHwoHSPtMVafxMumJiRY",
         "fp": "random",
-        "sni": "telegram.org",
+        "sni": "france.clique-vpn.ru",
         "sid": "5b46",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -280,7 +280,7 @@ parameters = {
         "security": "reality",
         "pbk": "pdK8vv1iXEQadMVqClvdUfDZSw-6xm9Yu7DQv5Z4DhY",
         "fp": "random",
-        "sni": "yahoo.com",
+        "sni": "uk.clique-vpn.ru",
         "sid": "658ba53a",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -290,7 +290,7 @@ parameters = {
         "security": "reality",
         "pbk": "BisWFcqOV7NaTqC9avwMmChYnXX2WyMknjodK39huW8",
         "fp": "random",
-        "sni": "cloudflare.com",
+        "sni": "usa.clique-vpn.ru",
         "sid": "afabf37907ca8f",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -300,7 +300,7 @@ parameters = {
         "security": "reality",
         "pbk": "t126zKUpND4cYe_ysrbJplY-r2_WHs_95HWLw4C79zY",
         "fp": "random",
-        "sni": "ing.com",
+        "sni": "latvia.clique-vpn.ru",
         "sid": "b163e86ba3f3",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -320,7 +320,7 @@ parameters = {
         "security": "reality",
         "pbk": "ERx8b7RTpk6DQ8IfQxgbsOOXK-rkac0V5dZhGv_99mI",
         "fp": "random",
-        "sni": "yahoo.com",
+        "sni": "netherlands2.clique-vpn.ru",
         "sid": "1c",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -330,7 +330,7 @@ parameters = {
         "security": "reality",
         "pbk": "LzesmGkKdu2gi2HHlE0cvD6pw_3mkfzQVKBsBNESkEQ",
         "fp": "random",
-        "sni": "wikipedia.org",
+        "sni": "finland1.clique-vpn.ru",
         "sid": "04254218effce3",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -340,7 +340,7 @@ parameters = {
     #     "security": "reality",
     #     "pbk": "ZQ6vH7Xr22l-Xf0Dp3C1mcHXhWAa8ZhY6r4rAkiIBAA",
     #     "fp": "random",
-    #     "sni": "yahoo.com",
+    #     "sni": "finland2.clique-vpn.ru",
     #     "sid": "46",
     #     "spx": "%2F",
     #     "flow": "xtls-rprx-vision"
@@ -350,7 +350,7 @@ parameters = {
         "security": "reality",
         "pbk": "alllDGYs0hTGuZR-5YlWM0b9J35sG9689dDAvW60tVo",
         "fp": "random",
-        "sni": "whatsapp.net",
+        "sni": "estonia.clique-vpn.ru",
         "sid": "d46e",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
@@ -360,7 +360,7 @@ parameters = {
         "security": "reality",
         "pbk": "ey3QB9txQgf1EYIwnrCbZbsLy0a-YVAKHUQ7fZGuLmw",
         "fp": "random",
-        "sni": "images.apple.com",
+        "sni": "austria.clique-vpn.ru",
         "sid": "e909798f64bd",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
