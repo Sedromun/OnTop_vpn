@@ -21,8 +21,12 @@ async def get_vless_keys(order_id: int) -> (int, str):
         try:
             email = servers_countries_in_email[id] + "-" + str(order_id)
             order = get_order(order_id)
+            try:
+                await api.login()
+            except Exception as e:
+                backend_logger.exception("COUNTRY: " + str(id) + " " + str(e))
+                continue
 
-            await api.login()
             client = await api.client.get_by_email(email)
 
             if client is None:

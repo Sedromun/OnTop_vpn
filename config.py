@@ -122,7 +122,7 @@ AUSTRIA_CERT_SHA256_1 = str(os.getenv("AUSTRIA_CERT_SHA256_1"))
 outline_client = {
     10: OutlineVPN(api_url=RUSSIAN_API_URL_1, cert_sha256=RUSSIAN_CERT_SHA256_1),
     11: OutlineVPN(api_url=RUSSIAN_API_URL_2, cert_sha256=RUSSIAN_CERT_SHA256_2),
-    20: OutlineVPN(api_url=SWEDEN_API_URL_1, cert_sha256=SWEDEN_CERT_SHA256_1),
+    # 20: OutlineVPN(api_url=SWEDEN_API_URL_1, cert_sha256=SWEDEN_CERT_SHA256_1),
     30: OutlineVPN(api_url=GERMAN_API_URL_1, cert_sha256=GERMAN_CERT_SHA256_1),
     31: OutlineVPN(api_url=GERMAN_API_URL_2, cert_sha256=GERMAN_CERT_SHA256_2),
     40: OutlineVPN(api_url=FRANCE_API_URL_1, cert_sha256=FRANCE_CERT_SHA256_1),
@@ -145,7 +145,7 @@ VLESS_PASSWORD = str(os.getenv("VLESS_PASSWORD"))
 vless_server_ip = {
     10: str(os.getenv("RUSSIA_1_IP")),
     11: str(os.getenv("RUSSIA_2_IP")),
-    20: str(os.getenv("SWEDEN_1_IP")),
+    # 20: str(os.getenv("SWEDEN_1_IP")),
     30: str(os.getenv("GERMANY_1_IP")),
     31: str(os.getenv("GERMANY_2_IP")),
     40: str(os.getenv("FRANCE_1_IP")),
@@ -163,7 +163,7 @@ vless_server_ip = {
 vless_client = {
     10: AsyncApi(f"http://{vless_server_ip[10]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     11: AsyncApi(f"http://{vless_server_ip[11]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    20: AsyncApi(f"http://{vless_server_ip[20]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+    # 20: AsyncApi(f"http://{vless_server_ip[20]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     30: AsyncApi(f"http://{vless_server_ip[30]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     31: AsyncApi(f"http://{vless_server_ip[31]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     40: AsyncApi(f"http://{vless_server_ip[40]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
@@ -181,7 +181,7 @@ vless_client = {
 servers_countries = {
     10: "Россия",
     11: "Россия",
-    20: "Швеция",
+    # 20: "Швеция",
     30: "Германия",
     31: "Германия",
     40: "Франция",
@@ -235,16 +235,16 @@ parameters = {
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
-    20: {
-        "type": "tcp",
-        "security": "reality",
-        "pbk": "Ky-_GRABOAtNoczRD6JOl4RzMCRTh6tNxbFSPikHFy4",
-        "fp": "random",
-        "sni": "sweden.clique-vpn.ru",
-        "sid": "259ac83ce22f20c5",
-        "spx": "%2F",
-        "flow": "xtls-rprx-vision"
-    },
+    # 20: {
+    #     "type": "tcp",
+    #     "security": "reality",
+    #     "pbk": "Ky-_GRABOAtNoczRD6JOl4RzMCRTh6tNxbFSPikHFy4",
+    #     "fp": "random",
+    #     "sni": "sweden.clique-vpn.ru",
+    #     "sid": "259ac83ce22f20c5",
+    #     "spx": "%2F",
+    #     "flow": "xtls-rprx-vision"
+    # },
     30: {
         "type": "tcp",
         "security": "reality",
@@ -370,7 +370,7 @@ parameters = {
 vless_inbound_id = {
     10: 1,
     11: 1,
-    20: 1,
+    # 20: 1,
     30: 1,
     31: 1,
     40: 1,
@@ -405,7 +405,7 @@ efficiency = {
 
 country_to_server_ids = {
     "Россия": [10, 11],
-    "Швеция": [20],
+    # "Швеция": [20],
     "Германия": [30, 31],
     "Франция": [40],
     "Великобритания": [50],
