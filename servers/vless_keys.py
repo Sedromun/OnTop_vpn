@@ -54,7 +54,7 @@ async def get_vless_keys(order_id: int) -> (int, str):
             res += create_key_string_from_data(id, order.uuid, client) + '\n'
             expiry_time = client.expiry_time
         except Exception as e:
-            backend_logger.exception(e)
+            backend_logger.exception("EXCEPTION!!!! COUNTRY: " + str(id) + " " + str(e))
             pass
     return expiry_time, res
 
