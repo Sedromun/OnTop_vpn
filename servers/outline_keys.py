@@ -18,7 +18,7 @@ def get_key(country: str, order_id: int) -> str | None:
     try:
         new_key = client.create_key().access_url
     except Exception as e:
-        backend_logger.exception("Outline exception!!!! COUNTRY: " + country + " " + str(e))
+        backend_logger.exception("Outline exception!!!! COUNTRY: " + str(server_id) + " " + str(e))
         return None
     create_key({"order_id": order_id, "country": country, "server_id": server_id, "key": new_key})
     return new_key
