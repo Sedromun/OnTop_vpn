@@ -4,16 +4,22 @@ from database.controllers.key import (create_key, delete_key,
 from database.controllers.key import get_key as get_key_from_db
 from database.controllers.order import get_order
 from utils.country import fastest
+from logs import backend_logger
 
 
-def get_key(country: str, order_id: int) -> str:
+
+def get_key(country: str, order_id: int) -> str | None:
     order = get_order(order_id)
     key = get_order_country_key(country=country, order=order)
     if key is not None:
         delete_key(key.id)
 
     server_id, _, client = get_client(country)
-    new_key = client.create_key().access_url
+    try:
+        new_key = client.create_key().access_url
+    except Exception as e:
+        backend_logger.exception("Outline exception!!!! COUNTRY: " + country + " " + str(e))
+        return None
     create_key({"order_id": order_id, "country": country, "server_id": server_id, "key": new_key})
     return new_key
 
