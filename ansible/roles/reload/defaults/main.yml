@@ -1,0 +1,12 @@
+---
+# Имя контейнера 3x-ui
+xui_container_name: "3x-ui"
+
+# Чистить ли лог: true/false
+xui_clean_logs: true
+
+# Убивать ли лишние процессы x-ui на хосте (кроме PID контейнера): true/false
+xui_kill_stray_processes: true
+
+# Рестартовать контейнер после действий: true/false
+xui_restart_container: true

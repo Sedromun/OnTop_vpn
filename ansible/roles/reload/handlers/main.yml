@@ -1,0 +1,6 @@
+---
+- name: restart 3x-ui container
+  community.docker.docker_container:
+    name: "{{ xui_container_name }}"
+    state: started
+    restart: true

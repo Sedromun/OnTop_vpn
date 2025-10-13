@@ -1,0 +1,9 @@
+- hosts: xui_hosts
+  become: true
+  roles:
+    - role: reload
+      vars:
+        xui_container_name: "3x-ui"
+        xui_clean_logs: true
+        xui_kill_stray_processes: false
+        xui_restart_container: true

@@ -14,8 +14,8 @@ def get_key(country: str, order_id: int) -> str | None:
     if key is not None:
         delete_key(key.id)
 
-    server_id, _, client = get_client(country)
     try:
+        server_id, _, client = get_client(country)
         new_key = client.create_key().access_url
     except Exception as e:
         backend_logger.exception("Outline exception!!!! COUNTRY: " + str(server_id) + " " + str(e))

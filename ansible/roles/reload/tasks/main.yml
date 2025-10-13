@@ -1,0 +1,85 @@
+# 1) Получаем путь к лог-файлу контейнера
+- name: Get 3x-ui LogPath (docker inspect)
+  command: docker inspect "{{ xui_container_name }}" --format {{ "'{{ .LogPath }}'" }}
+  register: xui_logpath
+  changed_when: false
+
+- name: Fail if container not found
+  fail:
+    msg: "Контейнер {{ xui_container_name }} не найден или не запущен. docker inspect вернул пусто."
+  when: xui_logpath.stdout | length == 0
+
+- name: Derive container log directory
+  set_fact:
+    xui_container_dir: "{{ xui_logpath.stdout | dirname }}"
+
+# 2) Находим реальный json.log
+- name: Find container json log file(s)
+  find:
+    paths: "{{ xui_container_dir }}"
+    patterns: "*-json.log"
+    file_type: file
+  register: xui_json_logs
+  when: xui_clean_logs
+
+- name: Debug found logs
+  debug:
+    var: xui_json_logs.files
+  when: xui_clean_logs | bool
+
+- name: Remove container json logs
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ xui_json_logs.files | default([]) }}"
+  when:
+    - xui_clean_logs
+    - (xui_json_logs.files | default([])) | length > 0
+  notify: restart 3x-ui container  # при удалении файла лучше рестартнуть контейнер, чтобы docker восстановил лог
+
+# 4) Узнаём PID главного процесса контейнера (чтобы его не убить)
+- name: Get container main PID
+  command: docker inspect "{{ xui_container_name }}" --format {{ "'{{ .State.Pid }}'" }}
+  register: xui_main_pid
+  changed_when: false
+
+# 5) Ищем "лишние" процессы x-ui на хосте
+# pgrep -f ищет по полной команде (как ваш `ps -ax | grep x-ui`)
+- name: Find host PIDs of x-ui processes
+  shell: "pgrep -f '/app/x-ui' || true"
+  register: xui_host_pids
+  changed_when: false
+  when: xui_kill_stray_processes
+
+# 6) Фильтруем PID контейнера из списка
+- name: Build list of stray PIDs (exclude container main PID)
+  set_fact:
+    xui_stray_pids: >-
+      {{
+        (xui_host_pids.stdout_lines | default([]))
+        | reject('equalto', xui_main_pid.stdout)
+        | list
+      }}
+  when: xui_kill_stray_processes
+
+- name: Debug stray PIDs
+  debug:
+    var: xui_stray_pids
+  when: xui_kill_stray_processes
+
+# 7) Убиваем чужие/зависшие процессы x-ui (если есть)
+- name: Kill stray x-ui processes
+  shell: "kill -9 {{ item }}"
+  loop: "{{ xui_stray_pids | default([]) }}"
+  when:
+    - xui_kill_stray_processes
+    - (xui_stray_pids | default([])) | length > 0
+
+# 8) Рестарт контейнера (если просили и не триггерили handler выше)
+- name: Restart 3x-ui container (direct)
+  community.docker.docker_container:
+    name: "{{ xui_container_name }}"
+    state: started
+    restart: true
+  when:
+    - xui_restart_container
