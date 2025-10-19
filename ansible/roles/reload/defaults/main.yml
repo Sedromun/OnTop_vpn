@@ -1,6 +1,7 @@
 ---
 # Имя контейнера 3x-ui
 xui_container_name: "3x-ui"
+watchtower_container_name: "watchtower"
 
 # Чистить ли лог: true/false
 xui_clean_logs: true

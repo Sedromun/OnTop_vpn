@@ -35,7 +35,9 @@
   when:
     - xui_clean_logs
     - (xui_json_logs.files | default([])) | length > 0
-  notify: restart 3x-ui container  # при удалении файла лучше рестартнуть контейнер, чтобы docker восстановил лог
+  notify:
+    - restart 3x-ui container
+    - restart watchtower container  # при удалении файла лучше рестартнуть контейнер, чтобы docker восстановил лог
 
 # 4) Узнаём PID главного процесса контейнера (чтобы его не убить)
 - name: Get container main PID
@@ -79,6 +81,14 @@
 - name: Restart 3x-ui container (direct)
   community.docker.docker_container:
     name: "{{ xui_container_name }}"
+    state: started
+    restart: true
+  when:
+    - xui_restart_container
+
+- name: Restart watchtower container (direct)
+  community.docker.docker_container:
+    name: "{{ watchtower_container_name }}"
     state: started
     restart: true
   when:

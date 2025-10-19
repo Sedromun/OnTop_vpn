@@ -4,3 +4,9 @@
     name: "{{ xui_container_name }}"
     state: started
     restart: true
+
+- name: restart watchtower container
+  community.docker.docker_container:
+    name: "{{ watchtower_container_name }}"
+    state: started
+    restart: true
