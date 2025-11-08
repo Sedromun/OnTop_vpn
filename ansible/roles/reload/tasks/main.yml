@@ -3,15 +3,21 @@
   command: docker inspect "{{ xui_container_name }}" --format {{ "'{{ .LogPath }}'" }}
   register: xui_logpath
   changed_when: false
+  when: xui_clean_logs
 
 - name: Fail if container not found
   fail:
     msg: "Контейнер {{ xui_container_name }} не найден или не запущен. docker inspect вернул пусто."
-  when: xui_logpath.stdout | length == 0
+  when:
+    - xui_clean_logs
+    - xui_logpath.stdout | length == 0
+   
+
 
 - name: Derive container log directory
   set_fact:
     xui_container_dir: "{{ xui_logpath.stdout | dirname }}"
+  when: xui_clean_logs
 
 # 2) Находим реальный json.log
 - name: Find container json log file(s)
@@ -44,6 +50,7 @@
   command: docker inspect "{{ xui_container_name }}" --format {{ "'{{ .State.Pid }}'" }}
   register: xui_main_pid
   changed_when: false
+  when: xui_kill_stray_processes
 
 # 5) Ищем "лишние" процессы x-ui на хосте
 # pgrep -f ищет по полной команде (как ваш `ps -ax | grep x-ui`)
