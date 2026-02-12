@@ -1,0 +1,15 @@
+---
+# Версия 3x-ui для установки
+xui_version: "v1.4.6"
+
+# Репозиторий 3x-ui
+xui_repo: "https://github.com/MHSanaei/3x-ui.git"
+
+# Каталог для клонирования репозитория
+xui_install_dir: "/opt/3x-ui"
+
+# Имя контейнера
+xui_container_name: "3x-ui"
+
+# Docker Compose команда (compose up flags)
+xui_compose_args: "up -d"

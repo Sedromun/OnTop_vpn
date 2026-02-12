@@ -1,0 +1,6 @@
+- name: prometheus | install python dependencies
+  become: true
+  apt:
+    state: latest
+    name: python3-jmespath
+

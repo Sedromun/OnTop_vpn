@@ -1,0 +1,49 @@
+- name: prometheus | alertmanager configuration file
+  become: true
+  template:
+    dest: /etc/prometheus/alertmanager.yml
+    force: true
+    src: etc-prometheus-alertmanager-yml.j2
+    mode: 0644
+  register: prometheus_alertmanager_configuration
+
+- name: prometheus | prometheus alert rules
+  become: true
+  template:
+    dest: /etc/prometheus/rules/default-alert.rules.yml
+    force: true
+    src: etc-prometheus-default-alert-rules-yml.j2
+    mode: 0644
+  register: prometheus_alert_rules
+
+- name: prometheus | prometheus additional alert rules
+  become: true
+  template:
+    dest: /etc/prometheus/rules/additional-alert.rules.yml
+    force: true
+    src: "{{ prometheus_additional_rules_template }}"
+    mode: 0644
+  register: prometheus_alert_rules_additional
+
+- name: prometheus | docker alertmanager
+  become: true
+  docker_container:
+    command: >
+      --config.file=/etc/prometheus/alertmanager.yml
+      --storage.path=/alertmanager
+      {{ prometheus_alertmanager_additional_command_args }}
+    image: prom/alertmanager:v{{ prometheus_alertmanager_version }}
+    name: alertmanager
+    networks:
+      - name: "{{ prometheus_docker_network }}"
+    published_ports: >-
+      {{ (prometheus_alertmanager_port > 0) |
+         ternary([(prometheus_alertmanager_port | string) + ':9094'], []) }}
+    # read_only: True
+    recreate: "{{ prometheus_alertmanager_configuration.changed }}"
+    restart_policy: always
+    state: started
+    volumes:
+      - /etc/prometheus/alertmanager.yml:/etc/prometheus/alertmanager.yml:ro
+      - "{{ prometheus_alertmanager_data_dir | default(alertmanager_data) }}:/alertmanager"
+  register: _alertmanager_container

@@ -1,0 +1,5 @@
+---
+# Роль для развёртывания 3x-ui на чистом сервере
+
+- import_tasks: docker.yml
+- import_tasks: xui.yml

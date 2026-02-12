@@ -1,0 +1,46 @@
+# {{ ansible_managed }}
+# Prometheus Alert rules
+# https://thenewstack.io/contributing-prometheus-history-alertmanager/
+# https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
+# https://samber.github.io/awesome-prometheus-alerts/
+
+groups:
+
+- name: default instance down rules
+  rules:
+
+  - alert: instance_down
+    expr: up == 0
+    for: {{ prometheus_alertmanager_instance_down_warn }}
+    labels:
+      severity: warn
+    annotations:
+{% raw %}
+      summary: "Instance {{$labels.instance}} may be down"
+      description: "{{$labels.instance}} of job {{$labels.job}} has been down for more than {% endraw -%} {{ prometheus_alertmanager_instance_down_warn }}."
+
+  - alert: instance_down
+    expr: up == 0
+    for: {{ prometheus_alertmanager_instance_down_error }}
+    labels:
+      severity: error
+    annotations:
+{% raw %}
+      summary: "Instance {{$labels.instance}} down"
+      description: "{{$labels.instance}} of job {{$labels.job}} has been down for more than {% endraw -%} {{ prometheus_alertmanager_instance_down_error }}."
+
+
+{% raw %}
+- name: docker_container_activity
+  rules:
+
+  - alert: ContainerInactive
+    expr: time() - container_last_seen{name=~"3x-ui|watchtower"} > 120
+    for: 2m
+    labels:
+      severity: error
+      job: cadvisor
+    annotations:
+      summary: "Container {{$labels.name}} seems inactive"
+      description: "Container **{{$labels.name}}** (instance {{$labels.instance}}) has not been seen for more than 2 minutes."
+          {% endraw %}

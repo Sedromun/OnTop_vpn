@@ -1,0 +1,11 @@
+---
+- name: restart docker
+  systemd:
+    name: docker
+    state: restarted
+
+- name: restart 3x-ui
+  community.docker.docker_compose_v2:
+    project_src: "{{ xui_install_dir }}"
+    state: present
+    recreate: always

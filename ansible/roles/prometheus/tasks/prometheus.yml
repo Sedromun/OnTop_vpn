@@ -1,0 +1,61 @@
+---
+- name: prometheus | prometheus configuration file
+  become: true
+  template:
+    dest: /etc/prometheus/prometheus.yml
+    force: true
+    src: etc-prometheus-prometheus-yml.j2
+    mode: 0644
+  register: prometheus_configuration
+
+- name: prometheus | file sd configs
+  become: true
+  template:
+    dest: /etc/prometheus/targets/{{ item.groupname }}.yml
+    force: true
+    src: file_sd_config-template-yml.j2
+    mode: 0644
+  with_items:
+    - "{{ prometheus_sd_targets }}"
+    
+###
+### Запустим docker контейнер prometheus
+###
+- name: prometheus | docker prometheus
+  become: true
+  docker_container:
+    ### Формируем команду запуска, где указываем места хранения ключевых конфигурационных файлов
+    command: >
+      --config.file=/etc/prometheus/prometheus.yml
+      --storage.tsdb.path=/prometheus
+      --web.console.libraries=/usr/share/prometheus/console_libraries
+      --web.console.templates=/usr/share/prometheus/consoles
+      {{ prometheus_additional_command_args }}
+    ### Используем переменную версии для быстрого обновления контейнера из vars
+    image: prom/prometheus:v{{ prometheus_version }}
+    ### Указываем имя контейнера
+    name: prometheus
+    ### Настраиваем общую docker сеть для доступа между компанентами
+    networks:
+      - name: "{{ prometheus_docker_network }}"
+    published_ports: >-
+      {{ (prometheus_port > 0) | ternary([(prometheus_port | string) +
+         ':9090'], []) }}
+    ### Указываем флаг пересоздание контейнера, если изменились конфигурационный файлы
+    recreate: >-
+      {{ prometheus_configuration.changed or
+         prometheus_alert_rules.changed or
+         prometheus_alert_rules_additional.changed }}
+    ### Выставляем политику перезагрузки в случае неожиданого завершения
+    restart_policy: always
+    state: started
+    user: "{{ prometheus_docker_user | default(omit) }}"
+    ### Настраиваем монтирование конфигурации
+    volumes:
+      # We could mount /etc/prometheus instead but the Docker image contains
+      # additional (optional) files
+      - /etc/prometheus/rules/:/etc/prometheus/rules/:ro
+      - /etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /etc/prometheus/targets/:/etc/prometheus/targets/:ro
+      - "{{ prometheus_docker_data_dir | default(prometheus_docker_data_volume) }}:/prometheus"
+  register: _prometheus_container

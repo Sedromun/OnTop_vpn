@@ -1,0 +1,61 @@
+---
+# Установка Docker из официального репозитория
+
+- name: docker | Установить зависимости
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+    update_cache: true
+
+- name: docker | Создать каталог для ключей
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: docker | Скачать GPG-ключ Docker
+  get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+    force: false
+
+- name: docker | Определить архитектуру
+  command: dpkg --print-architecture
+  register: dpkg_arch
+  changed_when: false
+
+- name: docker | Определить кодовое имя ОС
+  shell: . /etc/os-release && echo "$VERSION_CODENAME"
+  register: os_codename
+  changed_when: false
+
+- name: docker | Добавить репозиторий Docker
+  apt_repository:
+    repo: >-
+      deb [arch={{ dpkg_arch.stdout }} signed-by=/etc/apt/keyrings/docker.asc]
+      https://download.docker.com/linux/ubuntu {{ os_codename.stdout }} stable
+    state: present
+    filename: docker
+    update_cache: true
+
+- name: docker | Установить Docker Engine и плагины
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: present
+    update_cache: true
+
+- name: docker | Запустить и включить Docker
+  systemd:
+    name: docker
+    state: started
+    enabled: true

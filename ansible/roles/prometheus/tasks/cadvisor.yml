@@ -1,0 +1,20 @@
+---
+- name: cadvisor | Run cAdvisor container
+  become: true
+  docker_container:
+    name: cadvisor
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    state: started
+    restart_policy: always
+    privileged: true
+    networks:
+      - name: "{{ prometheus_docker_network }}"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    published_ports: >-
+      {{ (prometheus_cadvisor_port > 0) |
+         ternary([(prometheus_cadvisor_port | string) + ':8080'],
+         []) }}

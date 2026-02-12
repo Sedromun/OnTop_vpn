@@ -1,0 +1,24 @@
+---
+# Клонирование и запуск 3x-ui
+
+- name: xui | Установить git
+  apt:
+    name: git
+    state: present
+
+- name: xui | Клонировать репозиторий 3x-ui
+  git:
+    repo: "{{ xui_repo }}"
+    dest: "{{ xui_install_dir }}"
+    version: "{{ xui_version }}"
+    force: true
+
+- name: xui | Запустить docker compose up -d
+  community.docker.docker_compose_v2:
+    project_src: "{{ xui_install_dir }}"
+    state: present
+  register: xui_compose_result
+
+- name: xui | Вывести результат запуска
+  debug:
+    var: xui_compose_result

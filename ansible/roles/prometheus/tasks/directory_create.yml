@@ -1,0 +1,40 @@
+- name: prometheus | create directories
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - /etc/prometheus
+    - /etc/prometheus/rules
+    - /etc/prometheus/targets
+
+- name: prometheus | create data directories
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{prometheus_docker_user | default (65534)}}"
+    group: "{{prometheus_docker_user | default (65534)}}"
+  with_items:
+    - "{{ prometheus_docker_data_dir | default(prometheus_docker_data_volume) }}"
+  when: prometheus_docker_data_dir is defined or prometheus_docker_data_volume is defined
+
+- name: alertmanager | create data directories
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{prometheus_docker_user | default (65534)}}"
+    group: "{{prometheus_docker_user | default (65534)}}"
+  with_items:
+    - "{{ prometheus_alertmanager_data_dir | default(alertmanager_data) }}"
+  when: prometheus_alertmanager_data_dir is defined or alertmanager_data is defined
+
+- name: prometheus | docker network
+  become: true
+  docker_network:
+    name: "{{ prometheus_docker_network }}"
+    state: present

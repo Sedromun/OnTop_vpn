@@ -1,0 +1,25 @@
+---
+- name: node-exporter | Run Node Exporter container
+  become: true
+  when: prometheus_node_exporter_enabled | bool
+  docker_container:
+    name: node-exporter
+    image: prom/node-exporter:v{{ prometheus_node_exporter_version }}
+    networks:
+      - name: "{{ prometheus_docker_network }}"
+    restart_policy: always
+    state: started
+    pid_mode: host
+    volumes:
+      - /:/host:ro,rslave
+    command:
+      - '--path.rootfs=/host'
+      - '--collector.systemd'
+      - '--collector.tcpstat'
+      - '--collector.cpu'
+      - '--collector.meminfo'
+      - '--collector.loadavg'
+      - '--collector.diskstats'
+      - '--collector.netdev'
+    published_ports:
+      - "{{ prometheus_node_exporter_port }}:9100"

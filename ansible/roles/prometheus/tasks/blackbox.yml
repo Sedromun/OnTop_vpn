@@ -1,0 +1,28 @@
+- name: prometheus | blackbox configuration file
+  become: true
+  copy:
+    dest: /etc/prometheus/blackbox-exporter.yml
+    force: true
+    src: etc-prometheus-blackbox-exporter.yml
+    mode: 0644
+  register: prometheus_blackboxexporter_configuration
+
+- name: prometheus | docker blackbox-exporter
+  become: true
+  docker_container:
+    command: "--config.file=/etc/prometheus/blackbox-exporter.yml"
+    image: prom/blackbox-exporter:v{{ prometheus_blackboxexporter_version }}
+    name: blackbox-exporter
+    networks:
+      - name: "{{ prometheus_docker_network }}"
+    published_ports: >-
+      {{ (prometheus_blackboxexporter_port > 0) |
+         ternary([(prometheus_blackboxexporter_port | string) + ':9115'],
+         []) }}
+    # read_only: True
+    recreate: "{{ prometheus_blackboxexporter_configuration.changed }}"
+    restart_policy: always
+    state: started
+    volumes:
+      - /etc/prometheus/blackbox-exporter.yml:/etc/prometheus/blackbox-exporter.yml:ro
+  register: _blackboxexporter_container
