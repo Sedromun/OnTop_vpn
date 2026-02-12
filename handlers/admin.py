@@ -6,7 +6,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, BufferedInputFile
 
-from config import ADMINS, bot, outline_client
+from config import ADMINS, bot
 from database.controllers.order import get_all_country_orders, get_all_orders
 from database.controllers.user import get_all_users, get_user, update_user
 from logs import bot_logger
@@ -193,25 +193,6 @@ async def admin_countries_stat_handler(message: Message):
 
     await message.answer("Статистика по странам:\n\n" + msg)
 
-
-@admin_router.message(Command("countries_server_stat"))
-async def admin_countries_server_stat_handler(message: Message):
-    bot_logger.info(f"Message: '{message.message_id}' - admin.admin_countries_server_stat_handler")
-
-    if str(message.from_user.id) not in ADMINS:
-        await message.answer(get_incorrect_command())
-        return
-
-    msg = ""
-
-    for country, client in outline_client.items():
-        data = client.get_transferred_data()
-        res = 0
-        for byte in data["bytesTransferredByUserId"].values():
-            res += byte
-        msg += country + ": " + str(res / 10**9 * 100 // 10 / 10) + " Gb\n"
-
-    await message.answer("Статистика по странам:\n\n" + msg)
 
 
 @admin_router.message(Command("one_user_statistics"))

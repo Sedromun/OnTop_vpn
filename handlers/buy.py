@@ -15,13 +15,11 @@ from keyboards.buy import (BackFromPaymentCallbackFactory, BuyCallbackFactory,
                            get_payment_options_keyboard, get_payment_persons_choose_keyboard)
 from keyboards.info import get_instruction_button_keyboard
 from logs import bot_logger
-from servers.outline_keys import get_key
 from text.profile import get_order_info_text
 from text.texts import (get_buy_vpn_text, get_not_enough_money_text,
                         get_payment_choose_country_text,
                         get_payment_option_text, get_person_option_buy_text, get_success_created_key_text, get_success_created_present_text)
 from utils.buy_options import duration_to_str
-from utils.payment import get_order_perm_key
 from utils.payment_handle import PaymentPurpose, buy_handle, check_not_payed
 from utils.presents import create_present
 
@@ -80,9 +78,8 @@ async def choose_payment_callback(
                 "expiration_date": end,
             }
         )
-        get_key(callback_data.country, order.id)
         await callback.message.edit_text(
-            text=get_success_created_key_text(get_order_perm_key(order.id))
+            text=get_success_created_key_text()
             + get_order_info_text(order.id),
             reply_markup=get_instruction_button_keyboard(),
         )
@@ -159,13 +156,12 @@ async def buy_balance_callback(
                     "price": callback_data.price,
                 }
             )
-            key = get_key(callback_data.country, order.id)
             update_user(
                 callback.from_user.id, {"balance": user.balance - callback_data.price}
             )
 
             await callback.message.edit_text(
-                text=get_success_created_key_text(get_order_perm_key(order.id))
+                text=get_success_created_key_text()
                 + get_order_info_text(order.id),
                 reply_markup=get_instruction_button_keyboard(),
             )

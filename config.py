@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from pydantic import SecretStr
 from aiogram.client.bot import DefaultBotProperties
 
-from outline.outline_vpn.outline_vpn import OutlineVPN
 from py3xui.api.api import Api
 from py3xui.async_api.async_api import AsyncApi
 
@@ -86,56 +85,6 @@ TECH_SUPPORT_ADMIN = str(os.getenv("TECH_SUPPORT_ADMIN"))
 
 ADMINS = [SAVVA_ADMIN, EVGENIY_ADMIN, TECH_SUPPORT_ADMIN]
 
-# -- outline --
-
-SWEDEN_API_URL_1 = str(os.getenv("SWEDEN_API_URL_1"))
-SWEDEN_CERT_SHA256_1 = str(os.getenv("SWEDEN_CERT_SHA256_1"))
-RUSSIAN_API_URL_1 = str(os.getenv("RUSSIAN_API_URL_1"))
-RUSSIAN_CERT_SHA256_1 = str(os.getenv("RUSSIAN_CERT_SHA256_1"))
-RUSSIAN_API_URL_2 = str(os.getenv("RUSSIAN_API_URL_2"))
-RUSSIAN_CERT_SHA256_2 = str(os.getenv("RUSSIAN_CERT_SHA256_2"))
-GERMAN_API_URL_1 = str(os.getenv("GERMAN_API_URL_1"))
-GERMAN_CERT_SHA256_1 = str(os.getenv("GERMAN_CERT_SHA256_1"))
-GERMAN_API_URL_2 = str(os.getenv("GERMAN_API_URL_2"))
-GERMAN_CERT_SHA256_2 = str(os.getenv("GERMAN_CERT_SHA256_2"))
-FRANCE_API_URL_1 = str(os.getenv("FRANCE_API_URL_1"))
-FRANCE_CERT_SHA256_1 = str(os.getenv("FRANCE_CERT_SHA256_1"))
-GB_API_URL_1 = str(os.getenv("GB_API_URL_1"))
-GB_CERT_SHA256_1 = str(os.getenv("GB_CERT_SHA256_1"))
-USA_API_URL_1 = str(os.getenv("USA_API_URL_1"))
-USA_CERT_SHA256_1 = str(os.getenv("USA_CERT_SHA256_1"))
-LATVIA_API_URL_1 = str(os.getenv("LATVIA_API_URL_1"))
-LATVIA_CERT_SHA256_1 = str(os.getenv("LATVIA_CERT_SHA256_1"))
-ESTONIA_API_URL_1 = str(os.getenv("ESTONIA_API_URL_1"))
-ESTONIA_CERT_SHA256_1 = str(os.getenv("ESTONIA_CERT_SHA256_1"))
-NETHERLAND_API_URL_1 = str(os.getenv("NETHERLAND_API_URL_1"))
-NETHERLAND_CERT_SHA256_1 = str(os.getenv("NETHERLAND_CERT_SHA256_1"))
-NETHERLAND_API_URL_2 = str(os.getenv("NETHERLAND_API_URL_2"))
-NETHERLAND_CERT_SHA256_2 = str(os.getenv("NETHERLAND_CERT_SHA256_2"))
-FINLAND_API_URL_1 = str(os.getenv("FINLAND_API_URL_1"))
-FINLAND_CERT_SHA256_1 = str(os.getenv("FINLAND_CERT_SHA256_1"))
-FINLAND_API_URL_2 = str(os.getenv("FINLAND_API_URL_2"))
-FINLAND_CERT_SHA256_2 = str(os.getenv("FINLAND_CERT_SHA256_2"))
-AUSTRIA_API_URL_1 = str(os.getenv("AUSTRIA_API_URL_1"))
-AUSTRIA_CERT_SHA256_1 = str(os.getenv("AUSTRIA_CERT_SHA256_1"))
-
-outline_client = {
-    10: OutlineVPN(api_url=RUSSIAN_API_URL_1, cert_sha256=RUSSIAN_CERT_SHA256_1),
-    11: OutlineVPN(api_url=RUSSIAN_API_URL_2, cert_sha256=RUSSIAN_CERT_SHA256_2),
-    # 20: OutlineVPN(api_url=SWEDEN_API_URL_1, cert_sha256=SWEDEN_CERT_SHA256_1),
-    30: OutlineVPN(api_url=GERMAN_API_URL_1, cert_sha256=GERMAN_CERT_SHA256_1),
-    31: OutlineVPN(api_url=GERMAN_API_URL_2, cert_sha256=GERMAN_CERT_SHA256_2),
-    40: OutlineVPN(api_url=FRANCE_API_URL_1, cert_sha256=FRANCE_CERT_SHA256_1),
-    50: OutlineVPN(api_url=GB_API_URL_1, cert_sha256=GB_CERT_SHA256_1),
-    60: OutlineVPN(api_url=USA_API_URL_1, cert_sha256=USA_CERT_SHA256_1),
-    70: OutlineVPN(api_url=LATVIA_API_URL_1, cert_sha256=LATVIA_CERT_SHA256_1),
-    80: OutlineVPN(api_url=NETHERLAND_API_URL_1, cert_sha256=NETHERLAND_CERT_SHA256_1),
-    81: OutlineVPN(api_url=NETHERLAND_API_URL_2, cert_sha256=NETHERLAND_CERT_SHA256_2),
-    90: OutlineVPN(api_url=FINLAND_API_URL_1, cert_sha256=FINLAND_CERT_SHA256_1),
-    91: OutlineVPN(api_url=FINLAND_API_URL_2, cert_sha256=FINLAND_CERT_SHA256_2),
-    # 100: OutlineVPN(api_url=ESTONIA_API_URL_1, cert_sha256=ESTONIA_CERT_SHA256_1),
-    110: OutlineVPN(api_url=AUSTRIA_API_URL_1, cert_sha256=AUSTRIA_CERT_SHA256_1),
-}
 
 VLESS_URI = str(os.getenv("VLESS_URI"))
 VLESS_PORT = str(os.getenv("VLESS_PORT"))
@@ -143,115 +92,69 @@ VLESS_USERNAME = str(os.getenv("VLESS_USERNAME"))
 VLESS_PASSWORD = str(os.getenv("VLESS_PASSWORD"))
 
 vless_server_ip = {
-    10: str(os.getenv("RUSSIA_1_IP")),
-    11: str(os.getenv("RUSSIA_2_IP")),
-    # 20: str(os.getenv("SWEDEN_1_IP")),
-    30: str(os.getenv("GERMANY_1_IP")),
-    31: str(os.getenv("GERMANY_2_IP")),
-    40: str(os.getenv("FRANCE_1_IP")),
-    50: str(os.getenv("UK_1_IP")),
-    60: str(os.getenv("USA_1_IP")),
+    11: str(os.getenv("RUSSIA_1_IP")),
+    31: str(os.getenv("GERMANY_1_IP")),
     70: str(os.getenv("LATVIA_1_IP")),
-    80: str(os.getenv("NETHERLANDS_1_IP")),
-    81: str(os.getenv("NETHERLANDS_2_IP")),
-    90: str(os.getenv("FINLAND_1_IP")),
-    91: str(os.getenv("FINLAND_2_IP")),
-    # 100: str(os.getenv("ESTONIA_1_IP")),
-    110: str(os.getenv("AUSTRIA_1_IP"))
+    81: str(os.getenv("NETHERLANDS_1_IP")),
+    91: str(os.getenv("FINLAND_1_IP")),
+    110: str(os.getenv("AUSTRIA_1_IP")),
+    # 50: str(os.getenv("UK_1_IP")),
+    60: str(os.getenv("USA_1_IP")),
+    40: str(os.getenv("FRANCE_1_IP")),
+    120: str(os.getenv("TURKEY_1_IP")),
+    130: str(os.getenv("HONGKONG_1_IP")),
 }
 
 vless_client = {
-    10: AsyncApi(f"http://{vless_server_ip[10]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     11: AsyncApi(f"http://{vless_server_ip[11]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    # 20: AsyncApi(f"http://{vless_server_ip[20]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    30: AsyncApi(f"http://{vless_server_ip[30]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     31: AsyncApi(f"http://{vless_server_ip[31]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    40: AsyncApi(f"http://{vless_server_ip[40]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    50: AsyncApi(f"http://{vless_server_ip[50]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    60: AsyncApi(f"http://{vless_server_ip[60]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     70: AsyncApi(f"http://{vless_server_ip[70]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    80: AsyncApi(f"http://{vless_server_ip[80]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     81: AsyncApi(f"http://{vless_server_ip[81]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    90: AsyncApi(f"http://{vless_server_ip[90]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     91: AsyncApi(f"http://{vless_server_ip[91]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
-    # 100: AsyncApi(f"http://{vless_server_ip[100]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
     110: AsyncApi(f"http://{vless_server_ip[110]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+    # 50: AsyncApi(f"http://{vless_server_ip[50]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+    60: AsyncApi(f"http://{vless_server_ip[60]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+    40: AsyncApi(f"http://{vless_server_ip[40]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+    120: AsyncApi(f"http://{vless_server_ip[120]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
+    130: AsyncApi(f"http://{vless_server_ip[130]}:{VLESS_PORT}{VLESS_URI}", VLESS_USERNAME, VLESS_PASSWORD),
 }
 
 servers_countries = {
-    10: "Россия",
     11: "Россия",
-    # 20: "Швеция",
-    30: "Германия",
     31: "Германия",
-    40: "Франция",
-    50: "Великобритания",
-    60: "США",
     70: "Латвия",
-    80: "Нидерланды",
     81: "Нидерланды",
-    90: "Финляндия",
     91: "Финляндия",
-    # 100: "Эстония",
     110: "Австрия",
+    # 50: "Великобритания",
+    60: "США",
+    40: "Франция",
+    120: "Турция",
+    130: "Гонконг",
 }
 
 servers_countries_in_email = {
-    10: "Russia-1",
-    11: "Russia-2",
-    # 20: "Sweden-1",
-    30: "Germany-1",
-    31: "Germany-2",
-    40: "France-1",
-    50: "Great-Britain-1",
-    60: "USA-1",
-    70: "Lithuania-1",
-    80: "Netherlands-1",
-    81: "Netherlands-2",
-    90: "Finland-1",
-    91: "Finland-2",
-    # 100: "Estonia-1",
-    110: "Austria-1",
+    11: "Russia",
+    31: "Germany",
+    70: "Lithuania",
+    81: "Netherlands",
+    91: "Finland",
+    110: "Austria",
+    # 50: "Great-Britain",
+    60: "USA",
+    40: "France",
+    120: "Turkey",
+    130: "Hong-Kong",
 }
 
 parameters = {
-    10: {
-        "type": "tcp",
-        "security": "reality",
-        "pbk": "wgjOVa4JhxKvMi7hYcTti9O4TVgliYgnHOD_mZi_UWM",
-        "fp": "random",
-        "sni": "russia1.clique-vpn.ru",
-        "sid": "9ccd7c57e0",
-        "spx": "%2F",
-        "flow": "xtls-rprx-vision"
-    },
     11: {
         "type": "tcp",
         "security": "reality",
         "pbk": "ylmv9z-jJTsoELWHiavAEKTq7t1oRkIAilDVC37CYAI",
         "fp": "random",
-        "sni": "russia2.clique-vpn.ru",
+        "sni": "russia.clique-vpn.ru",
         "sid": "4b1070630806a0",
-        "spx": "%2F",
-        "flow": "xtls-rprx-vision"
-    },
-    # 20: {
-    #     "type": "tcp",
-    #     "security": "reality",
-    #     "pbk": "Ky-_GRABOAtNoczRD6JOl4RzMCRTh6tNxbFSPikHFy4",
-    #     "fp": "random",
-    #     "sni": "sweden.clique-vpn.ru",
-    #     "sid": "259ac83ce22f20c5",
-    #     "spx": "%2F",
-    #     "flow": "xtls-rprx-vision"
-    # },
-    30: {
-        "type": "tcp",
-        "security": "reality",
-        "pbk": "e4I69qQ_zAVjIF-pdjr1kKkoXCL2WSb-e7vFEdRqfAU",
-        "fp": "random",
-        "sni": "germany1.clique-vpn.ru",
-        "sid": "3fa55822",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
@@ -260,38 +163,8 @@ parameters = {
         "security": "reality",
         "pbk": "fZ8gm_Tr8VPUg4hNHFpIqYkqv0yUcWJXaf0XttO2kSo",
         "fp": "radnom",
-        "sni": "germany2.clique-vpn.ru",
+        "sni": "germany.clique-vpn.ru",
         "sid": "83c7614c9a8cda",
-        "spx": "%2F",
-        "flow": "xtls-rprx-vision"
-    },
-    40: {
-        "type": "tcp",
-        "security": "reality",
-        "pbk": "MdxMQkTaHNSk3weD3RRregSzHwoHSPtMVafxMumJiRY",
-        "fp": "random",
-        "sni": "france.clique-vpn.ru",
-        "sid": "5b46",
-        "spx": "%2F",
-        "flow": "xtls-rprx-vision"
-    },
-    50: {
-        "type": "tcp",
-        "security": "reality",
-        "pbk": "pdK8vv1iXEQadMVqClvdUfDZSw-6xm9Yu7DQv5Z4DhY",
-        "fp": "random",
-        "sni": "uk.clique-vpn.ru",
-        "sid": "658ba53a",
-        "spx": "%2F",
-        "flow": "xtls-rprx-vision"
-    },
-    60: {
-        "type": "tcp",
-        "security": "reality",
-        "pbk": "BisWFcqOV7NaTqC9avwMmChYnXX2WyMknjodK39huW8",
-        "fp": "random",
-        "sni": "usa.clique-vpn.ru",
-        "sid": "afabf37907ca8f",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
@@ -305,33 +178,13 @@ parameters = {
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
-    80: {
-        "type": "tcp",
-        "security": "reality",
-        "pbk": "yKijrBx6sGjGc6EfCmrEphiw4EH-6t7XXaEfER_eKHU",
-        "fp": "random",
-        "sni": "netherlands1.clique-vpn.ru",
-        "sid": "8f8c9bcd",
-        "spx": "%2F",
-        "flow": "xtls-rprx-vision"
-    },
     81: {
         "type": "tcp",
         "security": "reality",
         "pbk": "ERx8b7RTpk6DQ8IfQxgbsOOXK-rkac0V5dZhGv_99mI",
         "fp": "random",
-        "sni": "netherlands2.clique-vpn.ru",
+        "sni": "netherlands.clique-vpn.ru",
         "sid": "1c",
-        "spx": "%2F",
-        "flow": "xtls-rprx-vision"
-    },
-    90: {
-        "type": "tcp",
-        "security": "reality",
-        "pbk": "LzesmGkKdu2gi2HHlE0cvD6pw_3mkfzQVKBsBNESkEQ",
-        "fp": "random",
-        "sni": "finland1.clique-vpn.ru",
-        "sid": "04254218effce3",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
@@ -340,21 +193,11 @@ parameters = {
         "security": "reality",
         "pbk": "ZQ6vH7Xr22l-Xf0Dp3C1mcHXhWAa8ZhY6r4rAkiIBAA",
         "fp": "random",
-        "sni": "finland2.clique-vpn.ru",
+        "sni": "finland.clique-vpn.ru",
         "sid": "46",
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
-    # 100: {
-    #     "type": "tcp",
-    #     "security": "reality",
-    #     "pbk": "alllDGYs0hTGuZR-5YlWM0b9J35sG9689dDAvW60tVo",
-    #     "fp": "random",
-    #     "sni": "estonia.clique-vpn.ru",
-    #     "sid": "d46e",
-    #     "spx": "%2F",
-    #     "flow": "xtls-rprx-vision"
-    # },
     110: {
         "type": "tcp",
         "security": "reality",
@@ -365,57 +208,72 @@ parameters = {
         "spx": "%2F",
         "flow": "xtls-rprx-vision"
     },
+    # 50: {
+    #     "type": "tcp",
+    #     "security": "reality",
+    #     "pbk": "C8J4nK_U-MPhlHXieNjgi07SE3sro_Np5fT0tAignUI",
+    #     "fp": "random",
+    #     "sni": "www.apple.com",
+    #     "sid": "25ce",
+    #     "spx": "%2F",
+    #     "flow": "xtls-rprx-vision"
+    # },
+    60: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "C8J4nK_U-MPhlHXieNjgi07SE3sro_Np5fT0tAignUI",
+        "fp": "random",
+        "sni": "www.apple.com",
+        "sid": "25ce",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    40: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "1b302fqA4dEJX-gw5iHNq7twgXM3nRAnkEMyT80nJCg",
+        "fp": "random",
+        "sni": "www.yandex.com",
+        "sid": "e3b346af",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    120: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "6knpCNBHicI-jW-0PXAy18RVkFJv3Ies3OEhMYikFDU",
+        "fp": "random",
+        "sni": "www.vk.com",
+        "sid": "a7d8216819",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
+    130: {
+        "type": "tcp",
+        "security": "reality",
+        "pbk": "E1AAVc6eZDpW69olGjPxK89-NB2enVox5w5oA8YHLCM",
+        "fp": "random",
+        "sni": "www.yandex.com",
+        "sid": "b33d72af0f",
+        "spx": "%2F",
+        "flow": "xtls-rprx-vision"
+    },
 }
 
 vless_inbound_id = {
-    10: 1,
     11: 1,
-    # 20: 1,
-    30: 1,
     31: 1,
-    40: 1,
-    50: 1,
-    60: 1,
-    70: 2,
-    80: 1,
-    81: 1,
-    90: 1,
-    91: 1,
-    # 100: 1,
-    110: 1,
-}
-
-efficiency = {
-    10: 1,
-    11: 1,
-    # 20: 1,
-    30: 2,
-    31: 1,
-    40: 1,
-    50: 1,
-    60: 1,
     70: 1,
-    80: 1,
     81: 1,
-    90: 1,
     91: 1,
-    # 100: 1,
     110: 1,
+    # 50: 1,
+    60: 1,
+    40: 1,
+    120: 1,
+    130: 1,
 }
 
-country_to_server_ids = {
-    "Россия": [10, 11],
-    # "Швеция": [20],
-    "Германия": [30, 31],
-    "Франция": [40],
-    "Великобритания": [50],
-    "США": [60],
-    "Латвия": [70],
-    "Нидерланды": [80,81],
-    "Финляндия": [90, 91],
-    # "Эстония": [100],
-    "Австрия": [110],
-}
 
 SSCONF = "ssconf"
 KEYS_URL = SSCONF + "://" + DOMEN + "/keys" + "/"

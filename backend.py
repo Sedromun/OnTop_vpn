@@ -13,14 +13,12 @@ from keyboards.profile import get_order_expiring_keyboard
 from logs import backend_logger
 from main import app
 from schemas.Notification import NotificationSchema
-from servers.outline_keys import get_key
 from servers.vless_keys import get_vless_keys
 from text.notifications import (auto_extended_failure, auto_extended_success,
                                 get_referral_bought)
 from text.profile import (get_money_added_text, get_order_info_text,
                           get_success_extended_key_text)
 from text.texts import get_success_created_key_text, get_success_created_present_text
-from utils.payment import get_order_perm_key
 from utils.payment_handle import PaymentPurpose
 
 
@@ -115,11 +113,9 @@ async def check_payment(notification: NotificationSchema):
 
                 description += f"county: {order.country}"
 
-                get_key(order.country, order.id)
-
                 await bot.send_message(
                     user_id,
-                    text=get_success_created_key_text(get_order_perm_key(order.id))
+                    text=get_success_created_key_text()
                         + get_order_info_text(order.id),
                     reply_markup=get_instruction_button_keyboard(),
                 )
@@ -187,13 +183,6 @@ async def check_payment(notification: NotificationSchema):
 
         await check_referral(user_id, amount)
 
-
-@app.get("/keys/{order_id_enc}")
-async def get_key_id(order_id_enc: str):
-    order_id = FERNET.decrypt(order_id_enc.encode()).decode()
-    order = get_order(int(order_id))
-    key = get_key(order.country, order_id)
-    return HTMLResponse(key)
 
 
 @app.get("/vless/{order_id_enc}")

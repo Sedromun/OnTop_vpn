@@ -2,51 +2,23 @@ all:
   children:
     xui_hosts:
       hosts:
-        Russia_1:
-          ansible_host: 193.124.33.24
-          ansible_user: root
-          region_code: 10
-        Russia_2:
+        Russia:
           ansible_host: 45.144.30.101
           ansible_user: root
           region_code: 11
-        Germany_1:
-          ansible_host: 185.65.202.26
-          ansible_user: root
-          region_code: 30
-        Germany_2:
+        Germany:
           ansible_host: 185.235.241.82
           ansible_user: root
           region_code: 31
-        France:
-          ansible_host: 138.124.31.215
-          ansible_user: root
-          region_code: 40
-        United_Kingdom:
-          ansible_host: 194.147.35.48
-          ansible_user: root
-          region_code: 50
-        USA:
-          ansible_host: 166.1.160.37
-          ansible_user: root
-          region_code: 60
         Latvia:
           ansible_host: 176.120.67.60
           ansible_user: root
           region_code: 70
-        Netherlands_1:
-          ansible_host: 212.22.74.134
-          ansible_user: root
-          region_code: 80
-        Netherlands_2:
+        Netherlands:
           ansible_host: 94.131.106.243
           ansible_user: root
           region_code: 81
-        Finland_1:
-          ansible_host: 45.144.235.83
-          ansible_user: root
-          region_code: 90
-        Finland_2:
+        Finland:
           ansible_host: 185.156.108.92
           ansible_user: root
           region_code: 91
@@ -54,3 +26,26 @@ all:
           ansible_host: 85.208.109.86
           ansible_user: root
           region_code: 110
+        UK:
+          ansible_host: 45.89.111.131
+          ansible_user: root
+          region_code: 50
+        USA:
+          ansible_host: 138.124.180.34
+          ansible_user: root
+          region_code: 60
+        France:
+          ansible_host: 185.153.183.52
+          ansible_user: root
+          region_code: 40
+        Turkey:
+          ansible_host: 185.153.182.75
+          ansible_user: root
+          region_code: 120
+        Hongkong:
+          ansible_host: 74.119.193.95
+          ansible_user: root
+          region_code: 130
+
+
+

@@ -27,10 +27,6 @@ class InfoCallbackFactory(CallbackData, prefix="info"):
 def get_my_keys_keyboard(off_auto_need: bool, order_id: int):
     builder = InlineKeyboardBuilder()
     builder.button(
-        text=change_country,
-        callback_data=InfoCallbackFactory(text=change_country, order_id=order_id),
-    )
-    builder.button(
         text=extend_key,
         callback_data=InfoCallbackFactory(text=extend_key, order_id=order_id),
     )

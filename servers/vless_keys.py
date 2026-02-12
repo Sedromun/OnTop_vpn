@@ -1,9 +1,10 @@
+import asyncio
 import calendar
 import datetime
 import time
 import uuid
 
-from config import outline_client, country_to_server_ids, efficiency, vless_client, servers_countries_in_email, \
+from config import vless_client, servers_countries_in_email, \
     vless_server_ip, parameters, vless_inbound_id
 from database.controllers.key import (create_key, delete_key,
                                       get_order_country_key, get_server_id_usages, get_zero_id_usage)
@@ -22,12 +23,21 @@ async def get_vless_keys(order_id: int) -> (int, str):
             email = servers_countries_in_email[id] + "-" + str(order_id)
             order = get_order(order_id)
             try:
-                await api.login()
+                await asyncio.wait_for(api.login(), timeout=2)
+            except asyncio.TimeoutError:
+                backend_logger.exception("COUNTRY: " + str(id) + " TimeoutError(2 seconds)")
+                continue
             except Exception as e:
                 backend_logger.exception("COUNTRY: " + str(id) + " " + str(e))
                 continue
 
-            client = await api.client.get_by_email(email)
+            try:
+                client = await api.client.get_by_email(email)
+            except ValueError as e:
+                if "Inbound Not Found" in str(e):
+                    client = None
+                else:
+                    raise
 
             if client is None:
                 if order.uuid is None:
