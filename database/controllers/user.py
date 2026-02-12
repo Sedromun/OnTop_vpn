@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
@@ -8,13 +10,10 @@ from schemas import OrderModel, UserModel
 
 def get_user_orders(tg_id: int) -> list[OrderModel] | None:
     user = session.scalar(select(UserModel).where(UserModel.id == tg_id))
-    orders = user.orders
-    res = []
-    for order in orders:
-        if order.keys:
-            res.append(order)
-    res.sort(key=lambda x: x.id)
-    return res
+    now = datetime.datetime.now(datetime.timezone.utc)
+    orders = [o for o in user.orders if o.expiration_date.replace(tzinfo=datetime.timezone.utc) > now]
+    orders.sort(key=lambda x: x.id)
+    return orders
 
 
 def get_all_users() -> list[UserModel]:

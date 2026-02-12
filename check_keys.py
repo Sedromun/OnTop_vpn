@@ -133,8 +133,6 @@ async def check_expired():
     now = datetime.datetime.now(datetime.timezone.utc)
     orders = get_all_orders()
     for order in orders:
-        if not order.keys:
-            continue
         expire = order.expiration_date.astimezone(datetime.timezone.utc)
         for func, interval, after, interval_name in ORDERS_NOTIFICATIONS:
             await check_on_time(

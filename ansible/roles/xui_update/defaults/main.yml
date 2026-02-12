@@ -1,0 +1,9 @@
+---
+# Версия 3x-ui для обновления (тег git). "latest" = последний релиз.
+xui_target_version: "latest"
+
+# Репозиторий 3x-ui
+xui_repo: "https://github.com/MHSanaei/3x-ui.git"
+
+# Каталог установки
+xui_install_dir: "~/3x-ui"

@@ -1,0 +1,85 @@
+---
+# Обновление 3x-ui до указанной (или последней) версии
+
+- name: update | Получить текущую версию
+  command:
+    cmd: git describe --tags --abbrev=0
+    chdir: "{{ xui_install_dir }}"
+  register: current_version
+  changed_when: false
+  failed_when: false
+
+- name: update | Показать текущую версию
+  debug:
+    msg: "Текущая версия: {{ current_version.stdout | default('неизвестно') }}"
+
+- name: update | Получить последний тег из репозитория
+  shell: git ls-remote --tags --sort=-v:refname {{ xui_repo }} | head -1 | sed 's/.*refs\/tags\///'
+  register: latest_tag
+  changed_when: false
+  when: xui_target_version == "latest"
+
+- name: update | Определить целевую версию
+  set_fact:
+    xui_resolved_version: "{{ latest_tag.stdout if xui_target_version == 'latest' else xui_target_version }}"
+
+- name: update | Показать целевую версию
+  debug:
+    msg: "Обновление до: {{ xui_resolved_version }}"
+
+# - name: update | Пропустить если версия уже актуальна
+#   debug:
+#     msg: "Версия {{ xui_resolved_version }} уже установлена, пропуск."
+#   when: current_version.stdout == xui_resolved_version
+
+- name: update | Fetch из репозитория
+  command:
+    cmd: git fetch --tags
+    chdir: "{{ xui_install_dir }}"
+
+- name: update | Сохранить локальные изменения
+  command:
+    cmd: git stash
+    chdir: "{{ xui_install_dir }}"
+  failed_when: false
+
+- name: update | Checkout на целевую версию
+  command:
+    cmd: "git checkout {{ xui_resolved_version }}"
+    chdir: "{{ xui_install_dir }}"
+
+- name: update | Остановить контейнер
+  shell:
+    cmd: docker compose down
+    chdir: "{{ xui_install_dir }}"
+
+- name: update | Собрать и запустить новую версию
+  shell:
+    cmd: docker compose up -d --build
+    chdir: "{{ xui_install_dir }}"
+  register: compose_result
+
+- name: update | Результат запуска
+  debug:
+    var: compose_result
+
+- name: update | Подождать запуск панели (10 сек)
+  pause:
+    seconds: 10
+
+- name: update | Проверить доступность панели
+  uri:
+    url: "http://127.0.0.1:60711"
+    method: GET
+    status_code: [200, 302]
+    timeout: 5
+  register: health
+  retries: 3
+  delay: 5
+  until: health.status in [200, 302]
+  ignore_errors: true
+
+- name: update | Статус после обновления
+  debug:
+    msg: >-
+      {{ inventory_hostname }}: {{ 'OK ✅' if health.status | default(0) in [200, 302] else 'FAIL ❌ — панель не отвечает!' }}

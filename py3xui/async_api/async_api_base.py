@@ -55,6 +55,7 @@ class AsyncBaseApi:
         use_tls_verify: bool = True,
         custom_certificate_path: str | None = None,
         logger: Any | None = None,
+        proxy: str | None = None,
     ):  # pylint: disable=R0913, R0917
         self._host = host.rstrip("/")
         self._username = username
@@ -64,6 +65,7 @@ class AsyncBaseApi:
         self._custom_certificate_path = custom_certificate_path
         self._max_retries: int = 3
         self._session: str | None = None
+        self._proxy = proxy
         self.logger = logger or Logger(__name__)
 
     @property
@@ -206,7 +208,9 @@ class AsyncBaseApi:
 
                 cookies = {"3x-ui": self.session} if self.session else {}
                 timeout = httpx.Timeout(2.0, connect=10.0, read=30.0)
-                async with httpx.AsyncClient(cookies=cookies, verify=verify, timeout=timeout) as client:
+                async with httpx.AsyncClient(
+                    cookies=cookies, verify=verify, timeout=timeout, proxy=self._proxy
+                ) as client:
                     if method == ApiFields.GET:
                         response = await client.get(url, headers=headers, **kwargs)
                     elif method == ApiFields.POST:
